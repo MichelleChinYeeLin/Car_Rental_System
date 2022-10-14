@@ -6,9 +6,9 @@ public class CarRentalSystem {
         //TODO: read text file, check username + password
 
         //ADMIN:
-        //TODO:
+        //TODO: show gui (admin)
 
         //CUSTOMER:
-        //TODO:
+        //TODO: show gui (customer)
     }
 }
