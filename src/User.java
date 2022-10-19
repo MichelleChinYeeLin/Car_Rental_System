@@ -1,4 +1,4 @@
-public class User {
+public class User { // 要不要弄成abstract class 反正好像也不会用到
 
     private String username;
     private String password;

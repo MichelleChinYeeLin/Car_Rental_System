@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+
 public class Customer extends User{
 
     private String name;
     private String email;
     private String address;
+//    private ArrayList<Booking> myBookings = new ArrayList<>();
 
     public Customer(String username, String password, String name, String email, String address){
         super(username, password);
@@ -34,4 +37,13 @@ public class Customer extends User{
     public void setAddress(String address) {
         this.address = address;
     }
+
+//    public ArrayList<Booking> getMyBookings() {
+//        return myBookings;
+//    }
+//
+//    public void setMyBookings(ArrayList<Booking> myBookings) {
+//        this.myBookings = myBookings;
+//    }
+
 }
