@@ -114,6 +114,8 @@ public class FileIO {
 
                 line = br.readLine();
             }
+            br.close();
+            fr.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -123,7 +125,7 @@ public class FileIO {
         }
     }
 
-    public static void writeAdminFile(ArrayList<Admin> adminList){
+    public static void writeAdminFile(){
 
         try{
             FileWriter fw = new FileWriter(adminFileName);
@@ -132,6 +134,7 @@ public class FileIO {
                 fw.write(userNameText + admin.getUsername() + "\n");
                 fw.write(passwordText + admin.getPassword() + "\n\n");
             }
+            fw.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -181,6 +184,8 @@ public class FileIO {
 
                 line = br.readLine();
             }
+            br.close();
+            fr.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -190,7 +195,7 @@ public class FileIO {
         }
     }
 
-    public static void writeCustomerFile(ArrayList<Customer> customerList){
+    public static void writeCustomerFile(){
         try{
             FileWriter fw = new FileWriter(customerFileName);
 
@@ -203,6 +208,7 @@ public class FileIO {
                 fw.write(emailText + customer.getEmail() + "\n");
                 fw.write(addressText + customer.getAddress() + "\n\n");
             }
+            fw.close();
         }
         catch(IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -265,6 +271,8 @@ public class FileIO {
                     bookingList.add(booking);
                 }
             }
+            br.close();
+            fr.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -285,6 +293,7 @@ public class FileIO {
                 fw.write(startDateText + dateFormat.format(booking.getStartDate()) + "\n");
                 fw.write(endDateText + dateFormat.format(booking.getEndDate()) + "\n\n");
             }
+            fw.close();
         }
         catch(IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -331,6 +340,8 @@ public class FileIO {
 
                 line = br.readLine();
             }
+            br.close();
+            fr.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
@@ -340,7 +351,7 @@ public class FileIO {
         }
     }
 
-    public static void writeCarFile(ArrayList<Car> carList){
+    public static void writeCarFile(){
         try{
             FileWriter fw = new FileWriter(carFileName);
 
@@ -352,6 +363,7 @@ public class FileIO {
                 fw.write(priceText + car.getPrice() + "\n");
                 fw.write(availabilityText + car.isAvailable() + "\n\n");
             }
+            fw.close();
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
