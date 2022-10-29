@@ -22,17 +22,20 @@ public class HomePage implements ActionListener {
         login.setFocusable(false);
         login.addActionListener(this);
         login.setBounds(80,200,50,40);
-        login.setBackground(new Color(227,217,176));
+        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
+        login.setBackground(new Color(212, 183, 185));
 
         signUp.setFocusable(false);
         signUp.addActionListener(this);
         signUp.setBounds(170,200,50,40);
-        signUp.setBackground(new Color(227,217,176));
+        signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
+        signUp.setBackground(new Color(212, 183, 185));
 
         quit.setFocusable(false);
         quit.addActionListener(this);
         quit.setBounds(230,10,50,20);
-        quit.setBackground(new Color(227,217,176));
+        quit.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
+        quit.setBackground(new Color(212, 183, 185));
 
 //        label.setIcon(homeBackground);
 //        label.setBounds(-550, -370, 1748,1240); // 其实好像蛮丑的
@@ -41,13 +44,13 @@ public class HomePage implements ActionListener {
         frame.setIconImage(logo.getImage());
         frame.setSize(300,300);
         frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(240,205,151)); // 颜色再调一下真的很丑 你给我做gui是个错误的选择
+        frame.getContentPane().setBackground(new Color(155, 159, 177)); // 颜色可以调一下蛮丑的
         frame.setLocationRelativeTo(null);
 //        frame.add(label);
         frame.add(login);
         frame.add(signUp);
         frame.add(quit);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
@@ -64,7 +67,6 @@ public class HomePage implements ActionListener {
             frame.setVisible(false);
             CarRentalSystem.signUpPage.getFrame().setVisible(true);
         } else if (e.getSource() == quit) {
-            // another page? hmmmmmmmmmmmmmm
             System.exit(0); // 先这样 过后再看要不要做一个新的confirm page hmmmmmmmmmmmmmmmm
         }
     }
