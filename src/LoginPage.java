@@ -15,16 +15,19 @@ public class LoginPage implements ActionListener {
 
     public LoginPage() {
         frame = new JFrame("Login Page");
+        String[] userType = {"Customer", "Admin"};
+        logo = new ImageIcon("Logo.png");
+
         login = new JButton("Log In");
         cancel = new JButton("Cancel");
+
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password:");
         title = new JLabel("LOGIN");
+
         username = new JTextField();
         password = new JPasswordField();
-        String[] userType = {"Customer", "Admin"};
         userTypeSelect = new JComboBox<String>(userType);
-        logo = new ImageIcon("Logo.png");
 
         login.setFocusable(false);
         login.addActionListener(this);

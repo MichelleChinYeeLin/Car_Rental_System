@@ -71,6 +71,12 @@ public class Customer extends User{
 //    }
 
     public static boolean login(String username, String password){
-        return false;
+//        CarRentalSystem.loginCustomer = ?
+        return true;
+    }
+
+    public static boolean signUp(String username, String password, int age, String gender, String phoneNum, String email, String address) {
+        return true;
+        // return false if have redundant request
     }
 }

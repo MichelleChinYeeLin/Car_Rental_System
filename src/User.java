@@ -28,7 +28,7 @@ public class User { // 要不要弄成abstract class 反正好像也不会用到
         return false;
     }
 
-    public void signUp(){
-
+    public static boolean signUp(String username, String password, int age, String gender, String phoneNum, String email, String address){
+        return false;
     }
 }
