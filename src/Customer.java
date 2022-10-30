@@ -1,12 +1,26 @@
+import java.util.ArrayList;
+
 public class Customer extends User{
 
     private String name;
+    private String gender;
+    private int age;
     private String email;
     private String address;
 
-    public Customer(String username, String password, String name, String email, String address){
+    public Customer(){
+        super("", "");
+        this.name = "";
+        this.gender = "";
+        this.email = "";
+        this.address = "";
+    }
+
+    public Customer(String username, String password, String name, String gender, int age, String email, String address){
         super(username, password);
         this.name = name;
+        this.gender = gender;
+        this.age = age;
         this.email = email;
         this.address = address;
     }
@@ -17,6 +31,18 @@ public class Customer extends User{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGender(){return gender;}
+
+    public void setGender(String gender){this.gender = gender;}
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getEmail() {

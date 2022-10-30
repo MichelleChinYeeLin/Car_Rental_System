@@ -1,18 +1,27 @@
 public class Car {
 
+    private String numberPlate;
     private String brand;
     private String model;
     private String color;
     private double price;
-    private String numberPlate;
     private boolean availability;
 
-    public Car(String brand, String model, String color, double price, String numberPlate, boolean availability){
+    public Car(){
+        this.numberPlate = "";
+        this.brand = "";
+        this.model = "";
+        this.color = "";
+        this.price = 0.0;
+        this.availability = false;
+    }
+
+    public Car(String numberPlate, String brand, String model, String color, double price, boolean availability){
+        this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
         this.color = color;
         this.price = price;
-        this.numberPlate = numberPlate;
         this.availability = availability;
     }
 
@@ -56,7 +65,7 @@ public class Car {
         this.numberPlate = numberPlate;
     }
 
-    public boolean isAvailability() {
+    public boolean isAvailable() {
         return availability;
     }
 

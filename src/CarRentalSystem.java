@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CarRentalSystem {
 
     public static void main (String args[]) {
@@ -6,9 +8,9 @@ public class CarRentalSystem {
         //TODO: read text file, check username + password
 
         //ADMIN:
-        //TODO:
+        //TODO: show gui (admin)
 
         //CUSTOMER:
-        //TODO:
+        //TODO: show gui (customer)
     }
 }
