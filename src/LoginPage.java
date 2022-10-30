@@ -8,7 +8,9 @@ public class LoginPage implements ActionListener {
     private JFrame frame;
     private JButton login, cancel;
     private JLabel title, usernameLabel, passwordLabel;
-    private JTextField username, password;
+    private JTextField username;
+    private JPasswordField password;
+    private JComboBox<String> userTypeSelect;
     private ImageIcon logo;
 
     public LoginPage() {
@@ -19,36 +21,41 @@ public class LoginPage implements ActionListener {
         passwordLabel = new JLabel("Password:");
         title = new JLabel("LOGIN");
         username = new JTextField();
-        password = new JTextField();
+        password = new JPasswordField();
+        String[] userType = {"Customer", "Admin"};
+        userTypeSelect = new JComboBox<String>(userType);
         logo = new ImageIcon("Logo.png");
 
         login.setFocusable(false);
         login.addActionListener(this);
         login.setBounds(60,200,80,40);
         login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        login.setBackground(new Color(227,217,176));
+        login.setBackground(new Color(212, 183, 185));
 
         cancel.setFocusable(false);
         cancel.addActionListener(this);
         cancel.setBounds(160,200,80,40);
         cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        cancel.setBackground(new Color(227,217,176));
+        cancel.setBackground(new Color(212, 183, 185));
 
-        title.setBounds(90,20,200,30);
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
-        usernameLabel.setBounds(10,60,200,20);
+        title.setBounds(80,20,200,40);
+        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,38));
+        usernameLabel.setBounds(10,100,200,20);
         usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-        passwordLabel.setBounds(10,120,200,20);
+        passwordLabel.setBounds(10,140,200,20);
         passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
 
-        username.setBounds(10, 80,260, 40);
-        password.setBounds(10,140, 260, 40);
+        username.setBounds(10, 120,260, 20);
+        password.setBounds(10,160, 260, 20);
+
+        userTypeSelect.setBounds(10,80,80,20);
+        userTypeSelect.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
 
         frame.setLayout(null);
         frame.setIconImage(logo.getImage());
         frame.setSize(300,300);
         frame.setResizable(false);
-//        frame.getContentPane().setBackground(new Color(240,205,151));
+        frame.getContentPane().setBackground(new Color(155, 159, 177));
         frame.setLocationRelativeTo(null);
         frame.add(title);
         frame.add(usernameLabel);
@@ -57,6 +64,7 @@ public class LoginPage implements ActionListener {
         frame.add(cancel);
         frame.add(username);
         frame.add(password);
+        frame.add(userTypeSelect);
     }
 
     public JFrame getFrame(){
@@ -68,11 +76,22 @@ public class LoginPage implements ActionListener {
         try {
             if (e.getSource() == login){
                 String usernameInput = username.getText();
-                String passwordInput = password.getText();
-                // Non-static method 'login()' cannot be referenced from a static context 不懂什么意思我先把user那里的弄成static
-                if (User.login(usernameInput, passwordInput)){
-                    frame.setVisible(false);
-                    CarRentalSystem.mainMenu.getFrame().setVisible(true);
+                String passwordInput = String.valueOf(password.getPassword());
+                String userTypeInput = (String) userTypeSelect.getSelectedItem();
+                if (userTypeInput.equals("Customer")){
+                    if (Customer.login(usernameInput, passwordInput)){
+                        frame.setVisible(false);
+                        CarRentalSystem.customerMenu.getFrame().setVisible(true);
+                    }else {
+                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                    }
+                } else if (userTypeInput.equals("Admin")) {
+                    if (Admin.login(usernameInput, passwordInput)){
+                        frame.setVisible(false);
+                        CarRentalSystem.adminMenu.getFrame().setVisible(true);
+                    }else {
+                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                    }
                 }
             } else if (e.getSource() == cancel) {
                 frame.setVisible(false);

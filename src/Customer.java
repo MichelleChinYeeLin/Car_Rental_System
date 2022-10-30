@@ -70,4 +70,7 @@ public class Customer extends User{
 //        this.myBookings = myBookings;
 //    }
 
+    public static boolean login(String username, String password){
+        return false;
+    }
 }

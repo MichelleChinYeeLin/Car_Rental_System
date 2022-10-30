@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenu {
+public class CustomerMenu {
 
     private JFrame frame;
     private JLabel title;
 
-    public MainMenu(){
+    public CustomerMenu(){
         frame = new JFrame();
         title = new JLabel("Main Menu");
 

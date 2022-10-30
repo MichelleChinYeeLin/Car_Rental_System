@@ -25,8 +25,7 @@ public class User { // 要不要弄成abstract class 反正好像也不会用到
     }
 
     public static boolean login(String username, String password){
-
-        return true;
+        return false;
     }
 
     public void signUp(){

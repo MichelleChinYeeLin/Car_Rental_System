@@ -1,11 +1,10 @@
-import java.util.ArrayList;
-
 public class CarRentalSystem {
 
     public static HomePage homePage;
     public static LoginPage loginPage;
     public static SignUpPage signUpPage;
-    public static MainMenu mainMenu;
+    public static CustomerMenu customerMenu;
+    public static AdminMenu adminMenu;
     public static Customer loginCustomer = null;
     public static Admin loginAdmin = null; // 不懂有没有更好的方法
 
@@ -16,7 +15,8 @@ public class CarRentalSystem {
         homePage = new HomePage();
         loginPage = new LoginPage();
         signUpPage = new SignUpPage();
-        mainMenu = new MainMenu();
+        customerMenu = new CustomerMenu();
+        adminMenu = new AdminMenu();
 
         //ADMIN:
         //TODO: show gui (admin)
