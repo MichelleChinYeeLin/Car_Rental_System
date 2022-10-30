@@ -1,8 +1,9 @@
 public class CarRentalSystem {
 
     public static HomePage homePage;
-    public static loginPage loginPage;
-    public static signUpPage signUpPage;
+    public static LoginPage loginPage;
+    public static SignUpPage signUpPage;
+    public static MainMenu mainMenu;
     public static Customer loginCustomer = null;
     public static Admin loginAdmin = null; // 不懂有没有更好的方法
 
@@ -11,8 +12,9 @@ public class CarRentalSystem {
         //TODO: user login
         //TODO: read text file, check username + password
         homePage = new HomePage();
-        loginPage = new loginPage();
-        signUpPage = new signUpPage();
+        loginPage = new LoginPage();
+        signUpPage = new SignUpPage();
+        mainMenu = new MainMenu();
 
         //ADMIN:
         //TODO:

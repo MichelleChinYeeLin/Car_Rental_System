@@ -3,20 +3,21 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class signUpPage implements ActionListener {
+public class SignUpPage implements ActionListener {
 
     private JFrame frame;
-    private Button signUp, cancel;
+    private JButton signUp, cancel;
     private JLabel title, usernameLabel, passwordLabel, phoneNumLabel, emailLabel, addressLabel;
     private JTextField username, password, phoneNum, email, address;
     private JRadioButton male, female;
+    private ButtonGroup genderGroup;
     private JSpinner age;
     // JTextField or JOptionPane?
 
-    public signUpPage(){
+    public SignUpPage(){
         frame = new JFrame("Sign Up Page");
-        signUp = new Button("Sign Up");
-        cancel = new Button("Cancel");
+        signUp = new JButton("Sign Up");
+        cancel = new JButton("Cancel");
         title = new JLabel("Sign Up");
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password: ");
@@ -30,17 +31,26 @@ public class signUpPage implements ActionListener {
         address = new JTextField("Password: ", 20);
         male = new JRadioButton("Male");
         female = new JRadioButton("Female");
+        genderGroup = new ButtonGroup();
         age = new JSpinner();
 
         signUp.setFocusable(false);
         signUp.addActionListener(this);
-        signUp.setBounds(80,200,50,40);
+        signUp.setBounds(60,200,80,40);
+        signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
 //        signUp.setBackground(new Color(227,217,176));
 
         cancel.setFocusable(false);
         cancel.addActionListener(this);
-        cancel.setBounds(170,200,50,40);
+        cancel.setBounds(160,200,80,40);
+        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
 //        cancel.setBackground(new Color(227,217,176));
+
+        // male & female
+        genderGroup.add(male);
+        genderGroup.add(female);
+
+        age = new JSpinner(new SpinnerNumberModel(1,1,122,1)); // 最长寿的人122岁
 
 //        title.setBounds(90,20,200,30);
 //        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
@@ -68,12 +78,14 @@ public class signUpPage implements ActionListener {
         try {
             if (e.getSource() == signUp){
                 // get input from text field
+                // isSelected -> JRadioButton
+                // getValue -> JSpinner
             } else if (e.getSource() == cancel) {
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         } catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move3");
+            JOptionPane.showMessageDialog(frame,"Invalid move");
         }
     }
 

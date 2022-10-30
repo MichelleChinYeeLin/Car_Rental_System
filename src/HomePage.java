@@ -6,34 +6,34 @@ import java.awt.event.ActionListener;
 public class HomePage implements ActionListener {
 
     private JFrame frame;
-    private Button login, signUp, quit;
+    private JButton login, signUp, quit;
     private JLabel label;
     private ImageIcon logo, homeBackground;
 
     public HomePage(){
         frame = new JFrame("Michelle & HeYuan's Car Rental System");
-        login = new Button("Login");
-        signUp = new Button("Sign Up");
-        quit = new Button("Quit");
+        login = new JButton("Login");
+        signUp = new JButton("Sign Up");
+        quit = new JButton("Quit");
         label = new JLabel();
         logo = new ImageIcon("Logo.png"); // 可以去改
         homeBackground = new ImageIcon("HomePage.png");
 
         login.setFocusable(false);
         login.addActionListener(this);
-        login.setBounds(80,200,50,40);
+        login.setBounds(60,200,80,40);
         login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
         login.setBackground(new Color(212, 183, 185));
 
         signUp.setFocusable(false);
         signUp.addActionListener(this);
-        signUp.setBounds(170,200,50,40);
+        signUp.setBounds(160,200,80,40);
         signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
         signUp.setBackground(new Color(212, 183, 185));
 
         quit.setFocusable(false);
         quit.addActionListener(this);
-        quit.setBounds(230,10,50,20);
+        quit.setBounds(220,10,60,30);
         quit.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
         quit.setBackground(new Color(212, 183, 185));
 
@@ -50,7 +50,6 @@ public class HomePage implements ActionListener {
         frame.add(login);
         frame.add(signUp);
         frame.add(quit);
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 
