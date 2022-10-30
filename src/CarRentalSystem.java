@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class CarRentalSystem {
 
     public static HomePage homePage;
@@ -17,9 +19,9 @@ public class CarRentalSystem {
         mainMenu = new MainMenu();
 
         //ADMIN:
-        //TODO:
+        //TODO: show gui (admin)
 
         //CUSTOMER:
-        //TODO:
+        //TODO: show gui (customer)
     }
 }
