@@ -12,6 +12,7 @@ public class CarRentalSystem {
         //TODO: create GUI for login
         //TODO: user login
         //TODO: read text file, check username + password
+        FileIO.readAllFiles();
         homePage = new HomePage();
         loginPage = new LoginPage();
         signUpPage = new SignUpPage();

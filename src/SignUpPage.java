@@ -7,13 +7,12 @@ public class SignUpPage implements ActionListener {
 
     private JFrame frame;
     private JButton signUp, cancel;
-    private JLabel title, usernameLabel, passwordLabel, passwordCheckLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel;
-    private JTextField username, phoneNum, email, address;
+    private JLabel title, usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel;
+    private JTextField username, name, phoneNum, email, address;
     private JPasswordField password, passwordCheck;
     private JRadioButton male, female;
     private ButtonGroup genderGroup;
     private JSpinner age;
-    private ImageIcon logo;
     private JButton[] buttons;
     private JLabel[] labels;
 
@@ -26,11 +25,13 @@ public class SignUpPage implements ActionListener {
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password: ");
         passwordCheckLabel = new JLabel("Check your password: ");
+        nameLabel = new JLabel("Name: ");
         ageLabel = new JLabel("Age:");
         phoneNumLabel = new JLabel("Phone Number: ");
         emailLabel = new JLabel("Email: ");
         addressLabel = new JLabel("Address: ");
         username = new JTextField(20);
+        name = new JTextField(20);
         phoneNum = new JTextField(20);
         email = new JTextField(20);
         address = new JTextField(20);
@@ -49,18 +50,20 @@ public class SignUpPage implements ActionListener {
         password.setBounds(10,140,260,20);
         passwordCheckLabel.setBounds(10,160,200,20);
         passwordCheck.setBounds(10,180,260,20);
-        ageLabel.setBounds(10,210,30,20);
-        age.setBounds(40,210,40,20);
-        male.setBounds(100,210,60,20);
-        female.setBounds(170,210,80,20);
-        phoneNumLabel.setBounds(10,230,200,20);
-        phoneNum.setBounds(10,250,260,20);
-        emailLabel.setBounds(10,270,200,20);
-        email.setBounds(10,290,260,20);
-        addressLabel.setBounds(10,310,200,20);
-        address.setBounds(10,330,260,20);
-        signUp.setBounds(60,370,80,40);
-        cancel.setBounds(160,370,80,40);
+        nameLabel.setBounds(10,200,200,20);
+        name.setBounds(10,220,260,20);
+        ageLabel.setBounds(10,250,30,20);
+        age.setBounds(40,250,40,20);
+        male.setBounds(100,250,60,20);
+        female.setBounds(170,250,80,20);
+        phoneNumLabel.setBounds(10,280,200,20);
+        phoneNum.setBounds(10,300,260,20);
+        emailLabel.setBounds(10,320,200,20);
+        email.setBounds(10,340,260,20);
+        addressLabel.setBounds(10,360,200,20);
+        address.setBounds(10,380,260,20);
+        signUp.setBounds(60,410,80,40);
+        cancel.setBounds(160,410,80,40);
 
         male.setFocusable(false);
         female.setFocusable(false);
@@ -71,12 +74,12 @@ public class SignUpPage implements ActionListener {
         cancel.addActionListener(this);
 
         buttons = new JButton[]{signUp, cancel};
-        labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
+        labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
         GUI.JButtonSetup(buttons);
         GUI.JLabelSetup(labels);
         GUI.JFrameSetup(frame);
 
-        frame.setSize(300,470);
+        frame.setSize(300,500);
         frame.add(signUp);
         frame.add(cancel);
         frame.add(title);
@@ -86,6 +89,8 @@ public class SignUpPage implements ActionListener {
         frame.add(password);
         frame.add(passwordCheckLabel);
         frame.add(passwordCheck);
+        frame.add(nameLabel);
+        frame.add(name);
         frame.add(male);
         frame.add(female);
         frame.add(ageLabel);
@@ -109,6 +114,7 @@ public class SignUpPage implements ActionListener {
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String passwordCheckInput = String.valueOf(passwordCheck.getPassword());
+                String nameInput = name.getText();
                 String phoneNumInput = phoneNum.getText();
                 String emailInput = email.getText();
                 String addressInput = address.getText();
@@ -124,14 +130,16 @@ public class SignUpPage implements ActionListener {
                 if (!passwordInput.equals(passwordCheckInput)){
                     throw new Exception();
                 }
-                if (Customer.signUp(usernameInput, passwordInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
+                if (Customer.signUp(usernameInput, passwordInput, nameInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Something's wrong!");
+                    JOptionPane.showMessageDialog(frame, "You had sent duplicate requests!");
                 }
+                clearSignUpField();
             } else if (e.getSource() == cancel) {
+                clearSignUpField();
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
@@ -140,4 +148,16 @@ public class SignUpPage implements ActionListener {
         }
     }
 
+    private void clearSignUpField(){
+        username.setText("");
+        password.setText("");
+        passwordCheck.setText("");
+        name.setText("");
+        age.setValue(1);
+        male.setSelected(false); // 不懂做么这两个没用
+        female.setSelected(false);
+        phoneNum.setText("");
+        email.setText("");
+        address.setText("");
+    }
 }

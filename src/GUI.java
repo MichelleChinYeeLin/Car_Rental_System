@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUI {
-    private static ImageIcon logo;
 
     public static void JButtonSetup(JButton[] buttons){
         for (JButton i : buttons) {
@@ -13,7 +12,7 @@ public class GUI {
     }
 
     public static void JFrameSetup(JFrame frame){
-        logo = new ImageIcon("Logo.png");
+        ImageIcon logo = new ImageIcon("Logo.png");
         frame.setLayout(null);
         frame.setIconImage(logo.getImage());
         frame.setResizable(false);

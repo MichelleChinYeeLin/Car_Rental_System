@@ -2,7 +2,6 @@
 //import javafx.beans.property.SimpleIntegerProperty;
 
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -371,5 +370,12 @@ public class FileIO {
         catch (Exception e){
             System.out.println("An unexpected error has occurred. Please try again.");
         }
+    }
+
+    public static void readAllFiles(){
+        readAdminFile();
+        readCustomerFile();
+        readCarFile();
+        readBookingFile();
     }
 }

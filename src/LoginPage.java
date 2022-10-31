@@ -71,27 +71,34 @@ public class LoginPage implements ActionListener {
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String userTypeInput = (String) userTypeSelect.getSelectedItem();
+                clearLoginField();
                 if (userTypeInput.equals("Customer")){
                     if (Customer.login(usernameInput, passwordInput)){
                         frame.setVisible(false);
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
-                    }else {
-                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
                     }
                 } else if (userTypeInput.equals("Admin")) {
                     if (Admin.login(usernameInput, passwordInput)){
                         frame.setVisible(false);
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
                     }else {
-                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                        JOptionPane.showMessageDialog(frame, "Invalid account credentials! FK OFF!");
+                        frame.setVisible(false);
+                        CarRentalSystem.homePage.getFrame().setVisible(true);
                     }
                 }
             } else if (e.getSource() == cancel) {
+                clearLoginField();
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         } catch (Exception exception){
             JOptionPane.showMessageDialog(frame,"Invalid move");
         }
+    }
+
+    private void clearLoginField(){
+        username.setText("");
+        password.setText("");
     }
 }
