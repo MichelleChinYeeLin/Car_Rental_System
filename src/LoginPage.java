@@ -12,6 +12,8 @@ public class LoginPage implements ActionListener {
     private JPasswordField password;
     private JComboBox<String> userTypeSelect;
     private ImageIcon logo;
+    private JButton[] buttons;
+    private JLabel[] labels;
 
     public LoginPage() {
         frame = new JFrame("Login Page");
@@ -29,37 +31,43 @@ public class LoginPage implements ActionListener {
         password = new JPasswordField();
         userTypeSelect = new JComboBox<String>(userType);
 
-        login.setFocusable(false);
+//        login.setFocusable(false);
+//        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
+//        login.setBackground(new Color(212, 183, 185));
         login.addActionListener(this);
         login.setBounds(60,200,80,40);
-        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        login.setBackground(new Color(212, 183, 185));
 
-        cancel.setFocusable(false);
+//        cancel.setFocusable(false);
+//        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
+//        cancel.setBackground(new Color(212, 183, 185));
         cancel.addActionListener(this);
         cancel.setBounds(160,200,80,40);
-        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        cancel.setBackground(new Color(212, 183, 185));
 
-        title.setBounds(80,20,200,40);
         title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,38));
+        title.setBounds(80,20,200,40);
         usernameLabel.setBounds(10,100,200,20);
-        usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
         passwordLabel.setBounds(10,140,200,20);
-        passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
+//        usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
+//        passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
 
         username.setBounds(10, 120,260, 20);
         password.setBounds(10,160, 260, 20);
 
-        userTypeSelect.setBounds(10,80,80,20);
         userTypeSelect.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
+        userTypeSelect.setBounds(10,80,80,20);
 
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
+        buttons = new JButton[]{login, cancel};
+        labels = new JLabel[]{usernameLabel, passwordLabel};
+        GUI.JButtonSetup(buttons);
+        GUI.JLabelSetup(labels);
+        GUI.JFrameSetup(frame);
+
+//        frame.setLayout(null);
+//        frame.setIconImage(logo.getImage());
+//        frame.setResizable(false);
+//        frame.getContentPane().setBackground(new Color(155, 159, 177));
+//        frame.setLocationRelativeTo(null);
         frame.setSize(300,300);
-        frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(155, 159, 177));
-        frame.setLocationRelativeTo(null);
         frame.add(title);
         frame.add(usernameLabel);
         frame.add(passwordLabel);
