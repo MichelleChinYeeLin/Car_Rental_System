@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class SignUpPage implements ActionListener {
 
@@ -128,31 +129,49 @@ public class SignUpPage implements ActionListener {
                 String emailInput = email.getText();
                 String addressInput = address.getText();
                 int ageInput = (int) age.getValue();
-                String gender;
+
+                if(ageInput < 17){
+                    throw new InvalidAgeException();
+                }
+
+                String gender = "";
+
                 if (male.isSelected()){
                     gender = male.getText();
-                } else if (female.isSelected()) {
+                }
+                else if (female.isSelected()) {
                     gender = female.getText();
-                } else {
-                    throw new Exception(); // 过后我研究一下不同error怎样弄
                 }
+
                 if (!passwordInput.equals(passwordCheckInput)){
-                    throw new Exception();
+                    throw new MismatchPasswordException();
                 }
+
                 if (Customer.signUp(usernameInput, passwordInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
-                    JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
+                    JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!", "Success!", JOptionPane.INFORMATION_MESSAGE);
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);
-                } else {
-                    JOptionPane.showMessageDialog(frame, "Something's wrong!");
                 }
-            } else if (e.getSource() == cancel) {
+                else {
+                    JOptionPane.showMessageDialog(frame, "Username is already taken! Please enter a different username.", "Username Not Available", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+            else if (e.getSource() == cancel) {
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move");
+        }
+        catch(InvalidAgeException invalidAgeException){
+            JOptionPane.showMessageDialog(frame,null, "Invalid age entered! You must be 17 or above to register.", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(MismatchPasswordException mismatchPasswordException){
+            JOptionPane.showMessageDialog(frame, null, "Your password does not match!", JOptionPane.WARNING_MESSAGE);
         }
     }
+}
 
+class InvalidAgeException extends Exception{
+}
+
+class MismatchPasswordException extends Exception{
 }

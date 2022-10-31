@@ -2,7 +2,6 @@
 //import javafx.beans.property.SimpleIntegerProperty;
 
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,11 +13,12 @@ public class FileIO {
     private static final String customerFileName = "customers.txt";
     private static final String carFileName = "cars.txt";
     private static final String bookingFileName = "bookings.txt";
+    private static final String registrationFileName = "registration.txt";
 
     //Admin and customer
     private static final String userNameText = "Username: ";
     private static final String passwordText = "Password: ";
-    private static final String nameText = "Name: ";
+    private static final String phoneText = "Phone Number: ";
     private static final String genderText = "Gender: ";
     private static final String ageText = "Age: ";
     private static final String emailText = "Email: ";
@@ -45,6 +45,7 @@ public class FileIO {
     private static ArrayList<Customer> customerList;
     private static ArrayList<Car> carList;
     private static ArrayList<Booking> bookingList;
+    private static ArrayList<Customer> registrationList;
 
     public static ArrayList<Admin> getAdminList() {
 
@@ -93,6 +94,18 @@ public class FileIO {
 
     public static void setCarList(ArrayList<Car> list) {
         carList = list;
+    }
+
+    public static ArrayList<Customer> getRegistrationList() {
+
+        if(registrationList == null){
+            readRegistrationFile();
+        }
+        return registrationList;
+    }
+
+    public static void setRegistrationList(ArrayList<Customer> list) {
+        registrationList = list;
     }
 
     public static void readAdminFile(){
@@ -151,38 +164,46 @@ public class FileIO {
             FileReader fr = new FileReader(customerFileName);
             BufferedReader br = new BufferedReader(fr);
 
-            String username = "", password = "", name = "", gender = "", email = "", address = "";
+            String username = "", password = "", phone = "", gender = "", email = "", address = "";
             int age = 0;
             String line = br.readLine();
+            String line2 = "";
 
             while(line != null){
 
                 if(line.startsWith(userNameText)){
                     username = line.substring(userNameText.length());
+                    line = br.readLine();
                 }
                 else if(line.startsWith(passwordText)){
                     password = line.substring(passwordText.length());
+                    line = br.readLine();
                 }
-                else if(line.startsWith(nameText)){
-                    name = line.substring(nameText.length());
+                else if(line.startsWith(phoneText)){
+                    phone = line.substring(phoneText.length());
+                    line = br.readLine();
                 }
                 else if(line.startsWith(genderText)){
                     gender = line.substring(genderText.length());
+                    line = br.readLine();
                 }
                 else if(line.startsWith(ageText)){
                     age = Integer.parseInt(line.substring(ageText.length()));
+                    line = br.readLine();
                 }
                 else if(line.startsWith(emailText)){
                     email = line.substring(emailText.length());
+                    line = br.readLine();
                 }
                 else if(line.startsWith(addressText)){
                     address = line.substring(addressText.length());
 
-                    Customer customer = new Customer(username, password, name, gender, age, email, address);
+                    Customer customer = new Customer(username, password, phone, gender, age, email, address);
                     customerList.add(customer);
-                }
 
-                line = br.readLine();
+                    line2 = br.readLine();
+                    line = br.readLine();
+                }
             }
             br.close();
             fr.close();
@@ -202,7 +223,7 @@ public class FileIO {
             for(Customer customer : customerList){
                 fw.write(userNameText + customer.getUsername() + "\n");
                 fw.write(passwordText + customer.getPassword() + "\n");
-                fw.write(nameText + customer.getName() + "\n");
+                fw.write(phoneText + customer.getPhone() + "\n");
                 fw.write(genderText + customer.getGender() + "\n");
                 fw.write(ageText + customer.getAge() + "\n");
                 fw.write(emailText + customer.getEmail() + "\n");
@@ -232,6 +253,7 @@ public class FileIO {
             Date startDate = new Date();
             Date endDate = new Date();
             String line = br.readLine();
+            String line2 = "";
 
             while(line != null){
 
@@ -244,7 +266,9 @@ public class FileIO {
                             break;
                         }
                     }
+                    line = br.readLine();
                 }
+
                 else if(line.startsWith(userNameText)){
                     String username = line.substring(userNameText.length());
 
@@ -254,21 +278,29 @@ public class FileIO {
                             break;
                         }
                     }
+
+                    line = br.readLine();
                 }
                 else if(line.startsWith(totalPriceText)){
                     totalPrice = Double.parseDouble(line.substring(totalPriceText.length()));
+                    line = br.readLine();
                 }
                 else if(line.startsWith(statusText)){
                     status = line.substring(statusText.length());
+                    line = br.readLine();
                 }
                 else if(line.startsWith(startDateText)){
                     startDate = dateFormat.parse(line.substring(startDateText.length()));
+                    line = br.readLine();
                 }
                 else if(line.startsWith(endDateText)){
                     endDate = dateFormat.parse(line.substring(endDateText.length()));
 
                     Booking booking = new Booking(car, customer, totalPrice, status, startDate, endDate);
                     bookingList.add(booking);
+
+                    line2 = br.readLine();
+                    line = br.readLine();
                 }
             }
             br.close();
@@ -314,23 +346,29 @@ public class FileIO {
             double price = 0.0;
             boolean availability = false;
             String line = br.readLine();
+            String line2 = "";
 
             while (line != null){
 
                 if (line.startsWith(numberPlateText)){
                     numberPlate = line.substring(numberPlateText.length());
+                    line = br.readLine();
                 }
                 else if (line.startsWith(brandText)){
                     brand = line.substring(brandText.length());
+                    line = br.readLine();
                 }
                 else if (line.startsWith(modelText)){
                     model = line.substring(modelText.length());
+                    line = br.readLine();
                 }
                 else if (line.startsWith(colorText)){
                     color = line.substring(colorText.length());
+                    line = br.readLine();
                 }
                 else if (line.startsWith(priceText)){
                     price = Double.parseDouble(line.substring(priceText.length()));
+                    line = br.readLine();
                 }
                 else if (line.startsWith(availabilityText)){
                     availability = line.substring(availabilityText.length()).equals("True");
@@ -338,6 +376,7 @@ public class FileIO {
                     carList.add(car);
                 }
 
+                line2 = br.readLine();
                 line = br.readLine();
             }
             br.close();
@@ -369,6 +408,87 @@ public class FileIO {
             System.out.println("Unable to open file. Please try again.");
         }
         catch (Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
+    public static void readRegistrationFile(){
+        registrationList = new ArrayList<>();
+
+        try{
+            FileReader fr = new FileReader(registrationFileName);
+            BufferedReader br = new BufferedReader(fr);
+
+            String username = "", password = "", phone = "", gender = "", email = "", address = "";
+            int age = 0;
+            String line = br.readLine();
+            String line2 = "";
+
+            while(line != null && line2 != null){
+
+                if(line.startsWith(userNameText)){
+                    username = line.substring(userNameText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(passwordText)){
+                    password = line.substring(passwordText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(phoneText)){
+                    phone = line.substring(phoneText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(genderText)){
+                    gender = line.substring(genderText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(ageText)){
+                    age = Integer.parseInt(line.substring(ageText.length()));
+                    line = br.readLine();
+                }
+                else if(line.startsWith(emailText)){
+                    email = line.substring(emailText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(addressText)){
+                    address = line.substring(addressText.length());
+                    line2 = br.readLine();
+                    line = br.readLine();
+
+                    Customer customer = new Customer(username, password, phone, gender, age, email, address);
+                    registrationList.add(customer);
+                }
+            }
+            br.close();
+            fr.close();
+        }
+        catch (IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch (Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
+    public static void writeRegistrationFile(){
+        try{
+            FileWriter fw = new FileWriter(registrationFileName);
+
+            for(Customer customer : registrationList){
+                fw.write(userNameText + customer.getUsername() + "\n");
+                fw.write(passwordText + customer.getPassword() + "\n");
+                fw.write(phoneText + customer.getPhone() + "\n");
+                fw.write(genderText + customer.getGender() + "\n");
+                fw.write(ageText + customer.getAge() + "\n");
+                fw.write(emailText + customer.getEmail() + "\n");
+                fw.write(addressText + customer.getAddress() + "\n\n");
+            }
+            fw.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
             System.out.println("An unexpected error has occurred. Please try again.");
         }
     }
