@@ -22,7 +22,7 @@ public class SignUpPage implements ActionListener {
         signUp = new JButton("Sign Up");
         cancel = new JButton("Cancel");
         title = new JLabel("Sign Up");
-        usernameLabel = new JLabel("Username:");
+        usernameLabel = new JLabel("A Unique Username:");
         passwordLabel = new JLabel("Password: ");
         passwordCheckLabel = new JLabel("Check your password: ");
         nameLabel = new JLabel("Name: ");
@@ -39,7 +39,7 @@ public class SignUpPage implements ActionListener {
         passwordCheck = new JPasswordField(20);
         male = new JRadioButton("Male");
         female = new JRadioButton("Female");
-        age = new JSpinner(new SpinnerNumberModel(1,1,122,1)); // 最长寿的人122岁
+        age = new JSpinner(new SpinnerNumberModel(17,1,122,1)); // 最长寿的人122岁
 
         title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
 
@@ -120,31 +120,52 @@ public class SignUpPage implements ActionListener {
                 String addressInput = address.getText();
                 int ageInput = (int) age.getValue();
                 String gender;
+                char[] chars = nameInput.toCharArray();
+
+                // Input validation
+                // Username
+                if (usernameInput.length() > 0){
+                    for (Customer c : FileIO.getCustomerList()) {
+                        if (usernameInput.equals(c.getUsername())) throw new Exception("This username had been used!");
+                    }
+                } else {
+                    throw new Exception("Empty username is not allowed!");
+                }
+                // Password
+                if (!passwordInput.equals(passwordCheckInput)) throw new Exception("Your passwords aren't the same!");
+                // Name
+                for (char c : chars) {
+                    if (!Character.isLetter(c)) throw new Exception("Your name should only includes letters!");
+                }
+                // Age
+                if (ageInput < 17) throw new Exception("You should be at least 17 years old!");
+                // Gender
                 if (male.isSelected()){
                     gender = male.getText();
                 } else if (female.isSelected()) {
                     gender = female.getText();
                 } else {
-                    throw new Exception(); // 过后我研究一下不同error怎样弄
+                    throw new Exception("You hadn't choose any gender!"); // 过后我研究一下不同error怎样弄
                 }
-                if (!passwordInput.equals(passwordCheckInput)){
-                    throw new Exception();
-                }
+                // Phone Number
+                if (!phoneNumInput.matches("[0-9]+")) throw new Exception("Your phone number should includes only numbers!");
+                // Email & Address ??
+
                 if (Customer.signUp(usernameInput, passwordInput, nameInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(frame, "You had sent duplicate requests!");
+                    throw new Exception("You had sent duplicate requests!");
                 }
-                clearSignUpField();
             } else if (e.getSource() == cancel) {
-                clearSignUpField();
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         } catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move");
+            JOptionPane.showMessageDialog(frame, exception.getMessage());
+        } finally {
+            clearSignUpField();
         }
     }
 
@@ -153,7 +174,7 @@ public class SignUpPage implements ActionListener {
         password.setText("");
         passwordCheck.setText("");
         name.setText("");
-        age.setValue(1);
+        age.setValue(17);
         male.setSelected(false); // 不懂做么这两个没用
         female.setSelected(false);
         phoneNum.setText("");
