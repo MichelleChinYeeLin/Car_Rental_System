@@ -20,11 +20,8 @@ public class SignUpPage implements ActionListener {
     public SignUpPage(){
         frame = new JFrame("Sign Up Page");
         genderGroup = new ButtonGroup();
-        logo = new ImageIcon("Logo.png");
-
         signUp = new JButton("Sign Up");
         cancel = new JButton("Cancel");
-
         title = new JLabel("Sign Up");
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password: ");
@@ -33,7 +30,6 @@ public class SignUpPage implements ActionListener {
         phoneNumLabel = new JLabel("Phone Number: ");
         emailLabel = new JLabel("Email: ");
         addressLabel = new JLabel("Address: ");
-
         username = new JTextField(20);
         phoneNum = new JTextField(20);
         email = new JTextField(20);
@@ -44,49 +40,35 @@ public class SignUpPage implements ActionListener {
         female = new JRadioButton("Female");
         age = new JSpinner(new SpinnerNumberModel(1,1,122,1)); // 最长寿的人122岁
 
-//        signUp.setFocusable(false);
-//        signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        signUp.setBackground(new Color(212, 183, 185));
-        signUp.addActionListener(this);
-        signUp.setBounds(60,370,80,40);
-
-//        cancel.setFocusable(false);
-//        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        cancel.setBackground(new Color(212, 183, 185));
-        cancel.addActionListener(this);
-        cancel.setBounds(160,370,80,40);
-
         title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
+
         title.setBounds(80,20,200,40);
         usernameLabel.setBounds(10,80,200,20);
-        passwordLabel.setBounds(10,120,200,20);
-        passwordCheckLabel.setBounds(10,160,200,20);
-        ageLabel.setBounds(10,210,30,20);
-        phoneNumLabel.setBounds(10,230,200,20);
-        emailLabel.setBounds(10,270,200,20);
-        addressLabel.setBounds(10,310,200,20);
-//        usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        passwordCheckLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        ageLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        phoneNumLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        emailLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-//        addressLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-
         username.setBounds(10,100,260,20);
+        passwordLabel.setBounds(10,120,200,20);
         password.setBounds(10,140,260,20);
+        passwordCheckLabel.setBounds(10,160,200,20);
         passwordCheck.setBounds(10,180,260,20);
+        ageLabel.setBounds(10,210,30,20);
         age.setBounds(40,210,40,20);
         male.setBounds(100,210,60,20);
         female.setBounds(170,210,80,20);
+        phoneNumLabel.setBounds(10,230,200,20);
         phoneNum.setBounds(10,250,260,20);
+        emailLabel.setBounds(10,270,200,20);
         email.setBounds(10,290,260,20);
+        addressLabel.setBounds(10,310,200,20);
         address.setBounds(10,330,260,20);
+        signUp.setBounds(60,370,80,40);
+        cancel.setBounds(160,370,80,40);
 
         male.setFocusable(false);
         female.setFocusable(false);
         genderGroup.add(male);
         genderGroup.add(female);
+
+        signUp.addActionListener(this);
+        cancel.addActionListener(this);
 
         buttons = new JButton[]{signUp, cancel};
         labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
@@ -94,11 +76,6 @@ public class SignUpPage implements ActionListener {
         GUI.JLabelSetup(labels);
         GUI.JFrameSetup(frame);
 
-//        frame.setLayout(null);
-//        frame.setIconImage(logo.getImage());
-//        frame.setResizable(false);
-//        frame.getContentPane().setBackground(new Color(155, 159, 177));
-//        frame.setLocationRelativeTo(null);
         frame.setSize(300,470);
         frame.add(signUp);
         frame.add(cancel);
