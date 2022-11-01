@@ -46,3 +46,11 @@ Age: 20
 Email: 123
 Address: 123
 
+Username: testing999
+Password: 123
+Phone Number: 123
+Gender: Male
+Age: 21
+Email: 123
+Address: 123
+
