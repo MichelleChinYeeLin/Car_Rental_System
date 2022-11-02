@@ -18,6 +18,7 @@ public class FileIO {
     //Admin and customer
     private static final String userNameText = "Username: ";
     private static final String passwordText = "Password: ";
+    private static final String nameText = "Name: ";
     private static final String phoneText = "Phone Number: ";
     private static final String genderText = "Gender: ";
     private static final String ageText = "Age: ";
@@ -164,7 +165,7 @@ public class FileIO {
             FileReader fr = new FileReader(customerFileName);
             BufferedReader br = new BufferedReader(fr);
 
-            String username = "", password = "", phone = "", gender = "", email = "", address = "";
+            String username = "", password = "", name = "", phone = "", gender = "", email = "", address = "";
             int age = 0;
             String line = br.readLine();
             String line2 = "";
@@ -177,6 +178,10 @@ public class FileIO {
                 }
                 else if(line.startsWith(passwordText)){
                     password = line.substring(passwordText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(nameText)){
+                    name = line.substring(nameText.length());
                     line = br.readLine();
                 }
                 else if(line.startsWith(phoneText)){
@@ -198,7 +203,7 @@ public class FileIO {
                 else if(line.startsWith(addressText)){
                     address = line.substring(addressText.length());
 
-                    Customer customer = new Customer(username, password, phone, gender, age, email, address);
+                    Customer customer = new Customer(username, password, name, phone, gender, age, email, address);
                     customerList.add(customer);
 
                     line2 = br.readLine();
@@ -223,6 +228,7 @@ public class FileIO {
             for(Customer customer : customerList){
                 fw.write(userNameText + customer.getUsername() + "\n");
                 fw.write(passwordText + customer.getPassword() + "\n");
+                fw.write(nameText + customer.getName() + "\n");
                 fw.write(phoneText + customer.getPhone() + "\n");
                 fw.write(genderText + customer.getGender() + "\n");
                 fw.write(ageText + customer.getAge() + "\n");
@@ -419,7 +425,7 @@ public class FileIO {
             FileReader fr = new FileReader(registrationFileName);
             BufferedReader br = new BufferedReader(fr);
 
-            String username = "", password = "", phone = "", gender = "", email = "", address = "";
+            String username = "", password = "", name = "",  phone = "", gender = "", email = "", address = "";
             int age = 0;
             String line = br.readLine();
             String line2 = "";
@@ -432,6 +438,10 @@ public class FileIO {
                 }
                 else if(line.startsWith(passwordText)){
                     password = line.substring(passwordText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(nameText)){
+                    name = line.substring(nameText.length());
                     line = br.readLine();
                 }
                 else if(line.startsWith(phoneText)){
@@ -455,7 +465,7 @@ public class FileIO {
                     line2 = br.readLine();
                     line = br.readLine();
 
-                    Customer customer = new Customer(username, password, phone, gender, age, email, address);
+                    Customer customer = new Customer(username, password, name, phone, gender, age, email, address);
                     registrationList.add(customer);
                 }
             }
@@ -477,6 +487,7 @@ public class FileIO {
             for(Customer customer : registrationList){
                 fw.write(userNameText + customer.getUsername() + "\n");
                 fw.write(passwordText + customer.getPassword() + "\n");
+                fw.write(nameText + customer.getName() + "\n");
                 fw.write(phoneText + customer.getPhone() + "\n");
                 fw.write(genderText + customer.getGender() + "\n");
                 fw.write(ageText + customer.getAge() + "\n");

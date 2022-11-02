@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class Customer extends User{
 
+    private String name;
     private String phone;
     private String gender;
     private int age;
@@ -11,20 +12,25 @@ public class Customer extends User{
 
     public Customer(){
         super("", "");
+        this.name = "";
         this.phone = "";
         this.gender = "";
         this.email = "";
         this.address = "";
     }
 
-    public Customer(String username, String password, String phone, String gender, int age, String email, String address){
+    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address){
         super(username, password);
+        this.name = name;
         this.phone = phone;
         this.gender = gender;
         this.age = age;
         this.email = email;
         this.address = address;
     }
+
+    public String getName(){return name;}
+    public void setName(String name){this.name = name;}
 
     public String getPhone() {
         return phone;
@@ -75,7 +81,7 @@ public class Customer extends User{
         return true;
     }
 
-    public static boolean signUp(String username, String password, int age, String gender, String phone, String email, String address) {
+    public static boolean signUp(String username, String password, String name, int age, String gender, String phone, String email, String address) {
 
         ArrayList<Customer> customerList = FileIO.getCustomerList();
         ArrayList<Customer> newAccList = FileIO.getRegistrationList();
@@ -92,7 +98,7 @@ public class Customer extends User{
             }
         }
 
-        newAccList.add(new Customer(username, password, phone, gender, age, email, address));
+        newAccList.add(new Customer(username, password, name, phone, gender, age, email, address));
         FileIO.setRegistrationList(newAccList);
         FileIO.writeRegistrationFile();
 
