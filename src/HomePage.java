@@ -8,7 +8,8 @@ public class HomePage implements ActionListener {
     private JFrame frame;
     private JButton login, signUp, quit;
     private JLabel label;
-    private ImageIcon logo, homeBackground;
+//    private ImageIcon homeBackground;
+    private JButton[] buttons;
 
     public HomePage(){
         frame = new JFrame("Michelle & HeYuan's Car Rental System");
@@ -16,37 +17,23 @@ public class HomePage implements ActionListener {
         signUp = new JButton("Sign Up");
         quit = new JButton("Quit");
         label = new JLabel();
-        logo = new ImageIcon("Logo.png"); // 可以去改
-        homeBackground = new ImageIcon("HomePage.png");
-
-        login.setFocusable(false);
-        login.addActionListener(this);
-        login.setBounds(60,200,80,40);
-        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        login.setBackground(new Color(212, 183, 185));
-
-        signUp.setFocusable(false);
-        signUp.addActionListener(this);
-        signUp.setBounds(160,200,80,40);
-        signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        signUp.setBackground(new Color(212, 183, 185));
-
-        quit.setFocusable(false);
-        quit.addActionListener(this);
-        quit.setBounds(220,10,60,30);
-        quit.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        quit.setBackground(new Color(212, 183, 185));
-
+//        homeBackground = new ImageIcon("HomePage.png");
 //        label.setIcon(homeBackground);
 //        label.setBounds(-550, -370, 1748,1240); // 其实好像蛮丑的
 
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
-        frame.setSize(300,300);
-        frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(155, 159, 177)); // 颜色可以调一下蛮丑的
-        frame.setLocationRelativeTo(null);
+        login.setBounds(60,200,80,40);
+        signUp.setBounds(160,200,80,40);
+        quit.setBounds(220,10,60,30);
+
+        login.addActionListener(this);
+        signUp.addActionListener(this);
+        quit.addActionListener(this);
+
 //        frame.add(label);
+        buttons = new JButton[]{login, signUp, quit};
+        GUI.JButtonSetup(buttons);
+        GUI.JFrameSetup(frame);
+        frame.setSize(300,300);
         frame.add(login);
         frame.add(signUp);
         frame.add(quit);

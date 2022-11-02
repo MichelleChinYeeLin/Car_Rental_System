@@ -12,54 +12,44 @@ public class LoginPage implements ActionListener {
     private JPasswordField password;
     private JComboBox<String> userTypeSelect;
     private ImageIcon logo;
+    private JButton[] buttons;
+    private JLabel[] labels;
 
     public LoginPage() {
         frame = new JFrame("Login Page");
         String[] userType = {"Customer", "Admin"};
         logo = new ImageIcon("Logo.png");
-
         login = new JButton("Log In");
         cancel = new JButton("Cancel");
-
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password:");
         title = new JLabel("LOGIN");
-
         username = new JTextField();
         password = new JPasswordField();
         userTypeSelect = new JComboBox<String>(userType);
 
-        login.setFocusable(false);
-        login.addActionListener(this);
-        login.setBounds(60,200,80,40);
-        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        login.setBackground(new Color(212, 183, 185));
-
-        cancel.setFocusable(false);
-        cancel.addActionListener(this);
-        cancel.setBounds(160,200,80,40);
-        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        cancel.setBackground(new Color(212, 183, 185));
-
-        title.setBounds(80,20,200,40);
         title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,38));
-        usernameLabel.setBounds(10,100,200,20);
-        usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-        passwordLabel.setBounds(10,140,200,20);
-        passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-
-        username.setBounds(10, 120,260, 20);
-        password.setBounds(10,160, 260, 20);
-
-        userTypeSelect.setBounds(10,80,80,20);
         userTypeSelect.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
 
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
+        title.setBounds(80,20,200,40);
+        userTypeSelect.setBounds(10,80,80,20);
+        usernameLabel.setBounds(10,100,200,20);
+        passwordLabel.setBounds(10,140,200,20);
+        username.setBounds(10, 120,260, 20);
+        password.setBounds(10,160, 260, 20);
+        login.setBounds(60,200,80,40);
+        cancel.setBounds(160,200,80,40);
+
+        login.addActionListener(this);
+        cancel.addActionListener(this);
+
+        buttons = new JButton[]{login, cancel};
+        labels = new JLabel[]{usernameLabel, passwordLabel};
+        GUI.JButtonSetup(buttons);
+        GUI.JLabelSetup(labels);
+        GUI.JFrameSetup(frame);
+
         frame.setSize(300,300);
-        frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(155, 159, 177));
-        frame.setLocationRelativeTo(null);
         frame.add(title);
         frame.add(usernameLabel);
         frame.add(passwordLabel);
@@ -85,15 +75,15 @@ public class LoginPage implements ActionListener {
                     if (Customer.login(usernameInput, passwordInput)){
                         frame.setVisible(false);
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
-                    }else {
-                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
                     }
                 } else if (userTypeInput.equals("Admin")) {
                     if (Admin.login(usernameInput, passwordInput)){
                         frame.setVisible(false);
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
-                    }else {
-                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Invalid account credentials! FK OFF!");
+                        frame.setVisible(false);
+                        CarRentalSystem.homePage.getFrame().setVisible(true);
                     }
                 }
             } else if (e.getSource() == cancel) {
@@ -102,6 +92,13 @@ public class LoginPage implements ActionListener {
             }
         } catch (Exception exception){
             JOptionPane.showMessageDialog(frame,"Invalid move");
+        } finally {
+            clearLoginField();
         }
+    }
+
+    private void clearLoginField(){
+        username.setText("");
+        password.setText("");
     }
 }

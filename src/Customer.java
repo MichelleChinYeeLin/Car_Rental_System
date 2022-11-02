@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Customer extends User{
@@ -30,6 +31,7 @@ public class Customer extends User{
     }
 
     public String getName(){return name;}
+
     public void setName(String name){this.name = name;}
 
     public String getPhone() {
@@ -77,8 +79,25 @@ public class Customer extends User{
 //    }
 
     public static boolean login(String username, String password){
-//        CarRentalSystem.loginCustomer = ?
-        return true;
+        for (Customer c : FileIO.getCustomerList()) {
+            if (username.equals(c.getUsername())){
+                if (password.equals(c.getPassword())){
+                    CarRentalSystem.loginCustomer = c;
+                    return true;
+                } else {
+                    if (password.length() > 0)
+                        JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong password!");
+                    else
+                        JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your password!");
+                }
+            } else {
+                if (username.length() > 0)
+                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Can't found user \"" + username + "\"");
+                else
+                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your username!");
+            }
+        }
+        return false;
     }
 
     public static boolean signUp(String username, String password, String name, int age, String gender, String phone, String email, String address) {
@@ -101,7 +120,6 @@ public class Customer extends User{
         newAccList.add(new Customer(username, password, name, phone, gender, age, email, address));
         FileIO.setRegistrationList(newAccList);
         FileIO.writeRegistrationFile();
-
         return true;
     }
 }

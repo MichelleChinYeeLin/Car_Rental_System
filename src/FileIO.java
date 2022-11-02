@@ -503,4 +503,11 @@ public class FileIO {
             System.out.println("An unexpected error has occurred. Please try again.");
         }
     }
+
+    public static void readAllFiles(){
+        readAdminFile();
+        readCustomerFile();
+        readCarFile();
+        readBookingFile();
+    }
 }
