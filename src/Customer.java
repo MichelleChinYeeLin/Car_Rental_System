@@ -84,15 +84,17 @@ public class Customer extends User{
                 if (password.equals(c.getPassword())){
                     CarRentalSystem.loginCustomer = c;
                     return true;
-                } else {
+                }
+                else {
                     if (password.length() > 0)
                         JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong password!");
                     else
                         JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your password!");
                 }
-            } else {
+            }
+            else {
                 if (username.length() > 0)
-                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Can't found user \"" + username + "\"");
+                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \"" + username + "\" not found.");
                 else
                     JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your username!");
             }

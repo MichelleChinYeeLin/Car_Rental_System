@@ -326,6 +326,7 @@ public class FileIO {
 
             for(Booking booking : bookingList){
                 fw.write(numberPlateText + booking.getCar().getNumberPlate() + "\n");
+                fw.write(userNameText + booking.getCustomer().getUsername() + "\n");
                 fw.write(totalPriceText + booking.getTotalPrice() + "\n");
                 fw.write(statusText + booking.getStatus() + "\n");
                 fw.write(startDateText + dateFormat.format(booking.getStartDate()) + "\n");

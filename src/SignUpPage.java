@@ -121,32 +121,26 @@ public class SignUpPage implements ActionListener {
                 String addressInput = address.getText();
                 int ageInput = (int) age.getValue();
 
-                if(ageInput < 17){
-                    throw new InvalidAgeException();
-                }
-
                 String gender = "";
-                char[] chars = nameInput.toCharArray();
 
-                // Input validation
+                /* Input validation */
+
                 // Username
-                if (usernameInput.length() > 0){
-                    for (Customer c : FileIO.getCustomerList()) {
-                        if (usernameInput.equals(c.getUsername())) throw new Exception("This username had been used!");
+                if(usernameInput.equals("")) throw new EmptyInputException();
+
+                // Name
+                if(nameInput.equals("")) throw new EmptyInputException();
+
+                else{
+                    char[] chars = nameInput.toCharArray();
+                    for (char c : chars) {
+                        if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
                     }
                 }
-                else {
-                    //throw new Exception("Empty username is not allowed!");
-                    throw new Exception();
-                }
-                // Password
-                if (!passwordInput.equals(passwordCheckInput)) throw new Exception("Your passwords aren't the same!");
-                // Name
-                for (char c : chars) {
-                    if (!Character.isLetter(c)) throw new Exception("Your name should only includes letters!");
-                }
+
                 // Age
-                if (ageInput < 17) throw new Exception("You should be at least 17 years old!");
+                if (ageInput < 17) throw new InvalidAgeException();
+
                 // Gender
                 if (male.isSelected()){
                     gender = male.getText();
@@ -154,16 +148,19 @@ public class SignUpPage implements ActionListener {
                 else if (female.isSelected()) {
                     gender = female.getText();
                 }
-
-                if (!passwordInput.equals(passwordCheckInput)){
-                    throw new MismatchPasswordException();
+                else{
+                    throw new EmptyInputException();
                 }
 
-                if (Customer.signUp(usernameInput, passwordInput, ageInput, gender, phoneNumInput, emailInput, addressInput))
-                    JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!", "Success!", JOptionPane.INFORMATION_MESSAGE);
+                //Password
+                if (passwordInput.equals("") || passwordCheckInput.equals("")) throw new EmptyInputException();
+                if (!passwordInput.equals(passwordCheckInput)) throw new MismatchPasswordException();
+
                 // Phone Number
-                if (!phoneNumInput.matches("[0-9]+")) throw new Exception("Your phone number should includes only numbers!");
+                if (!phoneNumInput.matches("[0-9]+")) throw new InvalidPhoneException();
+
                 // Email & Address ??
+                //TODO email input validation
 
                 if (Customer.signUp(usernameInput, passwordInput, nameInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
@@ -171,7 +168,7 @@ public class SignUpPage implements ActionListener {
                     CarRentalSystem.homePage.getFrame().setVisible(true);
                 }
                 else {
-                    JOptionPane.showMessageDialog(frame, "Username is already taken! Please enter a different username.", "Username Not Available", JOptionPane.WARNING_MESSAGE);
+                    throw new UsernameTakenException();
                 }
             }
             else if (e.getSource() == cancel) {
@@ -180,10 +177,22 @@ public class SignUpPage implements ActionListener {
             }
         }
         catch(InvalidAgeException invalidAgeException){
-            JOptionPane.showMessageDialog(frame,null, "Invalid age entered! You must be 17 or above to register.", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(InvalidNameException invalidNameException){
+            JOptionPane.showMessageDialog(frame, "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(InvalidPhoneException invalidPhoneException){
+            JOptionPane.showMessageDialog(frame, "Invalid phone number entered! Your phone number must only include numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(MismatchPasswordException mismatchPasswordException){
-            JOptionPane.showMessageDialog(frame, null, "Your password does not match!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(EmptyInputException emptyInputException){
+            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(UsernameTakenException usernameTakenException){
+            JOptionPane.showMessageDialog(frame, "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(Exception exception){
 
@@ -203,8 +212,14 @@ public class SignUpPage implements ActionListener {
         address.setText("");
     }
 }
-class InvalidAgeException extends Exception{
-}
+class InvalidAgeException extends Exception{}
 
-class MismatchPasswordException extends Exception{
-}
+class InvalidNameException extends Exception{}
+
+class InvalidPhoneException extends Exception{}
+
+class MismatchPasswordException extends Exception{}
+
+class EmptyInputException extends Exception{}
+
+class UsernameTakenException extends Exception{}
