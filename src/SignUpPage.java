@@ -126,8 +126,6 @@ public class SignUpPage implements ActionListener {
                 }
 
                 String gender = "";
-
-                String gender;
                 char[] chars = nameInput.toCharArray();
 
                 // Input validation
@@ -136,8 +134,10 @@ public class SignUpPage implements ActionListener {
                     for (Customer c : FileIO.getCustomerList()) {
                         if (usernameInput.equals(c.getUsername())) throw new Exception("This username had been used!");
                     }
-                } else {
-                    throw new Exception("Empty username is not allowed!");
+                }
+                else {
+                    //throw new Exception("Empty username is not allowed!");
+                    throw new Exception();
                 }
                 // Password
                 if (!passwordInput.equals(passwordCheckInput)) throw new Exception("Your passwords aren't the same!");
@@ -159,7 +159,7 @@ public class SignUpPage implements ActionListener {
                     throw new MismatchPasswordException();
                 }
 
-                if (Customer.signUp(usernameInput, passwordInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
+                if (Customer.signUp(usernameInput, passwordInput, ageInput, gender, phoneNumInput, emailInput, addressInput))
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!", "Success!", JOptionPane.INFORMATION_MESSAGE);
                 // Phone Number
                 if (!phoneNumInput.matches("[0-9]+")) throw new Exception("Your phone number should includes only numbers!");
@@ -185,8 +185,10 @@ public class SignUpPage implements ActionListener {
         catch(MismatchPasswordException mismatchPasswordException){
             JOptionPane.showMessageDialog(frame, null, "Your password does not match!", JOptionPane.WARNING_MESSAGE);
         }
+        catch(Exception exception){
+
+        }
     }
-}
 
     private void clearSignUpField(){
         username.setText("");
@@ -200,6 +202,7 @@ public class SignUpPage implements ActionListener {
         email.setText("");
         address.setText("");
     }
+}
 class InvalidAgeException extends Exception{
 }
 
