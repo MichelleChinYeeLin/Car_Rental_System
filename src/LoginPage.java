@@ -28,17 +28,17 @@ public class LoginPage implements ActionListener {
         password = new JPasswordField();
         userTypeSelect = new JComboBox<String>(userType);
 
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,38));
+        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC, 38));
         userTypeSelect.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
 
-        title.setBounds(80,20,200,40);
-        userTypeSelect.setBounds(10,80,80,20);
-        usernameLabel.setBounds(10,100,200,20);
-        passwordLabel.setBounds(10,140,200,20);
-        username.setBounds(10, 120,260, 20);
-        password.setBounds(10,160, 260, 20);
-        login.setBounds(60,200,80,40);
-        cancel.setBounds(160,200,80,40);
+        title.setBounds(80, 20, 200, 40);
+        userTypeSelect.setBounds(10, 80, 80, 20);
+        usernameLabel.setBounds(10, 100, 200, 20);
+        passwordLabel.setBounds(10, 140, 200, 20);
+        username.setBounds(10, 120, 260, 20);
+        password.setBounds(10, 160, 260, 20);
+        login.setBounds(60, 200, 80, 40);
+        cancel.setBounds(160, 200, 80, 40);
 
         login.addActionListener(this);
         cancel.addActionListener(this);
@@ -49,7 +49,7 @@ public class LoginPage implements ActionListener {
         GUI.JLabelSetup(labels);
         GUI.JFrameSetup(frame);
 
-        frame.setSize(300,300);
+        frame.setSize(300, 300);
         frame.add(title);
         frame.add(usernameLabel);
         frame.add(passwordLabel);
@@ -60,45 +60,58 @@ public class LoginPage implements ActionListener {
         frame.add(userTypeSelect);
     }
 
-    public JFrame getFrame(){
+    public JFrame getFrame() {
         return frame;
-    };
+    }
+
+    ;
 
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == login){
+            if (e.getSource() == login) {
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String userTypeInput = (String) userTypeSelect.getSelectedItem();
-                if (userTypeInput.equals("Customer")){
-                    if (Customer.login(usernameInput, passwordInput)){
+
+                if (usernameInput.equals("") || passwordInput.equals("")){
+                    throw new EmptyInputException();
+                }
+
+                if (userTypeInput.equals("Customer")) {
+                    if (Customer.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
                     }
-                } else if (userTypeInput.equals("Admin")) {
-                    if (Admin.login(usernameInput, passwordInput)){
+                }
+                else if (userTypeInput.equals("Admin")) {
+                    if (Admin.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
-                    } else {
+                    }
+                    else {
+                        GUI.playSound("niganma.wav");
                         JOptionPane.showMessageDialog(frame, "Invalid account credentials! FK OFF!");
                         frame.setVisible(false);
                         CarRentalSystem.homePage.getFrame().setVisible(true);
                     }
                 }
-            } else if (e.getSource() == cancel) {
+            }
+            else if (e.getSource() == cancel) {
+                GUI.playSound("ji.wav");
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move");
-        } finally {
-            clearLoginField();
         }
-    }
-
-    private void clearLoginField(){
-        username.setText("");
-        password.setText("");
+        catch (EmptyInputException emptyInputException) {
+            GUI.playSound("niganma.wav");
+            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        finally {
+            username.setText("");
+            password.setText("");
+        }
     }
 }

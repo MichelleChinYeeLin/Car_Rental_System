@@ -79,25 +79,25 @@ public class Customer extends User{
 //    }
 
     public static boolean login(String username, String password){
-        for (Customer c : FileIO.getCustomerList()) {
-            if (username.equals(c.getUsername())){
-                if (password.equals(c.getPassword())){
-                    CarRentalSystem.loginCustomer = c;
-                    return true;
+        try {
+            for (Customer c : FileIO.getCustomerList()) {
+                if (username.equals(c.getUsername())){
+                    if (password.equals(c.getPassword())){
+                        CarRentalSystem.loginCustomer = c;
+                        return true;
+                    }
+                    else {
+                        throw new WrongPasswordException();
+                    }
                 }
                 else {
-                    if (password.length() > 0)
-                        JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong password!");
-                    else
-                        JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your password!");
+                    throw new UserNotFoundException();
                 }
             }
-            else {
-                if (username.length() > 0)
-                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \"" + username + "\" not found.");
-                else
-                    JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Please enter your username!");
-            }
+        } catch (WrongPasswordException wrongPasswordException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (UserNotFoundException e) {
+            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+username+"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
