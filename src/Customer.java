@@ -80,7 +80,7 @@ public class Customer extends User{
 
     public static boolean login(String username, String password){
         try {
-            for (Customer c : FileIO.getCustomerList()) {
+            for (Customer c : FileIO.customerList) {
                 if (username.equals(c.getUsername())){
                     if (password.equals(c.getPassword())){
                         CarRentalSystem.loginCustomer = c;

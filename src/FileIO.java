@@ -41,12 +41,12 @@ public class FileIO {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-    //ArrayLists
-    private static ArrayList<Admin> adminList;
-    private static ArrayList<Customer> customerList;
-    private static ArrayList<Car> carList;
-    private static ArrayList<Booking> bookingList;
-    private static ArrayList<Customer> registrationList;
+    //ArrayLists 我把这些改成public了
+    public static ArrayList<Admin> adminList = new ArrayList<>();
+    public static ArrayList<Customer> customerList= new ArrayList<>();
+    public static ArrayList<Car> carList= new ArrayList<>();
+    public static ArrayList<Booking> bookingList= new ArrayList<>();
+    public static ArrayList<Customer> registrationList= new ArrayList<>();
 
     public static ArrayList<Admin> getAdminList() {
 
@@ -110,7 +110,7 @@ public class FileIO {
     }
 
     public static void readAdminFile(){
-        adminList = new ArrayList<>();
+//        adminList = new ArrayList<>();
 
         try{
             FileReader fr = new FileReader(adminFileName);
@@ -159,7 +159,7 @@ public class FileIO {
     }
 
     public static void readCustomerFile(){
-        customerList = new ArrayList<>();
+//        customerList = new ArrayList<>();
 
         try{
             FileReader fr = new FileReader(customerFileName);
@@ -246,7 +246,7 @@ public class FileIO {
     }
 
     public static void readBookingFile(){
-        bookingList = new ArrayList<>();
+//        bookingList = new ArrayList<>();
 
         try {
             FileReader fr = new FileReader(bookingFileName);
@@ -343,7 +343,7 @@ public class FileIO {
     }
 
     public static void readCarFile(){
-        carList = new ArrayList<>();
+//        carList = new ArrayList<>();
 
         try{
             FileReader fr = new FileReader(carFileName);
@@ -420,7 +420,7 @@ public class FileIO {
     }
 
     public static void readRegistrationFile(){
-        registrationList = new ArrayList<>();
+//        registrationList = new ArrayList<>();
 
         try{
             FileReader fr = new FileReader(registrationFileName);
@@ -510,5 +510,6 @@ public class FileIO {
         readCustomerFile();
         readCarFile();
         readBookingFile();
+        readRegistrationFile();
     }
 }
