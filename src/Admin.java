@@ -13,12 +13,11 @@ public class Admin  extends User{
                     CarRentalSystem.loginAdmin = a;
                     return true;
                 }
+                else {
+                    return false;
+                }
             }
         }
         return false;
-    }
-
-    public static boolean signUp() {
-        return true;
     }
 }

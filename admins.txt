@@ -1,7 +1,5 @@
 Username: shuaigee
 Password: 321
-Name: hy
-Gender: female
-Age: 12
-Email: heyuandeemail
-Address: 111
+
+Username: admin
+Password: admin

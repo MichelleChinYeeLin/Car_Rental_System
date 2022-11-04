@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,11 +20,30 @@ public class SignUpPage implements ActionListener {
     private JLabel[] labels;
 
     public SignUpPage(){
+        //Create frame
         frame = new JFrame("Sign Up Page");
-        genderGroup = new ButtonGroup();
-        signUp = new JButton("Sign Up");
-        cancel = new JButton("Cancel");
+        GUI.JFrameSetup(frame);
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints frameConstraints = new GridBagConstraints();
+
+        //Create panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.white);
+        mainPanel.setPreferredSize(new Dimension(400,450));
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        //Create title
         title = new JLabel("Sign Up");
+        title.setFont(new Font(Font.SERIF, Font.BOLD, 25));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.gridwidth = 3;
+        constraints.ipady = 30;
+        mainPanel.add(title, constraints);
+
+        //Create labels
         usernameLabel = new JLabel("A Unique Username:");
         passwordLabel = new JLabel("Password: ");
         passwordCheckLabel = new JLabel("Check your password: ");
@@ -31,77 +52,111 @@ public class SignUpPage implements ActionListener {
         phoneNumLabel = new JLabel("Phone Number: ");
         emailLabel = new JLabel("Email: ");
         addressLabel = new JLabel("Address: ");
+        JLabel[] labels = {usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
+        GUI.JLabelSetup(labels);
+
+        //Set label positions
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.gridx = 0;
+        constraints.ipady = 0;
+        for(int i = 0; i < labels.length; i++){
+
+            constraints.gridwidth = 2;
+            if(labels[i].getText().equals("Age: ")){
+                constraints.gridwidth = 1;
+            }
+
+            constraints.gridy = i + 1;
+
+            mainPanel.add(labels[i], constraints);
+        }
+
+        //Create and set input field positions
+        constraints.gridwidth = 2;
+        constraints.gridx = 2;
         username = new JTextField(20);
-        name = new JTextField(20);
-        phoneNum = new JTextField(20);
-        email = new JTextField(20);
-        address = new JTextField(20);
+        constraints.gridy = 1;
+        mainPanel.add(username, constraints);
+
         password = new JPasswordField(20);
+        constraints.gridy = 2;
+        mainPanel.add(password, constraints);
+
         passwordCheck = new JPasswordField(20);
+        constraints.gridy = 3;
+        mainPanel.add(passwordCheck, constraints);
+
+        name = new JTextField(20);
+        constraints.gridy = 4;
+        mainPanel.add(name, constraints);
+
+        age = new JSpinner(new SpinnerNumberModel(17,1,122,1));
+        age.setPreferredSize(new Dimension(45, 25));
+        constraints.gridwidth = 1;
+        constraints.gridx = 1;
+        constraints.gridy = 5;
+        constraints.fill = GridBagConstraints.NONE;
+        mainPanel.add(age, constraints);
+
         male = new JRadioButton("Male");
         female = new JRadioButton("Female");
-        age = new JSpinner(new SpinnerNumberModel(17,1,122,1)); // 最长寿的人122岁
-
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
-
-        title.setBounds(80,20,200,40);
-        usernameLabel.setBounds(10,80,200,20);
-        username.setBounds(10,100,260,20);
-        passwordLabel.setBounds(10,120,200,20);
-        password.setBounds(10,140,260,20);
-        passwordCheckLabel.setBounds(10,160,200,20);
-        passwordCheck.setBounds(10,180,260,20);
-        nameLabel.setBounds(10,200,200,20);
-        name.setBounds(10,220,260,20);
-        ageLabel.setBounds(10,250,30,20);
-        age.setBounds(40,250,40,20);
-        male.setBounds(100,250,60,20);
-        female.setBounds(170,250,80,20);
-        phoneNumLabel.setBounds(10,280,200,20);
-        phoneNum.setBounds(10,300,260,20);
-        emailLabel.setBounds(10,320,200,20);
-        email.setBounds(10,340,260,20);
-        addressLabel.setBounds(10,360,200,20);
-        address.setBounds(10,380,260,20);
-        signUp.setBounds(60,410,80,40);
-        cancel.setBounds(160,410,80,40);
-
         male.setFocusable(false);
         female.setFocusable(false);
+        genderGroup = new ButtonGroup();
         genderGroup.add(male);
         genderGroup.add(female);
 
+        FlowLayout genderLayout = new FlowLayout();
+        genderLayout.setAlignment(FlowLayout.LEFT);
+        JPanel genderPanel = new JPanel(genderLayout);
+        genderPanel.setBackground(Color.white);
+        genderPanel.add(male);
+        genderPanel.add(female);
+        constraints.gridx = 2;
+        constraints.gridy = 5;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(genderPanel, constraints);
+
+        constraints.gridwidth = 2;
+        constraints.gridx = 2;
+        phoneNum = new JTextField(20);
+        constraints.gridy = 6;
+        mainPanel.add(phoneNum, constraints);
+
+        email = new JTextField(20);
+        constraints.gridy = 7;
+        mainPanel.add(email, constraints);
+
+        address = new JTextField(20);
+        constraints.gridy = 8;
+        mainPanel.add(address, constraints);
+
+        signUp = new JButton("Sign Up");
+        cancel = new JButton("Cancel");
         signUp.addActionListener(this);
         cancel.addActionListener(this);
-
-        buttons = new JButton[]{signUp, cancel};
-        labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
+        JButton buttons[] = {signUp, cancel};
         GUI.JButtonSetup(buttons);
-        GUI.JLabelSetup(labels);
-        GUI.JFrameSetup(frame);
 
-        frame.setSize(300,500);
-        frame.add(signUp);
-        frame.add(cancel);
-        frame.add(title);
-        frame.add(usernameLabel);
-        frame.add(username);
-        frame.add(passwordLabel);
-        frame.add(password);
-        frame.add(passwordCheckLabel);
-        frame.add(passwordCheck);
-        frame.add(nameLabel);
-        frame.add(name);
-        frame.add(male);
-        frame.add(female);
-        frame.add(ageLabel);
-        frame.add(age);
-        frame.add(phoneNumLabel);
-        frame.add(phoneNum);
-        frame.add(emailLabel);
-        frame.add(email);
-        frame.add(addressLabel);
-        frame.add(address);
+        //Create and set buttons
+        FlowLayout buttonLayout = new FlowLayout();
+        buttonLayout.setAlignment(FlowLayout.CENTER);
+        buttonLayout.setHgap(25);
+        JPanel buttonPanel = new JPanel(buttonLayout);
+        buttonPanel.setBackground(Color.white);
+        buttonPanel.add(signUp);
+        buttonPanel.add(cancel);
+        GridBagConstraints buttonConstraints = new GridBagConstraints();
+        buttonConstraints.anchor = GridBagConstraints.PAGE_END;
+        buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
+        buttonConstraints.weighty = 1;
+        buttonConstraints.weightx = 1;
+        buttonConstraints.gridwidth = 3;
+        buttonConstraints.gridx = 0;
+        mainPanel.add(buttonPanel, buttonConstraints);
+
+        frame.add(mainPanel, frameConstraints);
     }
 
     public JFrame getFrame() {
@@ -166,6 +221,7 @@ public class SignUpPage implements ActionListener {
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);
+                    clearSignUpField();
                 }
                 else {
                     throw new UsernameTakenException();
@@ -178,24 +234,30 @@ public class SignUpPage implements ActionListener {
         }
         catch(InvalidAgeException invalidAgeException){
             JOptionPane.showMessageDialog(frame, "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            age.setValue(17);
         }
         catch(InvalidNameException invalidNameException){
             JOptionPane.showMessageDialog(frame, "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            name.setText("");
         }
         catch(InvalidPhoneException invalidPhoneException){
             JOptionPane.showMessageDialog(frame, "Invalid phone number entered! Your phone number must only include numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            phoneNum.setText("");
         }
         catch(MismatchPasswordException mismatchPasswordException){
             JOptionPane.showMessageDialog(frame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            password.setText("");
+            passwordCheck.setText("");
         }
         catch(EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(UsernameTakenException usernameTakenException){
             JOptionPane.showMessageDialog(frame, "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            username.setText("");
         }
         catch(Exception exception){
-
+            JOptionPane.showMessageDialog(frame, "Unexpected error has occurred!", "Unexpected error!", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -205,7 +267,7 @@ public class SignUpPage implements ActionListener {
         passwordCheck.setText("");
         name.setText("");
         age.setValue(17);
-        male.setSelected(false); // 不懂做么这两个没用
+        male.setSelected(false);
         female.setSelected(false);
         phoneNum.setText("");
         email.setText("");

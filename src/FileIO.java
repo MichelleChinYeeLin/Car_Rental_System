@@ -2,6 +2,7 @@
 //import javafx.beans.property.SimpleIntegerProperty;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class FileIO {
     private static final String ageText = "Age: ";
     private static final String emailText = "Email: ";
     private static final String addressText = "Address: ";
+    private static final String pointsText = "Points: ";
 
     //Car
     private static final String numberPlateText = "Number Plate: ";
@@ -118,7 +120,7 @@ public class FileIO {
 
             String line = br.readLine();
 
-            while (line != null && line.startsWith(userNameText)){
+            while (line != null){
                 String nextLine = br.readLine();
 
                 String username = line.substring(userNameText.length());
@@ -126,6 +128,7 @@ public class FileIO {
                 Admin admin = new Admin(username, password);
                 adminList.add(admin);
 
+                line = br.readLine();
                 line = br.readLine();
             }
             br.close();
@@ -166,7 +169,7 @@ public class FileIO {
             BufferedReader br = new BufferedReader(fr);
 
             String username = "", password = "", name = "", phone = "", gender = "", email = "", address = "";
-            int age = 0;
+            int age = 0, points = 0;
             String line = br.readLine();
             String line2 = "";
 
@@ -202,8 +205,12 @@ public class FileIO {
                 }
                 else if(line.startsWith(addressText)){
                     address = line.substring(addressText.length());
+                    line = br.readLine();
+                }
+                else if(line.startsWith(pointsText)){
+                    points = Integer.parseInt(line.substring(pointsText.length()));
 
-                    Customer customer = new Customer(username, password, name, phone, gender, age, email, address);
+                    Customer customer = new Customer(username, password, name, phone, gender, age, email, address, points);
                     customerList.add(customer);
 
                     line2 = br.readLine();
@@ -215,6 +222,9 @@ public class FileIO {
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
+        }
+        catch (NumberFormatException numberFormatException){
+            System.out.println("Unable to parse. Please try again.");
         }
         catch (Exception e){
             System.out.println("An unexpected error has occurred. Please try again.");
@@ -233,7 +243,8 @@ public class FileIO {
                 fw.write(genderText + customer.getGender() + "\n");
                 fw.write(ageText + customer.getAge() + "\n");
                 fw.write(emailText + customer.getEmail() + "\n");
-                fw.write(addressText + customer.getAddress() + "\n\n");
+                fw.write(addressText + customer.getAddress() + "\n");
+                fw.write(pointsText + customer.getPoints() + "\n\n");
             }
             fw.close();
         }
@@ -261,7 +272,7 @@ public class FileIO {
             String line = br.readLine();
             String line2 = "";
 
-            while(line != null){
+            while(line != null && line2 != null){
 
                 if(line.startsWith(numberPlateText)){
                     String numberPlate = line.substring(numberPlateText.length());
@@ -475,6 +486,9 @@ public class FileIO {
         }
         catch (IOException ioException){
             System.out.println("Unable to open file. Please try again.");
+        }
+        catch (NumberFormatException numberFormatException){
+            System.out.println("Unable to parse. Please try again");
         }
         catch (Exception e){
             System.out.println("An unexpected error has occurred. Please try again.");

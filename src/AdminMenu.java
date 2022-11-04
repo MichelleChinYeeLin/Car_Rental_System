@@ -8,12 +8,14 @@ public class AdminMenu implements ActionListener {
     private JFrame frame;
     private JLabel title;
     private JButton logout;
+    private JButton accRegistration;
     private JButton[] buttons;
 
     public AdminMenu(){
         frame = new JFrame();
         title = new JLabel("Main Menu");
         logout = new JButton("Logout");
+        accRegistration = new JButton("Account Registration");
 
         title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
 
@@ -22,13 +24,21 @@ public class AdminMenu implements ActionListener {
 
         logout.addActionListener(this);
 
-        buttons = new JButton[]{logout};
+        buttons = new JButton[]{logout, accRegistration};
         GUI.JButtonSetup(buttons);
         GUI.JFrameSetup(frame);
-        frame.setSize(300,300);
+        frame.setSize(600,300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 先这样
         frame.add(title);
         frame.add(logout);
+        frame.add(accRegistration);
+
+//        JPanel topPanel = new JPanel();
+//        topPanel.add(accRegistration);
+//        topPanel.add(logout);
+//        topPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+//        topPanel.setVisible(true);
+//        frame.add(topPanel);
     }
 
     public JFrame getFrame() {

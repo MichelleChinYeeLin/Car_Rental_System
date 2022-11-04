@@ -7,36 +7,71 @@ public class HomePage implements ActionListener {
 
     private JFrame frame;
     private JButton login, signUp, quit;
-    private JLabel label;
-//    private ImageIcon homeBackground;
+    private JLabel logoLabel;
+    private ImageIcon homeBackground;
     private JButton[] buttons;
 
     public HomePage(){
         frame = new JFrame("Michelle & HeYuan's Car Rental System");
+        GUI.JFrameSetup(frame);
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
         login = new JButton("Login");
         signUp = new JButton("Sign Up");
         quit = new JButton("Quit");
-        label = new JLabel();
-//        homeBackground = new ImageIcon("HomePage.png");
-//        label.setIcon(homeBackground);
-//        label.setBounds(-550, -370, 1748,1240); // 其实好像蛮丑的
-
-        login.setBounds(60,200,80,40);
-        signUp.setBounds(160,200,80,40);
-        quit.setBounds(220,10,60,30);
-
+        buttons = new JButton[]{login, signUp, quit};
+        GUI.JButtonSetup(buttons);
         login.addActionListener(this);
         signUp.addActionListener(this);
         quit.addActionListener(this);
 
-//        frame.add(label);
-        buttons = new JButton[]{login, signUp, quit};
-        GUI.JButtonSetup(buttons);
-        GUI.JFrameSetup(frame);
-        frame.setSize(300,300);
-        frame.add(login);
-        frame.add(signUp);
-        frame.add(quit);
+        //Login
+        FlowLayout topLayout = new FlowLayout();
+        topLayout.setAlignment(FlowLayout.RIGHT);
+        JPanel topButtons = new JPanel(topLayout);
+        topButtons.setBackground(GUI.getFrameBackgroundColor());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        topButtons.add(quit);
+        frame.add(topButtons, constraints);
+
+        //Logo
+        JPanel logoPanel = new JPanel();
+        logoPanel.setBackground(GUI.getFrameBackgroundColor());
+        logoLabel = new JLabel();
+        homeBackground = new ImageIcon(getClass().getResource("images/Logo_With_Text.png"));
+        Image image = homeBackground.getImage();
+        Image newImage = image.getScaledInstance(450, 300, Image.SCALE_SMOOTH);
+        homeBackground = new ImageIcon(newImage);
+        logoLabel.setIcon(homeBackground);
+        logoPanel.add(logoLabel);
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.ipady = 20;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        frame.add(logoPanel, constraints);
+
+        //Sign Up & Quit
+        FlowLayout bottomLayout = new FlowLayout();
+        bottomLayout.setAlignment(FlowLayout.CENTER);
+        bottomLayout.setHgap(100);
+        JPanel bottomButtons = new JPanel(bottomLayout);
+        bottomButtons.setBackground(GUI.getFrameBackgroundColor());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.PAGE_END;
+        constraints.ipady = 0;
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        bottomButtons.add(login);
+        bottomButtons.add(signUp);
+        frame.add(bottomButtons, constraints);
+
         frame.setVisible(true);
     }
 

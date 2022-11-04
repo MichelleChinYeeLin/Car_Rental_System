@@ -9,6 +9,8 @@ public class Customer extends User{
     private int age;
     private String email;
     private String address;
+    private int points;
+
 //    private ArrayList<Booking> myBookings = new ArrayList<>();
 
     public Customer(){
@@ -18,9 +20,10 @@ public class Customer extends User{
         this.gender = "";
         this.email = "";
         this.address = "";
+        this.points = 0;
     }
 
-    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address){
+    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address) {
         super(username, password);
         this.name = name;
         this.phone = phone;
@@ -28,6 +31,18 @@ public class Customer extends User{
         this.age = age;
         this.email = email;
         this.address = address;
+        this.points = 0;
+    }
+
+    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address, int points){
+        super(username, password);
+        this.name = name;
+        this.phone = phone;
+        this.gender = gender;
+        this.age = age;
+        this.email = email;
+        this.address = address;
+        this.points = points;
     }
 
     public String getName(){return name;}
@@ -66,9 +81,11 @@ public class Customer extends User{
         return address;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public void setAddress(String address) { this.address = address; }
+
+    public int getPoints() { return points; }
+
+    public void setPoints(int points) { this.points = points;}
 
 //    public ArrayList<Booking> getMyBookings() {
 //        return myBookings;
@@ -119,7 +136,8 @@ public class Customer extends User{
             }
         }
 
-        newAccList.add(new Customer(username, password, name, phone, gender, age, email, address));
+        int newPoints = 0;
+        newAccList.add(new Customer(username, password, name, phone, gender, age, email, address, newPoints));
         FileIO.setRegistrationList(newAccList);
         FileIO.writeRegistrationFile();
         return true;
