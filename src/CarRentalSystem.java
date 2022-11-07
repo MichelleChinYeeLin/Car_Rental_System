@@ -11,6 +11,7 @@ public class CarRentalSystem {
     public static Admin loginAdmin = null; // 不懂有没有更好的方法
 
     public static void main (String[] args) {
+        FileIO.readAllFiles();
         homePage = new HomePage();
         loginPage = new LoginPage();
         signUpPage = new SignUpPage();

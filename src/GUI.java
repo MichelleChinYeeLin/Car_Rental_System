@@ -1,7 +1,11 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.net.URL;
+import java.io.File;
 
 public class GUI {
 
@@ -43,6 +47,18 @@ public class GUI {
         for (JLabel label : labels) {
             label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
             label.setHorizontalAlignment(JLabel.LEFT);
+        }
+    }
+
+    public static void playSound(String soundName) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile( ));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch(Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
         }
     }
 }

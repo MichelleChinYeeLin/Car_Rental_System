@@ -7,7 +7,7 @@ public class Admin  extends User{
     }
 
     public static boolean login(String username, String password){
-        for (Admin a : FileIO.getAdminList()) {
+        for (Admin a : FileIO.adminList) {
             if (username.equals(a.getUsername())) {
                 if (password.equals(a.getPassword())) {
                     CarRentalSystem.loginAdmin = a;
