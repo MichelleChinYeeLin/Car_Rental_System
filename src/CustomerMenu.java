@@ -20,7 +20,7 @@ public class CustomerMenu implements ActionListener {
         logout = new JButton("Logout");
         buttons = new JButton[]{logout};
         logout.addActionListener(this);
-        GUI.JButtonLeftTabSetup(buttons);
+        GUI.JButtonSetup(buttons);
 
         //Button Panel
         GridBagLayout buttonLayout = new GridBagLayout();

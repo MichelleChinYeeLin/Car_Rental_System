@@ -4,6 +4,7 @@ public class Car {
     private String brand;
     private String model;
     private String color;
+    private int level;
     private double price;
     private boolean availability;
 
@@ -12,15 +13,17 @@ public class Car {
         this.brand = "";
         this.model = "";
         this.color = "";
+        this.level = 0;
         this.price = 0.0;
         this.availability = false;
     }
 
-    public Car(String numberPlate, String brand, String model, String color, double price, boolean availability){
+    public Car(String numberPlate, String brand, String model, String color, int level, double price, boolean availability){
         this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
         this.color = color;
+        this.level = level;
         this.price = price;
         this.availability = availability;
     }
@@ -67,6 +70,22 @@ public class Car {
 
     public boolean isAvailable() {
         return availability;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public boolean isAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(boolean availability) {
+        this.availability = availability;
     }
 
     public void updateCarStatus(){

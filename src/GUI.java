@@ -26,11 +26,12 @@ public class GUI {
         }
     }
 
-    public static void JButtonLeftTabSetup(JButton[] buttons){
-        for (JButton button : buttons){
-            button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+    public static void subJButtonSetup(JButton[] buttons){
+        for (JButton button : buttons) {
+            button.setFocusable(false);
+            button.setFont(new Font(Font.SERIF, Font.BOLD, 16));
             button.setBackground(Color.white);
-            button.setPreferredSize(new Dimension(150, 40));
+            button.setPreferredSize(new Dimension(100, 40));
         }
     }
 

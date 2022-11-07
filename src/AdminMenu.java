@@ -6,9 +6,11 @@ import java.awt.event.ActionListener;
 public class AdminMenu implements ActionListener {
 
     private JFrame frame;
-    private JLabel title;
+    private JPanel carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel;
     private JButton logout, accRegistration, customers, bookings, cars, settings;
-    private JButton[] buttons;
+    private JButton addCar, editCar, deleteCar, searchCar, allCar;
+    private JButton[] buttons, carButtons;
+    private JPanel[] panels;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
@@ -30,11 +32,24 @@ public class AdminMenu implements ActionListener {
         cars.addActionListener(this);
         settings.addActionListener(this);
         logout.addActionListener(this);
-        GUI.JButtonLeftTabSetup(buttons);
+        GUI.JButtonSetup(buttons);
+
+        addCar = new JButton("Add");
+        editCar = new JButton("Edit");
+        deleteCar = new JButton("Delete");
+        searchCar = new JButton("Search");
+        allCar = new JButton("All Cars");
+        carButtons = new JButton[]{addCar, editCar, deleteCar, searchCar, allCar};
+        addCar.addActionListener(this);
+        editCar.addActionListener(this);
+        deleteCar.addActionListener(this);
+        searchCar.addActionListener(this);
+        allCar.addActionListener(this);
+        GUI.subJButtonSetup(carButtons);
 
         //Button Panel
-        GridBagLayout buttonLayout = new GridBagLayout();
-        JPanel buttonPanel = new JPanel(buttonLayout);
+        GridBagLayout ButtonLayout = new GridBagLayout();
+        JPanel buttonPanel = new JPanel(ButtonLayout);
         GridBagConstraints buttonConstraints = new GridBagConstraints();
         buttonConstraints.gridx = 0;
         buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
@@ -52,9 +67,28 @@ public class AdminMenu implements ActionListener {
         constraints.weightx = 0.01;
         frame.add(buttonPanel, constraints);
 
+        //Create car panel
+        carPanel = new JPanel(new FlowLayout());
+        carPanel.setBackground(Color.white);
+        carPanel.setVisible(false);
+        carPanel.add(addCar);
+        carPanel.add(editCar);
+        carPanel.add(deleteCar);
+        carPanel.add(searchCar);
+        carPanel.add(allCar);
+
+        //Create panels
+        registrationPanel = new JPanel();
+        customerPanel = new JPanel();
+        bookingsPanel = new JPanel();
+        settingsPanel = new JPanel();
+
+        panels = new JPanel[]{carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel};
+
         //Create main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.white);
+        mainPanel.add(carPanel);
 
         //Position main panel in the frame
         constraints.insets = new Insets(5,0,5,5);
@@ -77,6 +111,24 @@ public class AdminMenu implements ActionListener {
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
+            else if (e.getSource() == accRegistration){
+                showPanel(registrationPanel);
+            }
+            else if (e.getSource() == customers){
+                showPanel(customerPanel);
+            }
+            else if (e.getSource() == bookings){
+                showPanel(bookingsPanel);
+            }
+            else if (e.getSource() == cars){
+                showPanel(carPanel);
+            }
+            else if (e.getSource() == settings){
+                showPanel(settingsPanel);
+            }
+            else if (e.getSource() == addCar){
+
+            }
         } catch (Exception exception){
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
@@ -84,5 +136,12 @@ public class AdminMenu implements ActionListener {
 
     private void showCustomerList(){
 
+    }
+
+    private void showPanel(JPanel panel){
+        for (JPanel i : panels) {
+            i.setVisible(false);
+        }
+        panel.setVisible(true);
     }
 }

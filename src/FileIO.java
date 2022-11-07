@@ -32,6 +32,7 @@ public class FileIO {
     private static final String brandText = "Brand: ";
     private static final String modelText = "Model: ";
     private static final String colorText = "Color: ";
+    private static final String levelText = "Level: ";
     private static final String priceText = "Price: ";
     private static final String availabilityText = "Available: ";
 
@@ -43,7 +44,7 @@ public class FileIO {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-    //ArrayLists 我把这些改成public了
+    //ArrayLists
     public static ArrayList<Admin> adminList = new ArrayList<>();
     public static ArrayList<Customer> customerList= new ArrayList<>();
     public static ArrayList<Car> carList= new ArrayList<>();
@@ -361,6 +362,7 @@ public class FileIO {
             BufferedReader br = new BufferedReader(fr);
 
             String numberPlate = "", brand = "", model = "", color = "";
+            int level = 0;
             double price = 0.0;
             boolean availability = false;
             String line = br.readLine();
@@ -384,13 +386,17 @@ public class FileIO {
                     color = line.substring(colorText.length());
                     line = br.readLine();
                 }
+                else if (line.startsWith(levelText)){
+                    color = line.substring(levelText.length());
+                    line = br.readLine();
+                }
                 else if (line.startsWith(priceText)){
                     price = Double.parseDouble(line.substring(priceText.length()));
                     line = br.readLine();
                 }
                 else if (line.startsWith(availabilityText)){
                     availability = line.substring(availabilityText.length()).equals("True");
-                    Car car = new Car(numberPlate, brand, model, color, price, availability);
+                    Car car = new Car(numberPlate, brand, model, color, level, price, availability);
                     carList.add(car);
                 }
 
