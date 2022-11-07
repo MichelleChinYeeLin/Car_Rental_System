@@ -144,10 +144,4 @@ public class LoginPage implements ActionListener {
             password.setText("");
         }
     }
-
-    private void clearLoginField(){
-        userTypeSelect.setSelectedItem("Customer");
-        username.setText("");
-        password.setText("");
-    }
 }

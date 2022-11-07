@@ -46,7 +46,7 @@ public class SignUpPage implements ActionListener {
         //Create labels
         usernameLabel = new JLabel("A Unique Username:");
         passwordLabel = new JLabel("Password: ");
-        passwordCheckLabel = new JLabel("Check your password: ");
+        passwordCheckLabel = new JLabel("Validate your password: ");
         nameLabel = new JLabel("Name: ");
         ageLabel = new JLabel("Age:");
         phoneNumLabel = new JLabel("Phone Number: ");
@@ -274,18 +274,3 @@ public class SignUpPage implements ActionListener {
         address.setText("");
     }
 }
-class InvalidAgeException extends Exception{}
-
-class InvalidNameException extends Exception{}
-
-class InvalidPhoneException extends Exception{}
-
-class MismatchPasswordException extends Exception{}
-
-class EmptyInputException extends Exception{}
-
-class UsernameTakenException extends Exception{}
-
-class WrongPasswordException extends Exception{}
-
-class UserNotFoundException extends Exception{}

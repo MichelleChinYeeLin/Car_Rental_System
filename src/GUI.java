@@ -54,6 +54,7 @@ public class GUI {
     public static void JPanelSetup(JPanel[] panels){
         for (JPanel panel : panels) {
             panel.setVisible(false);
+            panel.setBackground(Color.white);
         }
     }
 

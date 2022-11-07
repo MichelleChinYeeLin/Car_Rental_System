@@ -1,0 +1,7 @@
+Number Plate: abc 123
+Brand: PROTON
+Model: SAGA
+Color: WHITE
+Price: 150.0
+Available: true
+
