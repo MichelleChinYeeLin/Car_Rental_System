@@ -100,35 +100,48 @@ public class LoginPage implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == login){
+            if (e.getSource() == login) {
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String userTypeInput = (String) userTypeSelect.getSelectedItem();
 
-                if (userTypeInput.equals("Customer")){
-                    if (Customer.login(usernameInput, passwordInput)){
+                if (usernameInput.equals("") || passwordInput.equals("")){
+                    throw new EmptyInputException();
+                }
+
+                if (userTypeInput.equals("Customer")) {
+                    if (Customer.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
                     }
                 }
                 else if (userTypeInput.equals("Admin")) {
-                    if (Admin.login(usernameInput, passwordInput)){
+                    if (Admin.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
-                        clearLoginField();
                     }
                     else {
+                        GUI.playSound("niganma.wav");
                         JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                        frame.setVisible(true);
                     }
                 }
             }
             else if (e.getSource() == cancel) {
+                GUI.playSound("ji.wav");
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         }
-        catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move");
+        catch (EmptyInputException emptyInputException) {
+            GUI.playSound("niganma.wav");
+            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        finally {
+            username.setText("");
+            password.setText("");
         }
     }
 
