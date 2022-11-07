@@ -2,8 +2,7 @@ import java.util.Date;
 
 public class Booking {
 
-//    private int bookingID; 这个不懂要不要
-//    private Customer customer; 这个应该要
+    private String bookingID;
     private Car car;
     private Customer customer;
     private double totalPrice;

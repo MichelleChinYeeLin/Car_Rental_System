@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,55 +9,88 @@ public class LoginPage implements ActionListener {
     private JFrame frame;
     private JButton login, cancel;
     private JLabel title, usernameLabel, passwordLabel;
-    private JTextField username, password;
+    private JTextField username;
+    private JPasswordField password;
+    private JComboBox<String> userTypeSelect;
     private ImageIcon logo;
+    private JButton[] buttons;
+    private JLabel[] labels;
 
     public LoginPage() {
         frame = new JFrame("Login Page");
-        login = new JButton("Log In");
-        cancel = new JButton("Cancel");
+        GUI.JFrameSetup(frame);
+        frame.setLayout(new GridBagLayout());
+
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(Color.white);
+        mainPanel.setPreferredSize(new Dimension(400,450));
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        title = new JLabel("LOGIN");
+        title.setFont(new Font(Font.SERIF, Font.BOLD, 25));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.ipady = 30;
+        constraints.gridwidth = 2;
+        constraints.weighty = 1;
+        constraints.weightx = 0.2;
+        mainPanel.add(title, constraints);
+
+        constraints.gridx = 0;
+        String[] userType = {"Customer", "Admin"};
+        userTypeSelect = new JComboBox<String>(userType);
+        userTypeSelect.setPreferredSize(new Dimension(20, 10));
+        userTypeSelect.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        constraints.gridy = 1;
+        mainPanel.add(userTypeSelect, constraints);
+
+        constraints.gridwidth = 1;
         usernameLabel = new JLabel("Username:");
         passwordLabel = new JLabel("Password:");
-        title = new JLabel("LOGIN");
+        labels = new JLabel[]{usernameLabel, passwordLabel};
+        GUI.JLabelSetup(labels);
+        constraints.gridy = 2;
+        mainPanel.add(usernameLabel, constraints);
+        constraints.gridy = 3;
+        mainPanel.add(passwordLabel, constraints);
+
+        GUI.JLabelSetup(labels);
+
+        constraints.gridx = 1;
+        constraints.weightx = 0.8;
         username = new JTextField();
-        password = new JTextField();
-        logo = new ImageIcon("Logo.png");
+        username.setPreferredSize(new Dimension(50, 5));
+        constraints.gridy = 2;
+        mainPanel.add(username, constraints);
 
-        login.setFocusable(false);
+        password = new JPasswordField();
+        password.setPreferredSize(new Dimension(50, 5));
+        constraints.gridy = 3;
+        mainPanel.add(password, constraints);
+
+        FlowLayout buttonLayout = new FlowLayout();
+        buttonLayout.setAlignment(FlowLayout.CENTER);
+        buttonLayout.setHgap(25);
+        JPanel buttonPanel = new JPanel(buttonLayout);
+        buttonPanel.setBackground(Color.white);
+        login = new JButton("Log In");
+        cancel = new JButton("Cancel");
+        buttons = new JButton[]{login, cancel};
+        GUI.JButtonSetup(buttons);
+        buttonPanel.add(login);
+        buttonPanel.add(cancel);
+        constraints.gridwidth = 2;
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        constraints.anchor = GridBagConstraints.PAGE_END;
+        mainPanel.add(buttonPanel, constraints);
+
         login.addActionListener(this);
-        login.setBounds(60,200,80,40);
-        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        login.setBackground(new Color(227,217,176));
-
-        cancel.setFocusable(false);
         cancel.addActionListener(this);
-        cancel.setBounds(160,200,80,40);
-        cancel.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-//        cancel.setBackground(new Color(227,217,176));
 
-        title.setBounds(90,20,200,30);
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
-        usernameLabel.setBounds(10,60,200,20);
-        usernameLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-        passwordLabel.setBounds(10,120,200,20);
-        passwordLabel.setFont(new Font(Font.SERIF, Font.ITALIC, 12));
-
-        username.setBounds(10, 80,260, 40);
-        password.setBounds(10,140, 260, 40);
-
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
-        frame.setSize(300,300);
-        frame.setResizable(false);
-//        frame.getContentPane().setBackground(new Color(240,205,151));
-        frame.setLocationRelativeTo(null);
-        frame.add(title);
-        frame.add(usernameLabel);
-        frame.add(passwordLabel);
-        frame.add(login);
-        frame.add(cancel);
-        frame.add(username);
-        frame.add(password);
+        frame.add(mainPanel);
     }
 
     public JFrame getFrame(){
@@ -66,20 +100,54 @@ public class LoginPage implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (e.getSource() == login){
+            if (e.getSource() == login) {
                 String usernameInput = username.getText();
-                String passwordInput = password.getText();
-                // Non-static method 'login()' cannot be referenced from a static context 不懂什么意思我先把user那里的弄成static
-                if (User.login(usernameInput, passwordInput)){
-                    frame.setVisible(false);
-                    CarRentalSystem.mainMenu.getFrame().setVisible(true);
+                String passwordInput = String.valueOf(password.getPassword());
+                String userTypeInput = (String) userTypeSelect.getSelectedItem();
+
+                if (usernameInput.equals("") || passwordInput.equals("")){
+                    throw new EmptyInputException();
                 }
-            } else if (e.getSource() == cancel) {
+
+                if (userTypeInput.equals("Customer")) {
+                    if (Customer.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
+                        frame.setVisible(false);
+                        CarRentalSystem.customerMenu.getFrame().setVisible(true);
+                    }
+                }
+                else if (userTypeInput.equals("Admin")) {
+                    if (Admin.login(usernameInput, passwordInput)) {
+                        GUI.playSound("ji.wav");
+                        frame.setVisible(false);
+                        CarRentalSystem.adminMenu.getFrame().setVisible(true);
+                    }
+                    else {
+                        GUI.playSound("niganma.wav");
+                        JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
+                        frame.setVisible(true);
+                    }
+                }
+            }
+            else if (e.getSource() == cancel) {
+                GUI.playSound("ji.wav");
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(frame,"Invalid move");
         }
+        catch (EmptyInputException emptyInputException) {
+            GUI.playSound("niganma.wav");
+            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        finally {
+            username.setText("");
+            password.setText("");
+        }
+    }
+
+    private void clearLoginField(){
+        userTypeSelect.setSelectedItem("Customer");
+        username.setText("");
+        password.setText("");
     }
 }
