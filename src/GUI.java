@@ -51,6 +51,12 @@ public class GUI {
         }
     }
 
+    public static void JPanelSetup(JPanel[] panels){
+        for (JPanel panel : panels) {
+            panel.setVisible(false);
+        }
+    }
+
     public static void playSound(String soundName) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile( ));

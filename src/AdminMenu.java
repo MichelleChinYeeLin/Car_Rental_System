@@ -7,16 +7,21 @@ public class AdminMenu implements ActionListener {
 
     private JFrame frame;
     private JPanel carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel;
+    private JPanel addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel;
+    private JLabel label;
     private JButton logout, accRegistration, customers, bookings, cars, settings;
     private JButton addCar, editCar, deleteCar, searchCar, allCar;
     private JButton[] buttons, carButtons;
-    private JPanel[] panels;
+    private JPanel[] panels, carPanels;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GUI.JFrameSetup(frame);
         frame.setLayout(new GridBagLayout());
+
+        //Create labels
+        label = new JLabel("HI");
 
         //Create buttons
         accRegistration = new JButton("Registration");
@@ -67,23 +72,56 @@ public class AdminMenu implements ActionListener {
         constraints.weightx = 0.01;
         frame.add(buttonPanel, constraints);
 
-        //Create car panel
-        carPanel = new JPanel(new FlowLayout());
-        carPanel.setBackground(Color.white);
-        carPanel.setVisible(false);
-        carPanel.add(addCar);
-        carPanel.add(editCar);
-        carPanel.add(deleteCar);
-        carPanel.add(searchCar);
-        carPanel.add(allCar);
+        /* CAR */
 
+        //Car button panel
+        JPanel carButtonPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints carConstraints = new GridBagConstraints();
+        carButtonPanel.add(addCar, carConstraints);
+        carButtonPanel.add(editCar, carConstraints);
+        carButtonPanel.add(deleteCar, carConstraints);
+        carButtonPanel.add(searchCar, carConstraints);
+        carButtonPanel.add(allCar, carConstraints);
+
+        //Add car panel
+        addCarPanel = new JPanel(new GridBagLayout());
+        addCarPanel.add(label);
+
+        //Edit car panel
+        editCarPanel = new JPanel(new GridBagLayout());
+
+        //Delete car panel
+        deleteCarPanel = new JPanel(new GridBagLayout());
+
+        //Search car panel
+        searchCarPanel = new JPanel(new GridBagLayout());
+
+        //View car panel
+        viewCarPanel = new JPanel(new GridBagLayout());
+
+        //Create car panel
+        carPanel = new JPanel(new GridBagLayout());
+        carPanel.setBackground(Color.white);
+
+        //Position elements in car panel
+        carConstraints.insets = new Insets(5,5,5,5);
+        carConstraints.gridy = 0;
+        carPanel.add(carButtonPanel, carConstraints);
+        carConstraints.gridy = 1;
+        carPanel.add(addCarPanel, carConstraints);
+
+        //All car panels
+        carPanels = new JPanel[]{addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel};
+        GUI.JPanelSetup(carPanels);
+
+        /* MAIN */
         //Create panels
         registrationPanel = new JPanel();
         customerPanel = new JPanel();
         bookingsPanel = new JPanel();
         settingsPanel = new JPanel();
-
         panels = new JPanel[]{carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel};
+        GUI.JPanelSetup(panels);
 
         //Create main panel
         JPanel mainPanel = new JPanel();
@@ -127,7 +165,19 @@ public class AdminMenu implements ActionListener {
                 showPanel(settingsPanel);
             }
             else if (e.getSource() == addCar){
-
+                showCarPanel(addCarPanel);
+            }
+            else if (e.getSource() == editCar){
+                showCarPanel(editCarPanel);
+            }
+            else if (e.getSource() == deleteCar){
+                showCarPanel(deleteCarPanel);
+            }
+            else if (e.getSource() == searchCar){
+                showCarPanel(searchCarPanel);
+            }
+            else if (e.getSource() == allCar){
+                showCarPanel(viewCarPanel);
             }
         } catch (Exception exception){
             JOptionPane.showMessageDialog(frame, "Invalid move!");
@@ -140,6 +190,13 @@ public class AdminMenu implements ActionListener {
 
     private void showPanel(JPanel panel){
         for (JPanel i : panels) {
+            i.setVisible(false);
+        }
+        panel.setVisible(true);
+    }
+
+    private void showCarPanel(JPanel panel){
+        for (JPanel i : carPanels) {
             i.setVisible(false);
         }
         panel.setVisible(true);
