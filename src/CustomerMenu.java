@@ -11,24 +11,48 @@ public class CustomerMenu implements ActionListener {
     private JButton[] buttons;
 
     public CustomerMenu(){
-        frame = new JFrame();
-        title = new JLabel("Main Menu");
-        logout = new JButton("Logout");
-
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
-
-        title.setBounds(70,40,200,30);
-        logout.setBounds(200,10,80,30);
-
-        logout.addActionListener(this);
-
-        buttons = new JButton[]{logout};
-        GUI.JButtonSetup(buttons);
+        frame = new JFrame("Customer Menu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GUI.JFrameSetup(frame);
-        frame.setSize(300,300);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 先这样
-        frame.add(title);
-        frame.add(logout);
+        frame.setLayout(new GridBagLayout());
+
+        //Create buttons
+        logout = new JButton("Logout");
+        buttons = new JButton[]{logout};
+        logout.addActionListener(this);
+        GUI.JButtonLeftTabSetup(buttons);
+
+        //Button Panel
+        GridBagLayout buttonLayout = new GridBagLayout();
+        JPanel buttonPanel = new JPanel(buttonLayout);
+        GridBagConstraints buttonConstraints = new GridBagConstraints();
+        buttonConstraints.gridx = 0;
+        buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
+        for(int i = 0; i < buttons.length; i++){
+            buttonConstraints.gridy = i;
+            buttonPanel.add(buttons[i], buttonConstraints);
+        }
+
+        //Position button panel in the frame
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5,5,5,5);
+        constraints.gridx = 0;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.weighty = 1;
+        constraints.weightx = 0.01;
+        frame.add(buttonPanel, constraints);
+
+        //Create main panel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.white);
+
+        //Position main panel in the frame
+        constraints.insets = new Insets(5,0,5,5);
+        constraints.gridx = 1;
+        constraints.weighty = 1;
+        constraints.weightx = 0.99;
+        constraints.fill = GridBagConstraints.BOTH;
+        frame.add(mainPanel, constraints);
     }
 
     public JFrame getFrame() {

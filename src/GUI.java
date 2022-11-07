@@ -6,28 +6,33 @@ import java.net.URL;
 public class GUI {
 
     private static final Color frameBackgroundColor = new Color(40, 48, 76); //Navy Blue
-    private static final Color buttonColor = new Color(255,255,255);
+    private static final int frameLength = 750;
+    private static final int frameHeight = 550;
 
     public static Color getFrameBackgroundColor(){
         return frameBackgroundColor;
     }
 
-    public static Color getButtonColor(){
-        return buttonColor;
+    public static void JButtonSetup(JButton[] buttons){
+        for (JButton button : buttons) {
+            button.setFocusable(false);
+            button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+            button.setBackground(Color.white);
+            button.setPreferredSize(new Dimension(150, 40));
+        }
     }
 
-    public static void JButtonSetup(JButton[] buttons){
-        for (JButton i : buttons) {
-            i.setFocusable(false);
-            i.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-            i.setBackground(getButtonColor());
-            i.setPreferredSize(new Dimension(150, 40));
+    public static void JButtonLeftTabSetup(JButton[] buttons){
+        for (JButton button : buttons){
+            button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+            button.setBackground(Color.white);
+            button.setPreferredSize(new Dimension(150, 40));
         }
     }
 
     public static void JFrameSetup(JFrame frame){
         ImageIcon logo = new ImageIcon("src/images/Logo.png");
-        frame.setSize(750,550);
+        frame.setSize(frameLength,frameHeight);
         frame.setIconImage(logo.getImage());
         frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
@@ -35,9 +40,9 @@ public class GUI {
     }
 
     public static void JLabelSetup(JLabel[] labels){
-        for (JLabel i : labels) {
-            i.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
-            i.setHorizontalAlignment(JLabel.LEFT);
+        for (JLabel label : labels) {
+            label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+            label.setHorizontalAlignment(JLabel.LEFT);
         }
     }
 }
