@@ -7,49 +7,71 @@ public class HomePage implements ActionListener {
 
     private JFrame frame;
     private JButton login, signUp, quit;
-    private JLabel label;
-    private ImageIcon logo, homeBackground;
+    private JLabel logoLabel;
+    private ImageIcon homeBackground;
+    private JButton[] buttons;
 
     public HomePage(){
         frame = new JFrame("Michelle & HeYuan's Car Rental System");
+        GUI.JFrameSetup(frame);
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints constraints = new GridBagConstraints();
+
         login = new JButton("Login");
         signUp = new JButton("Sign Up");
         quit = new JButton("Quit");
-        label = new JLabel();
-        logo = new ImageIcon("Logo.png"); // 可以去改
-        homeBackground = new ImageIcon("HomePage.png");
-
-        login.setFocusable(false);
+        buttons = new JButton[]{login, signUp, quit};
+        GUI.JButtonSetup(buttons);
         login.addActionListener(this);
-        login.setBounds(60,200,80,40);
-        login.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        login.setBackground(new Color(212, 183, 185));
-
-        signUp.setFocusable(false);
         signUp.addActionListener(this);
-        signUp.setBounds(160,200,80,40);
-        signUp.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        signUp.setBackground(new Color(212, 183, 185));
-
-        quit.setFocusable(false);
         quit.addActionListener(this);
-        quit.setBounds(220,10,60,30);
-        quit.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        quit.setBackground(new Color(212, 183, 185));
 
-//        label.setIcon(homeBackground);
-//        label.setBounds(-550, -370, 1748,1240); // 其实好像蛮丑的
+        //Login
+        FlowLayout topLayout = new FlowLayout();
+        topLayout.setAlignment(FlowLayout.RIGHT);
+        JPanel topButtons = new JPanel(topLayout);
+        topButtons.setBackground(GUI.getFrameBackgroundColor());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        topButtons.add(quit);
+        frame.add(topButtons, constraints);
 
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
-        frame.setSize(300,300);
-        frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(155, 159, 177)); // 颜色可以调一下蛮丑的
-        frame.setLocationRelativeTo(null);
-//        frame.add(label);
-        frame.add(login);
-        frame.add(signUp);
-        frame.add(quit);
+        //Logo
+        JPanel logoPanel = new JPanel();
+        logoPanel.setBackground(GUI.getFrameBackgroundColor());
+        logoLabel = new JLabel();
+        homeBackground = new ImageIcon(getClass().getResource("images/Logo_With_Text.png"));
+        Image image = homeBackground.getImage();
+        Image newImage = image.getScaledInstance(450, 300, Image.SCALE_SMOOTH);
+        homeBackground = new ImageIcon(newImage);
+        logoLabel.setIcon(homeBackground);
+        logoPanel.add(logoLabel);
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.ipady = 20;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        frame.add(logoPanel, constraints);
+
+        //Sign Up & Quit
+        FlowLayout bottomLayout = new FlowLayout();
+        bottomLayout.setAlignment(FlowLayout.CENTER);
+        bottomLayout.setHgap(100);
+        JPanel bottomButtons = new JPanel(bottomLayout);
+        bottomButtons.setBackground(GUI.getFrameBackgroundColor());
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.PAGE_END;
+        constraints.ipady = 0;
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        bottomButtons.add(login);
+        bottomButtons.add(signUp);
+        frame.add(bottomButtons, constraints);
+
         frame.setVisible(true);
     }
 

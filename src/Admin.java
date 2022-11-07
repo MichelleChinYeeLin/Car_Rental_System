@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class Admin  extends User{
 
     public Admin(String username, String password) {
@@ -5,11 +7,17 @@ public class Admin  extends User{
     }
 
     public static boolean login(String username, String password){
-//        CarRentalSystem.loginAdmin = ?
-        return true;
-    }
-
-    public static boolean signUp() {
-        return true;
+        for (Admin a : FileIO.adminList) {
+            if (username.equals(a.getUsername())) {
+                if (password.equals(a.getPassword())) {
+                    CarRentalSystem.loginAdmin = a;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }

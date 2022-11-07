@@ -7,33 +7,62 @@ public class AdminMenu implements ActionListener {
 
     private JFrame frame;
     private JLabel title;
-    private JButton logout;
-    private ImageIcon logo;
+    private JButton logout, accRegistration, customers, bookings, cars, settings;
+    private JButton[] buttons;
 
     public AdminMenu(){
-        frame = new JFrame();
-        logo = new ImageIcon("Logo.png");
-        title = new JLabel("Main Menu");
+        frame = new JFrame("Admin Menu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        GUI.JFrameSetup(frame);
+        frame.setLayout(new GridBagLayout());
+
+        //Create buttons
+        accRegistration = new JButton("Registration");
+        customers = new JButton("Customers");
+        bookings = new JButton("Bookings");
+        cars = new JButton("Cars");
+        settings = new JButton("Settings");
         logout = new JButton("Logout");
-
-        title.setBounds(70,40,200,30);
-        title.setFont(new Font(Font.SANS_SERIF, Font.ITALIC,30));
-
-        logout.setFocusable(false);
+        buttons = new JButton[]{accRegistration, customers, bookings, cars, settings, logout};
+        accRegistration.addActionListener(this);
+        customers.addActionListener(this);
+        bookings.addActionListener(this);
+        cars.addActionListener(this);
+        settings.addActionListener(this);
         logout.addActionListener(this);
-        logout.setBounds(200,10,80,30);
-        logout.setFont(new Font(Font.DIALOG, Font.ITALIC, 12));
-        logout.setBackground(new Color(212, 183, 185));
+        GUI.JButtonLeftTabSetup(buttons);
 
-        frame.setLayout(null);
-        frame.setIconImage(logo.getImage());
-        frame.setSize(300,300);
-        frame.setResizable(false);
-        frame.getContentPane().setBackground(new Color(155, 159, 177));
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 先这样
-        frame.add(title);
-        frame.add(logout);
+        //Button Panel
+        GridBagLayout buttonLayout = new GridBagLayout();
+        JPanel buttonPanel = new JPanel(buttonLayout);
+        GridBagConstraints buttonConstraints = new GridBagConstraints();
+        buttonConstraints.gridx = 0;
+        buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
+        for(int i = 0; i < buttons.length; i++){
+            buttonConstraints.gridy = i;
+            buttonPanel.add(buttons[i], buttonConstraints);
+        }
+
+        //Position button panel in the frame
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5,5,5,5);
+        constraints.gridx = 0;
+        constraints.anchor = GridBagConstraints.PAGE_START;
+        constraints.weighty = 1;
+        constraints.weightx = 0.01;
+        frame.add(buttonPanel, constraints);
+
+        //Create main panel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.white);
+
+        //Position main panel in the frame
+        constraints.insets = new Insets(5,0,5,5);
+        constraints.gridx = 1;
+        constraints.weighty = 1;
+        constraints.weightx = 0.99;
+        constraints.fill = GridBagConstraints.BOTH;
+        frame.add(mainPanel, constraints);
     }
 
     public JFrame getFrame() {
@@ -51,5 +80,9 @@ public class AdminMenu implements ActionListener {
         } catch (Exception exception){
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
+    }
+
+    private void showCustomerList(){
+
     }
 }
