@@ -9,16 +9,16 @@ public class AdminMenu implements ActionListener {
     private JFrame frame;
     private JPanel carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel;
     private JButton logout, accRegistration, customers, bookings, cars, settings;
-    private JPanel addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel;
 
     /* CAR */
-    private JPanel carAttributesPanel, carFunctionsPanel;
-    private JButton addCar, editCar, deleteCar, searchCar, allCar, confirmAdd, cancelAdd, search, confirmEdit, cancelEdit;
-    private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel, availabilityLabel;
-    private JTextField numberPlate, brand, model, color, price;
-    private JSpinner level;
-    private JRadioButton available, notAvailable;
-    private ButtonGroup availability;
+    private CarFunctions carFunctionsPanel;
+    private JButton addCar, editCar, deleteCar, searchCar, allCar;
+//    private JPanel addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel;
+//    private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel, availabilityLabel;
+//    private JTextField numberPlate, brand, model, color, price;
+//    private JSpinner level;
+//    private JRadioButton available, notAvailable;
+//    private ButtonGroup availability;
 
     /* REGISTRATION */
     private JPanel registrationFunctionsPanel;
@@ -34,7 +34,6 @@ public class AdminMenu implements ActionListener {
 
     private JButton[] buttons, carButtons;
     private JPanel[] panels, carPanels;
-    private JLabel[] carLabels;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
@@ -79,134 +78,25 @@ public class AdminMenu implements ActionListener {
         frame.add(buttonPanel, constraints);
 
 
-        /* CAR */
-        //Create labels
-        numberPlateLabel = new JLabel("Number Plate:");
-        brandLabel = new JLabel("Brand:");
-        modelLabel = new JLabel("Model:");
-        colorLabel = new JLabel("Color:");
-        levelLabel = new JLabel("Level:");
-        priceLabel = new JLabel("Price:");
-        availabilityLabel = new JLabel("Availability:");
-        carLabels = new JLabel[]{numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel, availabilityLabel};
-        GUI.JLabelSetup(carLabels);
-
+//        /* CAR */
         //Create buttons
         addCar = new JButton("Add");
         editCar = new JButton("Edit");
         deleteCar = new JButton("Delete");
         searchCar = new JButton("Search");
         allCar = new JButton("All Cars");
-        confirmAdd = new JButton("ADD");
-        cancelAdd = new JButton("CANCEL");
-        search = new JButton("SEARCH");
-        confirmEdit = new JButton("CONFIRM");
-        cancelEdit = new JButton("CANCEL");
-        carButtons = new JButton[]{addCar, editCar, deleteCar, searchCar, allCar, confirmAdd, cancelAdd, search, confirmEdit, cancelEdit};
+        carButtons = new JButton[]{addCar, editCar, deleteCar, searchCar, allCar};
         addCar.addActionListener(this);
         editCar.addActionListener(this);
         deleteCar.addActionListener(this);
         searchCar.addActionListener(this);
         allCar.addActionListener(this);
-        confirmAdd.addActionListener(this);
-        cancelAdd.addActionListener(this);
-        search.addActionListener(this);
-        confirmEdit.addActionListener(this);
-        cancelEdit.addActionListener(this);
         GUI.subJButtonSetup(carButtons);
-
-        //Create input fields
-        numberPlate = new JTextField(20);
-        brand = new JTextField(20);
-        model = new JTextField(20);
-        color = new JTextField(20);
-        price = new JTextField(20);
-        level = new JSpinner(new SpinnerNumberModel(1,1,3,1));
-        available = new JRadioButton("YES");
-        notAvailable = new JRadioButton("NO");
-        availability = new ButtonGroup();
-
-        available.setFocusable(false);
-        notAvailable.setFocusable(false);
-        availability.add(available);
-        availability.add(notAvailable);
 
         //Create car panel
         carPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
-
-        //Car Attributes Panel
-        carAttributesPanel = new JPanel(new GridBagLayout());
-        carAttributesPanel.setBackground(Color.white);
-        //Setup labels
-        carConstraints.insets = new Insets(10,5,10,5);
-        carConstraints.weightx = 1;
-        carConstraints.weighty = 1;
-        carConstraints.gridx = 0;
-        carConstraints.ipady = 0;
-        carConstraints.gridwidth = 2;
-        for(int i = 0; i < carLabels.length; i++){
-
-            if(carLabels[i].getText().equals("Level:")){
-                carConstraints.gridwidth = 1;
-            }
-            carConstraints.gridy = i + 1;
-            carAttributesPanel.add(carLabels[i], carConstraints);
-        }
-        //Setup fields
-        carConstraints.gridx = 2;
-        carConstraints.gridy = 1;
-        carAttributesPanel.add(numberPlate, carConstraints);
-        carConstraints.gridy = 2;
-        carAttributesPanel.add(brand, carConstraints);
-        carConstraints.gridy = 3;
-        carAttributesPanel.add(model, carConstraints);
-        carConstraints.gridy = 4;
-        carAttributesPanel.add(color, carConstraints);
-        carConstraints.gridy = 5;
-        carAttributesPanel.add(level, carConstraints);
-        carConstraints.gridy = 6;
-        carAttributesPanel.add(price, carConstraints);
-        carConstraints.gridy = 7;
-        JPanel availabilityPanel = new JPanel(new FlowLayout());
-        availabilityPanel.setBackground(Color.white);
-        availabilityPanel.add(available);
-        availabilityPanel.add(notAvailable);
-        carAttributesPanel.add(availabilityPanel, carConstraints);
-
-        //Add car panel
-        addCarPanel = new JPanel(new GridBagLayout());
-        JPanel selectionPanel = new JPanel(new FlowLayout());
-        selectionPanel.setBackground(Color.white);
-        selectionPanel.add(confirmAdd);
-        selectionPanel.add(cancelAdd);
-
-        carConstraints.gridy = 0;
-        addCarPanel.add(carAttributesPanel, carConstraints);
-        carConstraints.gridy = 1;
-        addCarPanel.add(selectionPanel, carConstraints);
-
-        //Edit car panel
-        editCarPanel = new JPanel(new GridBagLayout());
-        selectionPanel = new JPanel(new FlowLayout());
-        selectionPanel.setBackground(Color.white);
-        selectionPanel.add(search);
-        selectionPanel.add(confirmEdit);
-        selectionPanel.add(cancelEdit);
-
-        carConstraints.gridy = 0;
-        editCarPanel.add(carAttributesPanel, carConstraints);
-        carConstraints.gridy = 1;
-        editCarPanel.add(selectionPanel, carConstraints);
-
-        //Delete car panel
-        deleteCarPanel = new JPanel(new GridBagLayout());
-
-        //Search car panel
-        searchCarPanel = new JPanel(new GridBagLayout());
-
-        //View car panel
-        viewCarPanel = new JPanel(new GridBagLayout());
+        carFunctionsPanel = new CarFunctions();
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -215,17 +105,6 @@ public class AdminMenu implements ActionListener {
         carButtonPanel.add(deleteCar);
         carButtonPanel.add(searchCar);
         carButtonPanel.add(allCar);
-
-        //Create car functions panel & add all things in same place
-        carPanels = new JPanel[]{addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel};
-        GUI.JPanelSetup(carPanels);
-        carFunctionsPanel = new JPanel();
-        carFunctionsPanel.setPreferredSize(new Dimension(500,500));
-        carFunctionsPanel.add(addCarPanel);
-        carFunctionsPanel.add(editCarPanel);
-        carFunctionsPanel.add(deleteCarPanel);
-        carFunctionsPanel.add(searchCarPanel);
-        carFunctionsPanel.add(viewCarPanel);
 
         //Position elements in car panel
         carConstraints.gridy = 0;
@@ -236,27 +115,27 @@ public class AdminMenu implements ActionListener {
 
         /* REGISTRATION */
         //Create registration functions panel & add all things in same place
+        registrationPanel = new JPanel();
         registrationFunctionsPanel = new JPanel();
 
         /* CUSTOMER */
         //Create customer functions panel & add all things in same place
+        customerPanel = new JPanel();
         customerFunctionsPanel = new JPanel();
 
         /* BOOKING */
         //Create booking functions panel & add all things in same place
+        bookingsPanel = new JPanel();
         bookingFunctionsPanel = new JPanel();
 
         /* SETTING */
         //Create setting functions panel & add all things in same place
+        settingsPanel = new JPanel();
         settingFunctionsPanel = new JPanel();
 
 
         /* MAIN */
         //Create panels
-        registrationPanel = new JPanel();
-        customerPanel = new JPanel();
-        bookingsPanel = new JPanel();
-        settingsPanel = new JPanel();
         panels = new JPanel[]{carPanel, carFunctionsPanel, registrationPanel, registrationFunctionsPanel,
                 customerPanel, customerFunctionsPanel, bookingsPanel, bookingFunctionsPanel,
                 settingsPanel, settingFunctionsPanel};
@@ -305,51 +184,20 @@ public class AdminMenu implements ActionListener {
                 showPanel(settingsPanel, settingFunctionsPanel);
             }
             else if (e.getSource() == addCar){
-                showCarPanel(addCarPanel);
-                available.setEnabled(false);
-                available.setSelected(true);
-                notAvailable.setEnabled(false);
+                CarFunctions.showAddCarPanel();
             }
             else if (e.getSource() == editCar){
-                showCarPanel(editCarPanel);
+                CarFunctions.showEditCarPanel();
             }
             else if (e.getSource() == deleteCar){
-                showCarPanel(deleteCarPanel);
+                CarFunctions.showDeleteCarPanel();
             }
             else if (e.getSource() == searchCar){
-                showCarPanel(searchCarPanel);
+                CarFunctions.showSearchCarPanel();
             }
             else if (e.getSource() == allCar){
-                showCarPanel(viewCarPanel);
+                CarFunctions.showAllCarPanel();
             }
-            else if (e.getSource() == confirmAdd) {
-                String numberPlateInput = numberPlate.getText();
-                String brandInput = brand.getText().toUpperCase();
-                String modelInput = model.getText().toUpperCase();
-                String colorInput = color.getText().toUpperCase();
-                int levelInput = (int) level.getValue();
-                double priceInput = Double.parseDouble(price.getText());
-
-                /* Input validation */
-                if (numberPlateInput.equals("") || brandInput.equals("") || modelInput.equals("") || colorInput.equals("")){
-                    throw new EmptyInputException();
-                }
-
-                //Other validation??????
-
-                Car newCar = new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true);
-                FileIO.carList.add(newCar);
-                FileIO.writeCarFile();
-                JOptionPane.showMessageDialog(frame, "Car added Successfully!");
-                clearAddCarField();
-            }
-            else if (e.getSource() == cancelAdd) {
-                clearAddCarField();
-            }
-        } catch (EmptyInputException emptyInputException){
-            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (NumberFormatException numberFormatException){
-            JOptionPane.showMessageDialog(frame, "Error format for price!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
             System.out.println("HI something wrong");
         }
@@ -367,21 +215,4 @@ public class AdminMenu implements ActionListener {
         smallPanel.setVisible(true);
     }
 
-    private void showCarPanel(JPanel panel){
-        for (JPanel i : carPanels) {
-            i.setVisible(false);
-        }
-        panel.setVisible(true);
-    }
-
-    private void clearAddCarField(){
-        numberPlate.setText("");
-        brand.setText("");
-        model.setText("");
-        color.setText("");
-        price.setText("");
-        level.setValue(1);
-        available.setSelected(false);
-        notAvailable.setSelected(false);
-    }
 }
