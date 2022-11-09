@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Car {
 
     private String numberPlate;
@@ -94,4 +96,54 @@ public class Car {
         else
             availability = true;
     }
+
+    //Still thinking
+    public static Car checkField(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
+        if (!flag){
+            if (price == 0.0){
+                if (!numberPlate.equals("") && brand.equals("") && model.equals("") && color.equals("") && level == 0){
+                }
+                else if (!numberPlate.equals("") && !brand.equals("") && model.equals("") && color.equals("") && level == 0){
+                }
+            }
+            else {
+
+            }
+        }
+        else {
+
+        }
+        return null;
+    }
+
+    public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
+        ArrayList<Car> foundCars = new ArrayList<Car>();
+        for (Car c : FileIO.carList) {
+            if (numberPlate.equals(c.numberPlate)){
+                foundCars.add(c);
+            }
+            if (brand.equals(c.brand)){
+                foundCars.add(c);
+            }
+            if (model.equals(c.model)){
+                foundCars.add(c);
+            }
+            if (color.equals(c.color)){
+                foundCars.add(c);
+            }
+            if (level == c.level){
+                foundCars.add(c);
+            }
+            if (price == c.price){
+                foundCars.add(c);
+            }
+            if (flag){
+                if (available == c.availability){
+                    foundCars.add(c);
+                }
+            }
+        }
+        return foundCars;
+    }
+
 }

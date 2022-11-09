@@ -41,7 +41,8 @@ public class GUI {
         frame.setIconImage(logo.getImage());
         frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
-        frame.setLocation(600, 180);
+        frame.setLocationRelativeTo(null);
+//        frame.setLocation(600, 180);
     }
 
     public static void JLabelSetup(JLabel[] labels){

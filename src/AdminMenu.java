@@ -13,12 +13,6 @@ public class AdminMenu implements ActionListener {
     /* CAR */
     private CarFunctions carFunctionsPanel;
     private JButton addCar, editCar, deleteCar, searchCar, allCar;
-//    private JPanel addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel;
-//    private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel, availabilityLabel;
-//    private JTextField numberPlate, brand, model, color, price;
-//    private JSpinner level;
-//    private JRadioButton available, notAvailable;
-//    private ButtonGroup availability;
 
     /* REGISTRATION */
     private JPanel registrationFunctionsPanel;
@@ -33,7 +27,7 @@ public class AdminMenu implements ActionListener {
     private JPanel settingFunctionsPanel;
 
     private JButton[] buttons, carButtons;
-    private JPanel[] panels, carPanels;
+    private JPanel[] panels;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
@@ -78,7 +72,7 @@ public class AdminMenu implements ActionListener {
         frame.add(buttonPanel, constraints);
 
 
-//        /* CAR */
+        /* CAR */
         //Create buttons
         addCar = new JButton("Add");
         editCar = new JButton("Edit");
@@ -114,24 +108,24 @@ public class AdminMenu implements ActionListener {
 
 
         /* REGISTRATION */
-        //Create registration functions panel & add all things in same place
-        registrationPanel = new JPanel();
-        registrationFunctionsPanel = new JPanel();
+        registrationPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints regConstraints = new GridBagConstraints();
+        registrationFunctionsPanel = new JPanel(); // to change
 
         /* CUSTOMER */
-        //Create customer functions panel & add all things in same place
-        customerPanel = new JPanel();
-        customerFunctionsPanel = new JPanel();
+        customerPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints cusConstraints = new GridBagConstraints();
+        customerFunctionsPanel = new JPanel(); // to change
 
         /* BOOKING */
-        //Create booking functions panel & add all things in same place
-        bookingsPanel = new JPanel();
-        bookingFunctionsPanel = new JPanel();
+        bookingsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints bkgConstraints = new GridBagConstraints();
+        bookingFunctionsPanel = new JPanel(); // to change
 
         /* SETTING */
-        //Create setting functions panel & add all things in same place
-        settingsPanel = new JPanel();
-        settingFunctionsPanel = new JPanel();
+        settingsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints stgConstraints = new GridBagConstraints();
+        settingFunctionsPanel = new JPanel(); // to change
 
 
         /* MAIN */

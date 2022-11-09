@@ -1,7 +1,14 @@
-Number Plate: abc 123
-Brand: PROTON
-Model: SAGA
-Color: WHITE
-Price: 150.0
+Number Plate: 111
+Brand: 111
+Model: 11
+Color: 111
+Price: 11.0
+Available: false
+
+Number Plate: 1
+Brand: 1
+Model: 1
+Color: 1
+Price: 1.0
 Available: true
 
