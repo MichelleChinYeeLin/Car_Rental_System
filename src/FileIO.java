@@ -392,10 +392,9 @@ public class FileIO {
                     availability = line.substring(availabilityText.length()).equals("True");
                     Car car = new Car(numberPlate, brand, model, color, price, availability);
                     carList.add(car);
+                    line2 = br.readLine();
+                    line = br.readLine();
                 }
-
-                line2 = br.readLine();
-                line = br.readLine();
             }
             br.close();
             fr.close();

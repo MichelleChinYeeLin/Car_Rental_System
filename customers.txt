@@ -1,8 +1,30 @@
 Username: shuaigee
 Password: 123
 Name: hy
+Phone Number: 
 Gender: female
 Age: 12
 Email: heyuandeemail
 Address: 111
 Points: 0
+
+Username: testing
+Password: testing
+Name: testing
+Phone Number: 123
+Gender: Male
+Age: 17
+Email: 123
+Address: 123
+Points: 0
+
+Username: 123
+Password: 123
+Name: One
+Phone Number: 123
+Gender: Male
+Age: 17
+Email: 123
+Address: 123
+Points: 0
+

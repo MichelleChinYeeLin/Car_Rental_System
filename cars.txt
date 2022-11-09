@@ -1,0 +1,7 @@
+Number Plate: 123
+Brand: 123
+Model: 123
+Color: 123
+Price: 123.0
+Available: false
+

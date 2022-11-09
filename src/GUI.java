@@ -26,12 +26,11 @@ public class GUI {
         }
     }
 
-    public static void JButtonLeftTabSetup(JButton[] buttons){
-        for (JButton button : buttons){
-            button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-            button.setBackground(Color.white);
-            button.setPreferredSize(new Dimension(150, 40));
-        }
+    public static void JButtonSetup(JButton button){
+        button.setFocusable(false);
+        button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        button.setBackground(Color.white);
+        button.setPreferredSize(new Dimension(150, 40));
     }
 
     public static void JFrameSetup(JFrame frame){
@@ -48,6 +47,11 @@ public class GUI {
             label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
             label.setHorizontalAlignment(JLabel.LEFT);
         }
+    }
+
+    public static void JLabelSetup(JLabel label){
+        label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        label.setHorizontalAlignment(JLabel.LEFT);
     }
 
     public static void playSound(String soundName) {
