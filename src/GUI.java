@@ -17,6 +17,10 @@ public class GUI {
         return frameBackgroundColor;
     }
 
+    public static Font getDefaultFont(){
+        return new Font("Serif", Font.PLAIN, 16);
+    }
+
     public static void JButtonSetup(JButton[] buttons){
         for (JButton button : buttons) {
             button.setFocusable(false);
@@ -42,7 +46,6 @@ public class GUI {
         frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
         frame.setLocationRelativeTo(null);
-//        frame.setLocation(600, 180);
     }
 
     public static void JLabelSetup(JLabel[] labels){
@@ -50,6 +53,11 @@ public class GUI {
             label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
             label.setHorizontalAlignment(JLabel.LEFT);
         }
+    }
+
+    public static void JLabelSetup(JLabel label){
+        label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        label.setHorizontalAlignment(JLabel.LEFT);
     }
 
     public static void JPanelSetup(JPanel[] panels){

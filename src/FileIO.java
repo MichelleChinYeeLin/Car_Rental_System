@@ -424,7 +424,7 @@ public class FileIO {
                 fw.write(modelText + car.getModel() + "\n");
                 fw.write(colorText + car.getColor() + "\n");
                 fw.write(priceText + car.getPrice() + "\n");
-                fw.write(availabilityText + car.isAvailable() + "\n\n");
+                fw.write(availabilityText + car.isAvailability() + "\n\n");
             }
             fw.close();
         }

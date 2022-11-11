@@ -71,6 +71,10 @@ public class AdminMenu implements ActionListener {
         constraints.weightx = 0.01;
         frame.add(buttonPanel, constraints);
 
+        //Create main panel
+        JPanel mainPanel = new JPanel();
+        mainPanel.setBackground(Color.white);
+        mainPanel.setPreferredSize(new Dimension(600,500));
 
         /* CAR */
         //Create buttons
@@ -135,19 +139,18 @@ public class AdminMenu implements ActionListener {
                 settingsPanel, settingFunctionsPanel};
         GUI.JPanelSetup(panels);
 
-        //Create main panel
-        JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(Color.white);
-        mainPanel.add(carPanel);
-        mainPanel.validate();
+        GridBagConstraints panelConstraints = new GridBagConstraints();
+        panelConstraints.fill = GridBagConstraints.BOTH;
+        mainPanel.add(carPanel, panelConstraints);
 
         //Position main panel in the frame
-        constraints.insets = new Insets(5,0,5,5);
+        constraints.insets = new Insets(5,5,5,5);
         constraints.gridx = 1;
         constraints.weighty = 1;
         constraints.weightx = 0.99;
         constraints.fill = GridBagConstraints.BOTH;
         frame.add(mainPanel, constraints);
+        mainPanel.validate();
     }
 
     public JFrame getFrame() {
@@ -208,5 +211,4 @@ public class AdminMenu implements ActionListener {
         bigPanel.setVisible(true);
         smallPanel.setVisible(true);
     }
-
 }
