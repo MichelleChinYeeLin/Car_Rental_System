@@ -34,7 +34,7 @@ public class CarFunctions extends JPanel implements ActionListener {
         search.addActionListener(this);
         confirmEdit.addActionListener(this);
         cancelEdit.addActionListener(this);
-        GUI.subJButtonSetup(carButtons);
+        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
 
         //Create labels
         numberPlateLabel = new JLabel("Number Plate:");

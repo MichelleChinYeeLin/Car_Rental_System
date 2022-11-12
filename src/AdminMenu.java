@@ -7,8 +7,10 @@ public class AdminMenu implements ActionListener {
 
     /* MAIN */
     private JFrame frame;
-    private JPanel carPanel, registrationPanel, customerPanel, bookingsPanel, settingsPanel;
-    private JButton logout, accRegistration, customers, bookings, cars, settings;
+    private JPanel carsPanel, registrationsPanel, accountsPanel, bookingsPanel, reportsPanel;
+    private JButton logout, accRegistrations, accounts, bookings, cars, reports;
+    private JButton[] buttons, carButtons, accountButtons, bookingButtons, reportButtons;
+    private JPanel[] panels;
 
     /* CAR */
     private CarFunctions carFunctionsPanel;
@@ -17,17 +19,20 @@ public class AdminMenu implements ActionListener {
     /* REGISTRATION */
     private JPanel registrationFunctionsPanel;
 
-    /* CUSTOMER */
-    private JPanel customerFunctionsPanel;
+    /* ACCOUNT */
+    private JPanel accountFunctionsPanel;
+    private JButton addAdmin, searchAccount, allAccount;
+    // search -> edit/delete
 
     /* BOOKING */
     private JPanel bookingFunctionsPanel;
+    private JButton searchBooking, allBooking;
+    // search -> confirm/decline/generate receipt
 
-    /* SETTING */
-    private JPanel settingFunctionsPanel;
+    /* REPORT */
+    private JPanel reportFunctionsPanel;
+    private JButton genderReport, ageReport, paymentAnalysis, feedbackAnalysis;
 
-    private JButton[] buttons, carButtons;
-    private JPanel[] panels;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
@@ -36,18 +41,18 @@ public class AdminMenu implements ActionListener {
         frame.setLayout(new GridBagLayout());
 
         //Create buttons
-        accRegistration = new JButton("Registration");
-        customers = new JButton("Customers");
+        accRegistrations = new JButton("Registration");
+        accounts = new JButton("Accounts");
         bookings = new JButton("Bookings");
         cars = new JButton("Cars");
-        settings = new JButton("Settings");
+        reports = new JButton("Reports");
         logout = new JButton("Logout");
-        buttons = new JButton[]{accRegistration, customers, bookings, cars, settings, logout};
-        accRegistration.addActionListener(this);
-        customers.addActionListener(this);
+        buttons = new JButton[]{accRegistrations, accounts, bookings, cars, reports, logout};
+        accRegistrations.addActionListener(this);
+        accounts.addActionListener(this);
         bookings.addActionListener(this);
         cars.addActionListener(this);
-        settings.addActionListener(this);
+        reports.addActionListener(this);
         logout.addActionListener(this);
         GUI.JButtonSetup(buttons);
 
@@ -85,10 +90,10 @@ public class AdminMenu implements ActionListener {
         deleteCar.addActionListener(this);
         searchCar.addActionListener(this);
         allCar.addActionListener(this);
-        GUI.subJButtonSetup(carButtons);
+        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
 
         //Create car panel
-        carPanel = new JPanel(new GridBagLayout());
+        carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
         carFunctionsPanel = new CarFunctions();
 
@@ -102,43 +107,118 @@ public class AdminMenu implements ActionListener {
 
         //Position elements in car panel
         carConstraints.gridy = 0;
-        carPanel.add(carButtonPanel, carConstraints);
+        carsPanel.add(carButtonPanel, carConstraints);
         carConstraints.gridy = 1;
-        carPanel.add(carFunctionsPanel, carConstraints);
+        carsPanel.add(carFunctionsPanel, carConstraints);
 
 
         /* REGISTRATION */
-        registrationPanel = new JPanel(new GridBagLayout());
+        registrationsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints regConstraints = new GridBagConstraints();
         registrationFunctionsPanel = new JPanel(); // to change
 
-        /* CUSTOMER */
-        customerPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints cusConstraints = new GridBagConstraints();
-        customerFunctionsPanel = new JPanel(); // to change
+
+        /* ACCOUNT */
+        //Create buttons
+        addAdmin = new JButton("Add Admin");
+        searchAccount = new JButton("Search");
+        allAccount = new JButton("All Accounts");
+        accountButtons = new JButton[]{addAdmin, searchAccount, allAccount};
+        addAdmin.addActionListener(this);
+        searchAccount.addActionListener(this);
+        allAccount.addActionListener(this);
+        GUI.subJButtonSetup(accountButtons, new Dimension(120, 40));
+
+        //Create account panel
+        accountsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints accConstraints = new GridBagConstraints();
+        accountFunctionsPanel = new JPanel(); // to change
+
+        //Account button panel
+        JPanel accountButtonPanel = new JPanel(new GridBagLayout());
+        accountButtonPanel.add(addAdmin);
+        accountButtonPanel.add(searchAccount);
+        accountButtonPanel.add(allAccount);
+
+        //Position elements in account panel
+        accConstraints.gridy = 0;
+        accountsPanel.add(accountButtonPanel, accConstraints);
+        accConstraints.gridy = 1;
+        accountsPanel.add(accountFunctionsPanel, accConstraints);
+
 
         /* BOOKING */
+        //Create buttons
+        searchBooking = new JButton("Search");
+        allBooking = new JButton("All Bookings");
+        bookingButtons = new JButton[]{searchBooking, allBooking};
+        searchBooking.addActionListener(this);
+        allBooking.addActionListener(this);
+        GUI.subJButtonSetup(bookingButtons, new Dimension(120, 40));
+
+        //Create booking panel
         bookingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bkgConstraints = new GridBagConstraints();
         bookingFunctionsPanel = new JPanel(); // to change
 
-        /* SETTING */
-        settingsPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints stgConstraints = new GridBagConstraints();
-        settingFunctionsPanel = new JPanel(); // to change
+        //Booking button panel
+        JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
+        bookingButtonPanel.add(searchBooking);
+        bookingButtonPanel.add(allBooking);
+
+        //Position elements in booking panel
+        bkgConstraints.gridy = 0;
+        bookingsPanel.add(bookingButtonPanel, bkgConstraints);
+        bkgConstraints.gridy = 1;
+        bookingsPanel.add(bookingFunctionsPanel, bkgConstraints);
+
+
+        /* REPORT */
+        //Create buttons
+        genderReport = new JButton("Gender");
+        ageReport = new JButton("Age");
+        paymentAnalysis = new JButton("Payment");
+        feedbackAnalysis = new JButton("Feedback");
+        reportButtons = new JButton[]{genderReport, ageReport, paymentAnalysis, feedbackAnalysis};
+        genderReport.addActionListener(this);
+        ageReport.addActionListener(this);
+        paymentAnalysis.addActionListener(this);
+        feedbackAnalysis.addActionListener(this);
+        GUI.subJButtonSetup(reportButtons, new Dimension(110, 40));
+
+        //Create report panel
+        reportsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints repConstraints = new GridBagConstraints();
+        reportFunctionsPanel = new JPanel(); // to change
+
+        //Report button panel
+        JPanel reportButtonPanel = new JPanel(new GridBagLayout());
+        reportButtonPanel.add(genderReport);
+        reportButtonPanel.add(ageReport);
+        reportButtonPanel.add(paymentAnalysis);
+        reportButtonPanel.add(feedbackAnalysis);
+
+        //Position elements in booking panel
+        repConstraints.gridy = 0;
+        reportsPanel.add(reportButtonPanel, repConstraints);
+        repConstraints.gridy = 1;
+        reportsPanel.add(bookingFunctionsPanel, repConstraints);
 
 
         /* MAIN */
         //Create panels
-        panels = new JPanel[]{carPanel, carFunctionsPanel, registrationPanel, registrationFunctionsPanel,
-                customerPanel, customerFunctionsPanel, bookingsPanel, bookingFunctionsPanel,
-                settingsPanel, settingFunctionsPanel};
+        panels = new JPanel[]{carsPanel, carFunctionsPanel, registrationsPanel, registrationFunctionsPanel,
+                accountsPanel, accountFunctionsPanel, bookingsPanel, bookingFunctionsPanel,
+                reportsPanel, reportFunctionsPanel};
         GUI.JPanelSetup(panels);
 
         //Create main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.white);
-        mainPanel.add(carPanel);
+        mainPanel.add(carsPanel);
+        mainPanel.add(accountsPanel);
+        mainPanel.add(bookingsPanel);
+        mainPanel.add(reportsPanel);
         mainPanel.validate();
 
         //Position main panel in the frame
@@ -162,20 +242,20 @@ public class AdminMenu implements ActionListener {
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
-            else if (e.getSource() == accRegistration){
-                showPanel(registrationPanel, registrationFunctionsPanel);
+            else if (e.getSource() == accRegistrations){
+                showAdminPanel(registrationsPanel, registrationFunctionsPanel);
             }
-            else if (e.getSource() == customers){
-                showPanel(customerPanel, customerFunctionsPanel);
+            else if (e.getSource() == accounts){
+                showAdminPanel(accountsPanel, accountFunctionsPanel);
             }
             else if (e.getSource() == bookings){
-                showPanel(bookingsPanel, bookingFunctionsPanel);
+                showAdminPanel(bookingsPanel, bookingFunctionsPanel);
             }
             else if (e.getSource() == cars){
-                showPanel(carPanel, carFunctionsPanel);
+                showAdminPanel(carsPanel, carFunctionsPanel);
             }
-            else if (e.getSource() == settings){
-                showPanel(settingsPanel, settingFunctionsPanel);
+            else if (e.getSource() == reports){
+                showAdminPanel(reportsPanel, reportFunctionsPanel);
             }
             else if (e.getSource() == addCar){
                 CarFunctions.showAddCarPanel();
@@ -201,7 +281,7 @@ public class AdminMenu implements ActionListener {
 
     }
 
-    private void showPanel(JPanel bigPanel, JPanel smallPanel){
+    private void showAdminPanel(JPanel bigPanel, JPanel smallPanel){
         for (JPanel i : panels) {
             i.setVisible(false);
         }

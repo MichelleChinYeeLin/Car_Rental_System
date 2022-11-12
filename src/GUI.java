@@ -26,12 +26,12 @@ public class GUI {
         }
     }
 
-    public static void subJButtonSetup(JButton[] buttons){
+    public static void subJButtonSetup(JButton[] buttons, Dimension dim){
         for (JButton button : buttons) {
             button.setFocusable(false);
             button.setFont(new Font(Font.SERIF, Font.BOLD, 16));
             button.setBackground(Color.white);
-            button.setPreferredSize(new Dimension(100, 40));
+            button.setPreferredSize(dim);
         }
     }
 
@@ -39,7 +39,7 @@ public class GUI {
         ImageIcon logo = new ImageIcon("src/images/Logo.png");
         frame.setSize(frameLength,frameHeight);
         frame.setIconImage(logo.getImage());
-        frame.setResizable(true);
+//        frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
         frame.setLocationRelativeTo(null);
 //        frame.setLocation(600, 180);
