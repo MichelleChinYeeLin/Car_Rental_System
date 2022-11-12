@@ -12,7 +12,6 @@ public class LoginPage implements ActionListener {
     private JTextField username;
     private JPasswordField password;
     private JComboBox<String> userTypeSelect;
-    private ImageIcon logo;
     private JButton[] buttons;
     private JLabel[] labels;
 
@@ -40,7 +39,7 @@ public class LoginPage implements ActionListener {
 
         constraints.gridx = 0;
         String[] userType = {"Customer", "Admin"};
-        userTypeSelect = new JComboBox<String>(userType);
+        userTypeSelect = new JComboBox<>(userType);
         userTypeSelect.setPreferredSize(new Dimension(20, 10));
         userTypeSelect.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
         constraints.gridy = 1;

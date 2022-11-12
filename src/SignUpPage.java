@@ -52,7 +52,7 @@ public class SignUpPage implements ActionListener {
         phoneNumLabel = new JLabel("Phone Number: ");
         emailLabel = new JLabel("Email: ");
         addressLabel = new JLabel("Address: ");
-        JLabel[] labels = {usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
+        labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
         GUI.JLabelSetup(labels);
 
         //Set label positions
@@ -136,7 +136,7 @@ public class SignUpPage implements ActionListener {
         cancel = new JButton("Cancel");
         signUp.addActionListener(this);
         cancel.addActionListener(this);
-        JButton buttons[] = {signUp, cancel};
+        buttons = new JButton[]{signUp, cancel};
         GUI.JButtonSetup(buttons);
 
         //Create and set buttons

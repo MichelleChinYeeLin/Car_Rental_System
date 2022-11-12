@@ -2,18 +2,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class AccountFunctions extends JPanel implements ActionListener {
 
     private static JPanel editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel;
+    private JPanel customerOnlyAttributes;
+    private JPanel searchAccountAttributesPanel;
     private JButton confirmEdit, cancelEdit, confirmAdd, cancelAdd, search;
     private JLabel usernameLabel1, passwordLabel1, passwordLabel2;
     private JLabel usernameLabel2;
+    private JLabel usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
+            emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2;
     private static JTextField username1;
     private JTextField username2;
+    private JTextField usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
     private JPasswordField password1, password2;
+    private JComboBox<String> userType, genderSearch;
+    private JSpinner fromAge, toAge, fromPoint, toPoint;
     private static JPanel[] panels;
-    private JLabel[] labels;
+    private JLabel[] labels, searchLabels;
     private JButton[] accountButtons;
 
     public AccountFunctions(){
@@ -39,13 +47,51 @@ public class AccountFunctions extends JPanel implements ActionListener {
         usernameLabel2 = new JLabel("New Username:");
         labels = new JLabel[]{usernameLabel1, passwordLabel1, passwordLabel2, usernameLabel2};
         GUI.JLabelSetup(labels);
+        usernameSearchLabel = new JLabel("Username:");
+        nameSearchLabel = new JLabel("Name:");
+        phoneSearchLabel = new JLabel("Phone:");
+        genderSearchLabel = new JLabel("Gender:");
+        ageSearchLabel1 = new JLabel("Age:");
+        ageSearchLabel2 = new JLabel("to");
+        emailSearchLabel = new JLabel("Email:");
+        addressSearchLabel = new JLabel("Address:");
+        pointSearchLabel1 = new JLabel("Point:");
+        pointSearchLabel2 = new JLabel("to");
+        searchLabels = new JLabel[]{usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
+                emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2};
+        GUI.JLabelSetup(searchLabels);
 
         //Create input fields
+        //JTextField
         username1 = new JTextField(20);
         username1.setEnabled(false);
         username2 = new JTextField(20);
+        usernameSearch = new JTextField(20);
+        usernameSearch.setPreferredSize(new Dimension(35,40));
+        nameSearch = new JTextField(7);
+        phoneSearch = new JTextField(7);
+        emailSearch = new JTextField(7);
+        addressSearch = new JTextField(7);
+
+        //JPasswordField
         password1 = new JPasswordField(20);
         password2 = new JPasswordField(20);
+
+        //JComboBox
+        String[] userTypes = {"Customer", "Admin"};
+        String[] genderTypes = {"male", "female"};
+        userType = new JComboBox<>(userTypes);
+        userType.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        userType.setPreferredSize(new Dimension(100,40));
+        genderSearch = new JComboBox<>(genderTypes);
+        genderSearch.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+
+        //JSpinner
+        fromAge = new JSpinner(new SpinnerNumberModel(17,1,122,1));
+        toAge = new JSpinner(new SpinnerNumberModel(17,1,122,1));
+        fromPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+        toPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+
 
         //Edit password & Add admin panel
         GridBagConstraints accConstraints = new GridBagConstraints();
@@ -93,6 +139,95 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
         //Search account panel
         searchAccountPanel = new JPanel(new GridBagLayout());
+        searchAccountAttributesPanel = new JPanel(new GridBagLayout());
+        searchAccountAttributesPanel.setBackground(Color.white);
+        JPanel commonAttributes = new JPanel();
+        commonAttributes.setBackground(Color.white);
+        customerOnlyAttributes = new JPanel(new GridBagLayout());
+        customerOnlyAttributes.setBackground(Color.white);
+        customerOnlyAttributes.setVisible(false);
+
+        //Common attributes
+        commonAttributes.add(usernameSearchLabel);
+        commonAttributes.add(usernameSearch);
+        commonAttributes.add(userType);
+        commonAttributes.add(search);
+
+        //Customer only attributes
+        GridBagConstraints searchAttributeConstraints = new GridBagConstraints();
+        searchAttributeConstraints.insets = new Insets(2,2,2,2);
+        searchAttributeConstraints.fill = GridBagConstraints.HORIZONTAL;
+        searchAttributeConstraints.gridy = 0;
+        searchAttributeConstraints.gridx = 0;
+        searchAttributeConstraints.weightx = 0.1;
+        customerOnlyAttributes.add(nameSearchLabel, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 1;
+        customerOnlyAttributes.add(nameSearch, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 2;
+        customerOnlyAttributes.add(phoneSearchLabel, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 3;
+        customerOnlyAttributes.add(phoneSearch, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 4;
+        customerOnlyAttributes.add(emailSearchLabel, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 5;
+        customerOnlyAttributes.add(emailSearch, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 6;
+        customerOnlyAttributes.add(addressSearchLabel, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 7;
+        customerOnlyAttributes.add(addressSearch, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridy = 1;
+        searchAttributeConstraints.gridx = 0;
+        customerOnlyAttributes.add(ageSearchLabel1, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 1;
+        customerOnlyAttributes.add(fromAge, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 2;
+        customerOnlyAttributes.add(ageSearchLabel2, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 3;
+        customerOnlyAttributes.add(toAge, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 4;
+        customerOnlyAttributes.add(pointSearchLabel1, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 5;
+        customerOnlyAttributes.add(fromPoint, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 6;
+        customerOnlyAttributes.add(pointSearchLabel2, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 7;
+        customerOnlyAttributes.add(toPoint, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridy = 2;
+        searchAttributeConstraints.gridx = 3;
+        customerOnlyAttributes.add(genderSearchLabel, searchAttributeConstraints);
+
+        searchAttributeConstraints.gridx = 4;
+        customerOnlyAttributes.add(genderSearch, searchAttributeConstraints);
+
+        //Add two panels above -> search account attributes panel
+        accConstraints.gridy = 0;
+        searchAccountAttributesPanel.add(commonAttributes, accConstraints);
+        accConstraints.gridy = 1;
+        searchAccountAttributesPanel.add(customerOnlyAttributes, accConstraints);
+
+        //Add search account attributes panel & searched result -> search account panel
+        accConstraints.gridy = 0;
+        searchAccountPanel.add(searchAccountAttributesPanel, accConstraints);
+        accConstraints.gridy = 1;
+//        searchAccountPanel.add(, accConstraints); // search result
+
+
 
         //View account panel
         viewAccountPanel = new JPanel(new GridBagLayout());
@@ -167,6 +302,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == cancelAdd){
                 username2.setText("");
             }
+            else if (e.getSource() == search){
+                searchAccount();
+            }
         }
         catch (EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -190,6 +328,34 @@ public class AccountFunctions extends JPanel implements ActionListener {
             i.setVisible(false);
         }
         panel.setVisible(true);
+    }
+
+    private void searchAccount(){
+        try {
+            ArrayList<Admin> searchedAdminList = FileIO.getAdminList();
+            ArrayList<Customer> searchedCustomerList = FileIO.getCustomerList();
+            String userTypeInput = (String) userType.getSelectedItem();
+            String usernameInput = usernameSearchLabel.getText().toUpperCase();
+
+            customerOnlyAttributes.setVisible(userTypeInput.equals("Customer"));
+
+            if (userTypeInput.equals("Admin")){
+                searchedAdminList.removeIf(a -> !a.getUsername().contains(usernameInput));
+                //下面的换成这个
+//                for (Admin a : searchedAdminList) {
+//                    if (!a.getUsername().contains(usernameInput)){
+//                        searchedAdminList.remove(a);
+//                    }
+//                }
+            }
+            else {
+                String nameInput = nameSearch.getText();
+                //TODO: get input from fields
+            }
+        }
+        catch (Exception exception){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Unexpected error. Please try again.");
+        }
     }
 
 }

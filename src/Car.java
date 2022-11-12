@@ -70,10 +70,6 @@ public class Car {
         this.numberPlate = numberPlate;
     }
 
-    public boolean isAvailable() {
-        return availability;
-    }
-
     public int getLevel() {
         return level;
     }
@@ -88,13 +84,6 @@ public class Car {
 
     public void setAvailability(boolean availability) {
         this.availability = availability;
-    }
-
-    public void updateCarStatus(){
-        if (availability == true)
-            availability = false;
-        else
-            availability = true;
     }
 
     //Still thinking
