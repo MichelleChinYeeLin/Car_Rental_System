@@ -21,7 +21,7 @@ public class AdminMenu implements ActionListener {
 
     /* ACCOUNT */
     private JPanel accountFunctionsPanel;
-    private JButton addAdmin, searchAccount, allAccount;
+    private JButton editPassword, addAdmin, searchAccount, allAccount;
     // search -> edit/delete
 
     /* BOOKING */
@@ -120,22 +120,26 @@ public class AdminMenu implements ActionListener {
 
         /* ACCOUNT */
         //Create buttons
+        editPassword = new JButton("Change Password");
         addAdmin = new JButton("Add Admin");
         searchAccount = new JButton("Search");
         allAccount = new JButton("All Accounts");
-        accountButtons = new JButton[]{addAdmin, searchAccount, allAccount};
+        accountButtons = new JButton[]{editPassword, addAdmin, searchAccount, allAccount};
+        editPassword.addActionListener(this);
         addAdmin.addActionListener(this);
         searchAccount.addActionListener(this);
         allAccount.addActionListener(this);
         GUI.subJButtonSetup(accountButtons, new Dimension(120, 40));
+        editPassword.setPreferredSize(new Dimension(160,40));
 
         //Create account panel
         accountsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-        accountFunctionsPanel = new JPanel(); // to change
+        accountFunctionsPanel = new AccountFunctions();
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
+        accountButtonPanel.add(editPassword);
         accountButtonPanel.add(addAdmin);
         accountButtonPanel.add(searchAccount);
         accountButtonPanel.add(allAccount);
@@ -256,6 +260,19 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == reports){
                 showAdminPanel(reportsPanel, reportFunctionsPanel);
+            }
+            else if (e.getSource() == editPassword){
+                AccountFunctions.getUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
+                AccountFunctions.showEditPasswordPanel();
+            }
+            else if (e.getSource() == addAdmin){
+                AccountFunctions.showAddAdminPanel();
+            }
+            else if (e.getSource() == searchAccount){
+                AccountFunctions.showSearchAccountPanel();
+            }
+            else if (e.getSource() == allAccount){
+                AccountFunctions.showViewAccountPanel();
             }
             else if (e.getSource() == addCar){
                 CarFunctions.showAddCarPanel();

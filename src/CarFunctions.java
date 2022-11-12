@@ -216,11 +216,7 @@ public class CarFunctions extends JPanel implements ActionListener {
 
                 //Other validation??????
 
-                Car newCar = new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true);
-                ArrayList<Car> newCarList = FileIO.getCarList();
-                newCarList.add(newCar);
-                FileIO.setCarList(newCarList);
-                //FileIO.carList.add(newCar);
+                FileIO.carList.add(new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true));
                 FileIO.writeCarFile();
                 JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
                 clearAddCarField();

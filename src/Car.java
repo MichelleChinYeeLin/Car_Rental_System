@@ -98,24 +98,6 @@ public class Car {
     }
 
     //Still thinking
-    public static Car checkField(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
-        if (!flag){
-            if (price == 0.0){
-                if (!numberPlate.equals("") && brand.equals("") && model.equals("") && color.equals("") && level == 0){
-                }
-                else if (!numberPlate.equals("") && !brand.equals("") && model.equals("") && color.equals("") && level == 0){
-                }
-            }
-            else {
-
-            }
-        }
-        else {
-
-        }
-        return null;
-    }
-
     public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
         ArrayList<Car> foundCars = new ArrayList<Car>();
         for (Car c : FileIO.carList) {

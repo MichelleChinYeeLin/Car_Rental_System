@@ -395,7 +395,7 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if (line.startsWith(availabilityText)){
-                    availability = line.substring(availabilityText.length()).equals("True");
+                    availability = line.substring(availabilityText.length()).equals("true");
                     Car car = new Car(numberPlate, brand, model, color, level, price, availability);
                     carList.add(car);
                     line2 = br.readLine();
@@ -532,4 +532,13 @@ public class FileIO {
         readBookingFile();
         readRegistrationFile();
     }
+
+    public static void writeAllFiles(){
+        writeAdminFile();
+        writeCustomerFile();
+        writeCarFile();
+        writeBookingFile();
+        writeRegistrationFile();
+    }
+
 }
