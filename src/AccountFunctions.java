@@ -148,7 +148,21 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 password2.setText("");
             }
             else if (e.getSource() == confirmAdd){
+                String newUsername = username2.getText();
+                String newPassword = newUsername;
 
+                if (newUsername.equals("")) throw new EmptyInputException();
+
+                for (Admin a: FileIO.adminList) {
+                    if (newUsername.equals(a.getUsername())){
+                        throw new UsernameTakenException();
+                    }
+                }
+                // New admin account's password same with username
+                FileIO.adminList.add(new Admin(newUsername, newPassword));
+                FileIO.writeAdminFile();
+                JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "New admin account is successfully created!");
+                username2.setText("");
             }
             else if (e.getSource() == cancelAdd){
                 username2.setText("");
@@ -161,6 +175,10 @@ public class AccountFunctions extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             password1.setText("");
             password2.setText("");
+        }
+        catch (UsernameTakenException usernameTakenException){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            username2.setText("");
         }
         catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
