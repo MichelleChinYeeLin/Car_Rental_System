@@ -17,6 +17,6 @@ public class CarRentalSystem {
         signUpPage = new SignUpPage();
         customerMenu = new CustomerMenu();
         adminMenu = new AdminMenu();
-        adminMenu.getFrame().setVisible(true);
+//        adminMenu.getFrame().setVisible(true);
     }
 }

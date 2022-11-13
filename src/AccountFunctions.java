@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -12,6 +11,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private static JPanel editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel;
     private JPanel customerOnlyAttributes, searchAccountAttributesPanel, searchResultPanel;
     private JButton confirmEdit, cancelEdit, confirmAdd, cancelAdd, search;
+    private JButton editButton, deleteButton;
     private JLabel usernameLabel1, passwordLabel1, passwordLabel2;
     private JLabel usernameLabel2;
     private JLabel usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
@@ -22,10 +22,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JPasswordField password1, password2;
     private JComboBox<String> userType, genderSearch;
     private JSpinner fromAge, toAge, fromPoint, toPoint;
-    private JTable searchCustomerTable, searchAdminTable;
+    private JTable searchTable, searchAdminTable;
     private static JPanel[] panels;
     private JLabel[] labels, searchLabels;
     private JButton[] accountButtons;
+    private JSpinner numberSpinner;
 
     public AccountFunctions(){
 
@@ -159,9 +160,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
         customerOnlyAttributes = new JPanel(new GridBagLayout());
         customerOnlyAttributes.setBackground(Color.white);
         customerOnlyAttributes.setVisible(false);
-        searchResultPanel = new JPanel();
-//        searchResultPanel.setBackground(Color.white);
-        searchResultPanel.setPreferredSize(new Dimension(500,200));
+        searchResultPanel = new JPanel(new GridBagLayout());
+        searchResultPanel.setBackground(Color.white);
+        searchResultPanel.setPreferredSize(new Dimension(500,250));
 
         //Common attributes
         commonAttributes.add(usernameSearchLabel);
@@ -192,7 +193,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
         searchAttributeConstraints.gridx = 5;
         customerOnlyAttributes.add(emailSearch, searchAttributeConstraints);
-
 
         searchAttributeConstraints.gridy = 1;
         searchAttributeConstraints.gridx = 0;
@@ -323,6 +323,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == search){
                 searchAccount();
             }
+            else if (e.getSource() == editButton){
+                //TODO: show editable fields
+            }
+            else if (e.getSource() == deleteButton){
+                //TODO: confirm again
+            }
+
         }
         catch (EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -350,10 +357,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
     private void searchAccount(){
         try {
-            ArrayList<Admin> searchedAdminList = FileIO.getAdminList();
-            ArrayList<Customer> searchedCustomerList = FileIO.getCustomerList();
+//            ArrayList<Admin> searchedAdminList = FileIO.getAdminList(); //亲测无效
+            ArrayList<Admin> searchedAdminList = new ArrayList<>(FileIO.adminList);
+            ArrayList<Customer> searchedCustomerList = new ArrayList<>(FileIO.customerList);
             String userTypeInput = (String) userType.getSelectedItem();
-            String usernameInput = usernameSearchLabel.getText();
+            String usernameInput = usernameSearch.getText();
+            String[] tableColumn = new String[]{};
+            Object[][] tempTable = new Object[][]{};
 
 
             if (userTypeInput.equals("Admin")){
@@ -366,25 +376,16 @@ public class AccountFunctions extends JPanel implements ActionListener {
 //                }
 
                 if (!(searchedAdminList.size() == 0)){
-                    String[] tableColumn = {"No", "Username"};
-                    Object[][] tempTable = new Object[searchedAdminList.size()][2];
+                    tableColumn = new String[]{"No", "Username"};
+                    tempTable = new Object[searchedAdminList.size()][2];
                     int i = 0;
                     for (Admin admin : searchedAdminList){
                         tempTable[i][0] = i + 1;
                         tempTable[i][1] = admin.getUsername();
                         i++;
                     }
-
-                    searchAdminTable = new JTable(tempTable, tableColumn);
-                    searchAdminTable.setVisible(true);
-                    JScrollPane scrollPane = new JScrollPane(searchAdminTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    searchAdminTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                    searchResultPanel.add(scrollPane);
                 }
-
-                searchResultPanel.validate();
-
-        }
+            }
             else {
                 if ((int) fromAge.getValue() > (int) toAge.getValue()){
                     throw new InvalidAgeException();
@@ -419,8 +420,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 searchedCustomerList.removeIf(c -> !(c.getPoints() >= (int) fromPoint.getValue() && c.getPoints() <= (int) toPoint.getValue()));
 
                 if (!(searchedCustomerList.size() == 0)){
-                    String[] tableColumn = {"No", "Username", "Name", "Phone Num.", "Gender", "Age", "Email", "Address", "Points"};
-                    Object[][] tempTable = new Object[searchedCustomerList.size()][9];
+                    tableColumn = new String[]{"No", "Username", "Name", "Phone Num.", "Gender", "Age", "Email", "Address", "Points"};
+                    tempTable = new Object[searchedCustomerList.size()][9];
                     int i = 0;
                     for (Customer customer : searchedCustomerList){
                         tempTable[i][0] = i + 1;
@@ -434,17 +435,67 @@ public class AccountFunctions extends JPanel implements ActionListener {
                         tempTable[i][8] = customer.getPoints();
                         i++;
                     }
-
-                    searchCustomerTable = new JTable(tempTable, tableColumn);
-                    searchCustomerTable.setVisible(true);
-                    JScrollPane scrollPane = new JScrollPane(searchCustomerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-                    searchCustomerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-                    searchResultPanel.add(scrollPane);
                 }
-
-                searchResultPanel.validate();
-
             }
+
+            searchTable = new JTable(tempTable, tableColumn);
+            searchTable.setVisible(true);
+            JScrollPane scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            searchTable.setPreferredSize(new Dimension(500,180));
+            scrollPane.setPreferredSize(new Dimension(500,200));
+
+            JPanel bottomPanel = new JPanel(new GridBagLayout());
+            bottomPanel.setBackground(Color.white);
+            GridBagConstraints bottomConstraints = new GridBagConstraints();
+
+            bottomConstraints.fill = GridBagConstraints.BOTH;
+            bottomConstraints.anchor = GridBagConstraints.WEST;
+            bottomConstraints.gridx = 0;
+            bottomConstraints.insets = new Insets(5,5,5,20);
+            JLabel numberLabel = new JLabel("Row Number: ");
+            GUI.JLabelSetup(numberLabel);
+            bottomPanel.add(numberLabel, bottomConstraints);
+
+            bottomConstraints.gridx = 1;
+            int maxNum;
+            if (userTypeInput.equals("Admin")){
+                maxNum = searchedAdminList.size();
+            }
+            else {
+                maxNum = searchedCustomerList.size();
+            }
+            numberSpinner = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
+            bottomPanel.add(numberSpinner, bottomConstraints);
+
+            editButton = new JButton("EDIT");
+            deleteButton = new JButton("DELETE");
+            editButton.addActionListener(this);
+            deleteButton.addActionListener(this);
+            JButton[] buttons = new JButton[]{editButton, deleteButton};
+            GUI.subJButtonSetup(buttons, new Dimension(100,30));
+
+            bottomConstraints.gridx = 3;
+            bottomPanel.add(editButton, bottomConstraints);
+
+            bottomConstraints.gridx = 4;
+            bottomPanel.add(deleteButton, bottomConstraints);
+
+            searchResultPanel.validate();
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.gridx = 0;
+            constraints.gridy = 0;
+            constraints.weighty = 0.8;
+            searchResultPanel.add(scrollPane, constraints);
+
+            constraints.gridy = 1;
+            constraints.weighty = 0.2;
+            constraints.fill = GridBagConstraints.HORIZONTAL;
+            constraints.anchor = GridBagConstraints.WEST;
+            searchResultPanel.add(bottomPanel, constraints);
+
+            searchResultPanel.validate();
         }
         catch (InvalidAgeException invalidAgeException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid age entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
