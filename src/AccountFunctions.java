@@ -22,7 +22,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JPasswordField password1, password2;
     private JComboBox<String> userType, genderSearch;
     private JSpinner fromAge, toAge, fromPoint, toPoint;
-    private JTable searchTable, searchAdminTable;
+    private JTable searchTable;
+    private static JTable allAdminTable, allCustomerTable;
     private static JPanel[] panels;
     private JLabel[] labels, searchLabels;
     private JButton[] accountButtons;
@@ -246,7 +247,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
         searchAccountPanel.add(searchResultPanel, accConstraints);
 
 
-
         //View account panel
         viewAccountPanel = new JPanel(new GridBagLayout());
 
@@ -273,6 +273,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
     }
 
     public static void showViewAccountPanel(){
+        viewAccountPanel.removeAll();
+        viewAllAccount();
         showAccountPanel(viewAccountPanel);
     }
 
@@ -381,9 +383,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     tempTable = new Object[searchedAdminList.size()][2];
                     int i = 0;
                     for (Admin admin : searchedAdminList){
-                        tempTable[i][0] = i + 1;
-                        tempTable[i][1] = admin.getUsername();
-                        i++;
+                        i = insertAdminTable(tempTable, i, admin);
                     }
                 }
             }
@@ -425,16 +425,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     tempTable = new Object[searchedCustomerList.size()][9];
                     int i = 0;
                     for (Customer customer : searchedCustomerList){
-                        tempTable[i][0] = i + 1;
-                        tempTable[i][1] = customer.getUsername();
-                        tempTable[i][2] = customer.getName();
-                        tempTable[i][3] = customer.getPhone();
-                        tempTable[i][4] = customer.getGender();
-                        tempTable[i][5] = customer.getAge();
-                        tempTable[i][6] = customer.getEmail();
-                        tempTable[i][7] = customer.getAddress();
-                        tempTable[i][8] = customer.getPoints();
-                        i++;
+                        i = insertCustomerTable(tempTable, i, customer);
                     }
                 }
             }
@@ -443,7 +434,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
             searchTable.setVisible(true);
             JScrollPane scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//            searchTable.setPreferredSize(new Dimension(480,160));
             scrollPane.setPreferredSize(new Dimension(500,200));
 
             JPanel bottomPanel = new JPanel(new GridBagLayout());
@@ -482,8 +472,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
             bottomConstraints.gridx = 4;
             bottomPanel.add(deleteButton, bottomConstraints);
 
-            searchResultPanel.validate();
-
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.gridx = 0;
             constraints.gridy = 0;
@@ -513,4 +501,61 @@ public class AccountFunctions extends JPanel implements ActionListener {
         }
     }
 
+    private static void viewAllAccount() {
+        String[] adminColumn = new String[]{"No", "Username"};
+        Object[][] adminTempTable = new Object[FileIO.adminList.size()][2];
+        int i = 0;
+        for (Admin admin : FileIO.adminList) {
+            i = insertAdminTable(adminTempTable, i, admin);
+        }
+
+        allAdminTable = new JTable(adminTempTable, adminColumn);
+        allAdminTable.setVisible(true);
+        JScrollPane admScrollPane = new JScrollPane(allAdminTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        allAdminTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        admScrollPane.setPreferredSize(new Dimension(500,200));
+
+        String[] customerColumn = new String[]{"No", "Username", "Name", "Phone Num.", "Gender", "Age", "Email", "Address", "Points"};
+        Object[][] customerTempTable = new Object[FileIO.customerList.size()][9];
+        int j = 0;
+        for (Customer customer : FileIO.customerList){
+            j = insertCustomerTable(customerTempTable, j, customer);
+        }
+
+        allCustomerTable = new JTable(customerTempTable, customerColumn);
+        allCustomerTable.setVisible(true);
+        JScrollPane cusScrollPane = new JScrollPane(allCustomerTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        allCustomerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        cusScrollPane.setPreferredSize(new Dimension(500,200));
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(10,5,10,5);
+        constraints.gridy = 0;
+        viewAccountPanel.add(admScrollPane, constraints);
+        constraints.gridy = 1;
+        viewAccountPanel.add(cusScrollPane, constraints);
+
+        viewAccountPanel.validate();
+    }
+
+    private static int insertAdminTable(Object[][] adminTempTable, int i, Admin admin){
+        adminTempTable[i][0] = i + 1;
+        adminTempTable[i][1] = admin.getUsername();
+        i++;
+        return i;
+    }
+
+    private static int insertCustomerTable(Object[][] customerTempTable, int j, Customer customer) {
+        customerTempTable[j][0] = j + 1;
+        customerTempTable[j][1] = customer.getUsername();
+        customerTempTable[j][2] = customer.getName();
+        customerTempTable[j][3] = customer.getPhone();
+        customerTempTable[j][4] = customer.getGender();
+        customerTempTable[j][5] = customer.getAge();
+        customerTempTable[j][6] = customer.getEmail();
+        customerTempTable[j][7] = customer.getAddress();
+        customerTempTable[j][8] = customer.getPoints();
+        j++;
+        return j;
+    }
 }
