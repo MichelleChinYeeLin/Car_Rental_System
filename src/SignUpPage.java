@@ -167,6 +167,7 @@ public class SignUpPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == signUp){
+                GUI.playSound("ji.wav");
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String passwordCheckInput = String.valueOf(passwordCheck.getPassword());
@@ -228,6 +229,7 @@ public class SignUpPage implements ActionListener {
                 }
             }
             else if (e.getSource() == cancel) {
+                GUI.playSound("ji.wav");
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }

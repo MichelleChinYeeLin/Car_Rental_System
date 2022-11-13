@@ -242,54 +242,70 @@ public class AdminMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == logout){
+                GUI.playSound("ji.wav");
                 CarRentalSystem.loginAdmin = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
             else if (e.getSource() == accRegistrations){
+                GUI.playSound("ji.wav");
                 showAdminPanel(registrationsPanel, registrationFunctionsPanel);
             }
             else if (e.getSource() == accounts){
+                GUI.playSound("ji.wav");
                 showAdminPanel(accountsPanel, accountFunctionsPanel);
             }
             else if (e.getSource() == bookings){
+                GUI.playSound("ji.wav");
                 showAdminPanel(bookingsPanel, bookingFunctionsPanel);
             }
             else if (e.getSource() == cars){
+                GUI.playSound("ji.wav");
                 showAdminPanel(carsPanel, carFunctionsPanel);
             }
             else if (e.getSource() == reports){
+                GUI.playSound("ji.wav");
                 showAdminPanel(reportsPanel, reportFunctionsPanel);
             }
             else if (e.getSource() == editPassword){
+                GUI.playSound("ji.wav");
                 AccountFunctions.getUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
                 AccountFunctions.showEditPasswordPanel();
             }
             else if (e.getSource() == addAdmin){
+                GUI.playSound("ji.wav");
                 AccountFunctions.showAddAdminPanel();
             }
             else if (e.getSource() == searchAccount){
+                GUI.playSound("ji.wav");
                 AccountFunctions.showSearchAccountPanel();
             }
             else if (e.getSource() == allAccount){
+                GUI.playSound("ji.wav");
                 AccountFunctions.showViewAccountPanel();
             }
             else if (e.getSource() == addCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showAddCarPanel();
             }
             else if (e.getSource() == editCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showEditCarPanel();
             }
             else if (e.getSource() == deleteCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showDeleteCarPanel();
             }
             else if (e.getSource() == searchCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showSearchCarPanel();
             }
             else if (e.getSource() == allCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showAllCarPanel();
             }
         } catch (Exception exception){
+            GUI.playSound("niganma.wav");
             System.out.println("HI something wrong");
         }
     }

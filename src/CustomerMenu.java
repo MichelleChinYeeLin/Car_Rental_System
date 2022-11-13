@@ -177,26 +177,33 @@ public class CustomerMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == logout){
+                GUI.playSound("ji.wav");
                 CarRentalSystem.loginCustomer = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
             else if (e.getSource() == cars){
+                GUI.playSound("ji.wav");
                 showCustomerPanel(carsPanel, carFunctionsPanel);
             }
             else if (e.getSource() == booking){
+                GUI.playSound("ji.wav");
                 showCustomerPanel(bookingsPanel, bookingFunctionsPanel);
             }
             else if (e.getSource() == account){
+                GUI.playSound("ji.wav");
                 showCustomerPanel(accountPanel, accountFunctionsPanel);
             }
             else if (e.getSource() == searchCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showSearchCarPanel();
             }
             else if (e.getSource() == allCar){
+                GUI.playSound("ji.wav");
                 CarFunctions.showAllCarPanel();
             }
         } catch (Exception exception){
+            GUI.playSound("niganma.wav");
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
     }

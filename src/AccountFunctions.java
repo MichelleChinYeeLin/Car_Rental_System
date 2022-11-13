@@ -321,6 +321,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 username2.setText("");
             }
             else if (e.getSource() == search){
+                searchResultPanel.removeAll();
                 searchAccount();
             }
             else if (e.getSource() == editButton){
@@ -442,7 +443,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             searchTable.setVisible(true);
             JScrollPane scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
             searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            searchTable.setPreferredSize(new Dimension(500,180));
+//            searchTable.setPreferredSize(new Dimension(480,160));
             scrollPane.setPreferredSize(new Dimension(500,200));
 
             JPanel bottomPanel = new JPanel(new GridBagLayout());
