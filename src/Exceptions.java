@@ -15,3 +15,5 @@ class UsernameTakenException extends Exception{}
 class WrongPasswordException extends Exception{}
 
 class UserNotFoundException extends Exception{}
+
+class InvalidPointException extends Exception{}
