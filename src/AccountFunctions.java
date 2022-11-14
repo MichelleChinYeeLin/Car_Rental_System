@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class AccountFunctions extends JPanel implements ActionListener {
 
-    private static JPanel editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel;
+    private static JPanel editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel, editAccountPanel;
     private JPanel customerOnlyAttributes, searchAccountAttributesPanel, searchResultPanel;
     private JButton confirmEdit, cancelEdit, confirmAdd, cancelAdd, search;
     private JButton editButton, deleteButton;
@@ -17,17 +17,17 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JLabel usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
             emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2;
     private static JTextField username1;
-    private JTextField username2;
-    private JTextField usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
+    private JTextField username2, usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
     private JPasswordField password1, password2;
     private JComboBox<String> userType, genderSearch;
-    private JSpinner fromAge, toAge, fromPoint, toPoint;
+    private JSpinner fromAge, toAge, fromPoint, toPoint, numberSpinner;
     private JTable searchTable;
     private static JTable allAdminTable, allCustomerTable;
     private static JPanel[] panels;
     private JLabel[] labels, searchLabels;
     private JButton[] accountButtons;
-    private JSpinner numberSpinner;
+    private Customer customerAccount;
+    private Admin adminAccount;
 
     public AccountFunctions(){
 
@@ -152,6 +152,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         accConstraints.gridy = 4;
         editPasswordPanel.add(editPasswordSelectionPanel, accConstraints);
 
+
         //Search account panel
         searchAccountPanel = new JPanel(new GridBagLayout());
         searchAccountAttributesPanel = new JPanel(new GridBagLayout());
@@ -247,16 +248,21 @@ public class AccountFunctions extends JPanel implements ActionListener {
         searchAccountPanel.add(searchResultPanel, accConstraints);
 
 
+        //Edit account panel
+        editAccountPanel = new JPanel(new GridBagLayout());
+
+
         //View account panel
         viewAccountPanel = new JPanel(new GridBagLayout());
 
         //Create account functions panel
-        panels = new JPanel[]{editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel};
+        panels = new JPanel[]{editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel, editAccountPanel};
         GUI.JPanelSetup(panels);
         setPreferredSize(new Dimension(500,500));
         add(editPasswordPanel);
         add(addAdminPanel);
         add(searchAccountPanel);
+        add(editAccountPanel);
         add(viewAccountPanel);
     }
 
@@ -323,6 +329,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 username2.setText("");
             }
             else if (e.getSource() == search){
+                customerAccount = null;
+                adminAccount = null;
                 searchResultPanel.removeAll();
                 searchAccount();
             }
@@ -331,6 +339,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == deleteButton){
                 //TODO: confirm again
+                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
             }
 
         }
