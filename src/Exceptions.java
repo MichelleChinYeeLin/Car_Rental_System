@@ -17,3 +17,5 @@ class WrongPasswordException extends Exception{}
 class UserNotFoundException extends Exception{}
 
 class InvalidPointException extends Exception{}
+
+class lastAdminException extends Exception{}

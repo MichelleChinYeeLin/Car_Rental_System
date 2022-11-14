@@ -10,40 +10,50 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
     private static JPanel editPasswordPanel, addAdminPanel, searchAccountPanel, viewAccountPanel, editAccountPanel;
     private JPanel customerOnlyAttributes, searchAccountAttributesPanel, searchResultPanel;
-    private JButton confirmEdit, cancelEdit, confirmAdd, cancelAdd, search;
-    private JButton editButton, deleteButton;
-    private JLabel usernameLabel1, passwordLabel1, passwordLabel2;
-    private JLabel usernameLabel2;
+    private JButton confirmEdit, cancelEdit, confirmAdd, cancelAdd, search, editButton, resetPassword, OKButton, backToSearch, deleteButton;
+    private JLabel usernameLabel1, passwordLabel1, passwordLabel2, usernameLabel2;
     private JLabel usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
             emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2;
+    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+            emailEditLabel, addressEditLabel, pointEditLabel;
     private static JTextField username1;
     private JTextField username2, usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
+    private JTextField usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit;
     private JPasswordField password1, password2;
+    private JPasswordField passwordEdit;
+    private JRadioButton male, female;
+    private ButtonGroup genderGroup;
     private JComboBox<String> userType, genderSearch;
-    private JSpinner fromAge, toAge, fromPoint, toPoint, numberSpinner;
+    private JSpinner fromAge, toAge, fromPoint, toPoint, numberSpinner, ageEdit, pointEdit;
     private JTable searchTable;
     private static JTable allAdminTable, allCustomerTable;
     private static JPanel[] panels;
-    private JLabel[] labels, searchLabels;
+    private JLabel[] labels, searchLabels, editLabels;
     private JButton[] accountButtons;
-    private Customer customerAccount;
-    private Admin adminAccount;
+    private JComponent[] components;
 
     public AccountFunctions(){
 
         //Create buttons
         confirmEdit = new JButton("EDIT");
         cancelEdit = new JButton("CANCEL");
-        confirmAdd = new JButton("ADD");
-        cancelAdd = new JButton("CANCEL");
-        search = new JButton("SEARCH");
-        accountButtons = new JButton[]{confirmEdit, cancelEdit, confirmAdd, cancelAdd, search};
         confirmEdit.addActionListener(this);
         cancelEdit.addActionListener(this);
+        confirmAdd = new JButton("ADD");
+        cancelAdd = new JButton("CANCEL");
         confirmAdd.addActionListener(this);
         cancelAdd.addActionListener(this);
+        search = new JButton("SEARCH");
         search.addActionListener(this);
+        resetPassword = new JButton("RESET PASSWORD");
+        resetPassword.addActionListener(this);
+        OKButton = new JButton("OK");
+        OKButton.addActionListener(this);
+        backToSearch = new JButton("BACK");
+        backToSearch.addActionListener(this);
+        accountButtons = new JButton[]{confirmEdit, cancelEdit, confirmAdd, cancelAdd, search, resetPassword, OKButton, backToSearch};
         GUI.subJButtonSetup(accountButtons, new Dimension(100, 40));
+        resetPassword.setPreferredSize(new Dimension(180,40));
 
         //Create labels
         usernameLabel1 = new JLabel("Username:");
@@ -65,6 +75,18 @@ public class AccountFunctions extends JPanel implements ActionListener {
         searchLabels = new JLabel[]{usernameSearchLabel, nameSearchLabel, phoneSearchLabel, genderSearchLabel, ageSearchLabel1, ageSearchLabel2,
                 emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2};
         GUI.JLabelSetup(searchLabels);
+        usernameEditLabel = new JLabel("Username:");
+        passwordEditLabel = new JLabel("Password:");
+        nameEditLabel = new JLabel("Name:");
+        phoneEditLabel = new JLabel("Phone:");
+        genderEditLabel = new JLabel("Gender:");
+        ageEditLabel = new JLabel("Age:");
+        emailEditLabel = new JLabel("Email:");
+        addressEditLabel = new JLabel("Address:");
+        pointEditLabel = new JLabel("Point:");
+        editLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+                emailEditLabel, addressEditLabel, pointEditLabel};
+        GUI.JLabelSetup(editLabels);
 
         //Create input fields
         //JTextField
@@ -77,10 +99,16 @@ public class AccountFunctions extends JPanel implements ActionListener {
         phoneSearch = new JTextField(10);
         emailSearch = new JTextField(10);
         addressSearch = new JTextField(10);
+        usernameEdit = new JTextField(20);
+        nameEdit = new JTextField(20);
+        phoneEdit = new JTextField(20);
+        emailEdit = new JTextField(20);
+        addressEdit = new JTextField(20);
 
         //JPasswordField
         password1 = new JPasswordField(20);
         password2 = new JPasswordField(20);
+        passwordEdit = new JPasswordField(20);
 
         //JComboBox
         String[] userTypes = {"Admin", "Customer"};
@@ -106,14 +134,30 @@ public class AccountFunctions extends JPanel implements ActionListener {
         fromPoint.setPreferredSize(new Dimension(100,25));
         toPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
         toPoint.setPreferredSize(new Dimension(100,25));
+        ageEdit = new JSpinner(new SpinnerNumberModel(17,17,122,1));
+        ageEdit.setPreferredSize(new Dimension(100,25));
+        pointEdit = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+        pointEdit.setPreferredSize(new Dimension(100,25));
 
+        //JRadioButtons
+        male = new JRadioButton("male");
+        male.setFocusable(false);
+        female = new JRadioButton("female");
+        female.setFocusable(false);
+        genderGroup = new ButtonGroup();
+        genderGroup.add(male);
+        genderGroup.add(female);
 
-        //Edit password & Add admin panel
+        //JComponent array
+        components = new JComponent[]{nameEdit, phoneEdit, emailEdit, addressEdit,
+                male, female, ageEdit, pointEdit};
+
+        //Edit password & Add admin & Edit account panel
         GridBagConstraints accConstraints = new GridBagConstraints();
         editPasswordPanel = new JPanel(new GridBagLayout());
-        editPasswordPanel.setBackground(Color.white);
         addAdminPanel = new JPanel(new GridBagLayout());
-        addAdminPanel.setBackground(Color.white);
+        editAccountPanel = new JPanel(new GridBagLayout());
+
         //Setup buttons
         JPanel editPasswordSelectionPanel = new JPanel();
         editPasswordSelectionPanel.setBackground(Color.white);
@@ -123,34 +167,70 @@ public class AccountFunctions extends JPanel implements ActionListener {
         addAdminSelectionPanel.setBackground(Color.white);
         addAdminSelectionPanel.add(confirmAdd);
         addAdminSelectionPanel.add(cancelAdd);
+        JPanel editAccountSelectionPanel = new JPanel();
+        editAccountSelectionPanel.setBackground(Color.white);
+        editAccountSelectionPanel.add(resetPassword);
+        editAccountSelectionPanel.add(OKButton);
+        editAccountSelectionPanel.add(backToSearch);
+
         //Setup labels
-        accConstraints.insets = new Insets(10,5,10,5);
+        accConstraints.insets = new Insets(8,5,8,5);
         accConstraints.weightx = 1;
         accConstraints.weighty = 1;
         accConstraints.gridx = 0;
         accConstraints.ipady = 0;
         accConstraints.gridwidth = 2;
         for(int i = 0; i < labels.length - 1; i++){
-
-            if(labels[i].getText().equals("Level:")){
-                accConstraints.gridwidth = 1;
-            }
             accConstraints.gridy = i + 1;
             editPasswordPanel.add(labels[i], accConstraints);
             if (i == 0) addAdminPanel.add(usernameLabel2, accConstraints);
         }
+        for(int i = 0; i < editLabels.length; i++){
+            accConstraints.gridy = i + 1;
+            editAccountPanel.add(editLabels[i], accConstraints);
+        }
+
         //Setup fields
         accConstraints.gridx = 2;
         accConstraints.gridy = 1;
         editPasswordPanel.add(username1, accConstraints);
         addAdminPanel.add(username2, accConstraints);
+        editAccountPanel.add(usernameEdit, accConstraints);
+
         accConstraints.gridy = 2;
         editPasswordPanel.add(password1, accConstraints);
         addAdminPanel.add(addAdminSelectionPanel, accConstraints);
+        editAccountPanel.add(passwordEdit, accConstraints);
+
         accConstraints.gridy = 3;
         editPasswordPanel.add(password2, accConstraints);
+        editAccountPanel.add(nameEdit, accConstraints);
+
         accConstraints.gridy = 4;
         editPasswordPanel.add(editPasswordSelectionPanel, accConstraints);
+        editAccountPanel.add(phoneEdit, accConstraints);
+
+        accConstraints.gridy = 5;
+        JPanel genderPanel = new JPanel();
+        genderPanel.setBackground(Color.white);
+        genderPanel.add(male);
+        genderPanel.add(female);
+        editAccountPanel.add(genderPanel, accConstraints);
+
+        accConstraints.gridy = 6;
+        editAccountPanel.add(ageEdit, accConstraints);
+
+        accConstraints.gridy = 7;
+        editAccountPanel.add(emailEdit, accConstraints);
+
+        accConstraints.gridy = 8;
+        editAccountPanel.add(addressEdit, accConstraints);
+
+        accConstraints.gridy = 9;
+        editAccountPanel.add(pointEdit, accConstraints);
+
+        accConstraints.gridy = 10;
+        editAccountPanel.add(editAccountSelectionPanel, accConstraints);
 
 
         //Search account panel
@@ -248,10 +328,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
         searchAccountPanel.add(searchResultPanel, accConstraints);
 
 
-        //Edit account panel
-        editAccountPanel = new JPanel(new GridBagLayout());
-
-
         //View account panel
         viewAccountPanel = new JPanel(new GridBagLayout());
 
@@ -329,19 +405,29 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 username2.setText("");
             }
             else if (e.getSource() == search){
-                customerAccount = null;
-                adminAccount = null;
                 searchResultPanel.removeAll();
                 searchAccount();
             }
             else if (e.getSource() == editButton){
-                //TODO: show editable fields
+                if((int) numberSpinner.getValue() == 0){
+                    throw new UserNotFoundException();
+                }
+                showAccountPanel(editAccountPanel);
+                editAccount();
             }
             else if (e.getSource() == deleteButton){
-                //TODO: confirm again
-                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                if (JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!").equals("DELETE")){
+                    if (deleteAccount()){
+                        JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been deleted!");
+                    }
+                    else {
+                        throw new lastAdminException();
+                    }
+                }
+                else {
+                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
+                }
             }
-
         }
         catch (EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -354,6 +440,12 @@ public class AccountFunctions extends JPanel implements ActionListener {
         catch (UsernameTakenException usernameTakenException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             username2.setText("");
+        }
+        catch (UserNotFoundException userNotFoundException){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (lastAdminException lastAdminException){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
@@ -508,6 +600,77 @@ public class AccountFunctions extends JPanel implements ActionListener {
         catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Unexpected error. Please try again.");
         }
+    }
+
+    private void editAccount() {
+        Admin adminAccount;
+        Customer customerAccount;
+        int numberValue = (int) numberSpinner.getValue();
+        resetFields(components);
+        usernameEdit.setEnabled(false);
+        passwordEdit.setEditable(false);
+
+        if (Objects.equals(userType.getSelectedItem(), "Admin")) {
+            adminAccount = FileIO.adminList.get(numberValue - 1);
+            usernameEdit.setText(adminAccount.getUsername());
+            passwordEdit.setText(adminAccount.getPassword());
+            nameEdit.setEnabled(false);
+            phoneEdit.setEnabled(false);
+            emailEdit.setEnabled(false);
+            addressEdit.setEnabled(false);
+            male.setEnabled(false);
+            female.setEnabled(false);
+            ageEdit.setEnabled(false);
+            pointEdit.setEnabled(false);
+        }
+        else {
+            customerAccount = FileIO.customerList.get(numberValue - 1);
+            usernameEdit.setText(customerAccount.getUsername());
+            passwordEdit.setText(customerAccount.getPassword());
+            nameEdit.setText(customerAccount.getName());
+            phoneEdit.setText(customerAccount.getPhone());
+            emailEdit.setText(customerAccount.getEmail());
+            addressEdit.setText(customerAccount.getAddress());
+            if (customerAccount.getGender().equals("male")){
+                male.setSelected(true);
+            }
+            else {
+                female.setSelected(true);
+            }
+            ageEdit.setValue(customerAccount.getAge());
+            pointEdit.setValue(customerAccount.getPoints());
+        }
+    }
+
+    private void resetFields(JComponent[] components){
+        for (JComponent i : components) {
+            i.setEnabled(true);
+        }
+        nameEdit.setText("");
+        phoneEdit.setText("");
+        emailEdit.setText("");
+        addressEdit.setText("");
+        male.setSelected(false);
+        female.setSelected(false);
+        ageEdit.setValue(17);
+        pointEdit.setValue(0);
+    }
+
+    private boolean deleteAccount(){
+        int numberValue = (int) numberSpinner.getValue();
+
+        if (userType.getSelectedItem().equals("Admin")) {
+            if (FileIO.adminList.size() == 1){
+                return false;
+            }
+            FileIO.adminList.remove(numberValue - 1);
+            FileIO.writeAdminFile();
+        }
+        else if (userType.getSelectedItem().equals("Customer")){
+            FileIO.customerList.remove(numberValue - 1);
+            FileIO.writeCustomerFile();
+        }
+        return true;
     }
 
     private static void viewAllAccount() {

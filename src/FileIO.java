@@ -120,7 +120,7 @@ public class FileIO {
             BufferedReader br = new BufferedReader(fr);
 
             String line = br.readLine();
-            String line2 = ""; //TODO: Correct???????
+            String line2 = "";
 
             while (line != null){
                 String nextLine = br.readLine();
@@ -130,7 +130,7 @@ public class FileIO {
                 Admin admin = new Admin(username, password);
                 adminList.add(admin);
 
-                line2 = br.readLine(); //TODO: Something wrong???
+                line2 = br.readLine();
                 line = br.readLine();
             }
             br.close();
