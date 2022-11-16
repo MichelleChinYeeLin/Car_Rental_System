@@ -1,9 +1,9 @@
 Username: shuaigee
-Password: 123
+Password: 1
 Name: hy
 Phone Number: 123
-Gender: female
-Age: 12
+Gender: male
+Age: 17
 Email: heyuandeemail
 Address: 111
 Points: 0

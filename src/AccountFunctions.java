@@ -100,6 +100,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         emailSearch = new JTextField(10);
         addressSearch = new JTextField(10);
         usernameEdit = new JTextField(20);
+        usernameEdit.setEnabled(false);
         nameEdit = new JTextField(20);
         phoneEdit = new JTextField(20);
         emailEdit = new JTextField(20);
@@ -109,6 +110,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         password1 = new JPasswordField(20);
         password2 = new JPasswordField(20);
         passwordEdit = new JPasswordField(20);
+        passwordEdit.setEditable(false);
 
         //JComboBox
         String[] userTypes = {"Admin", "Customer"};
@@ -119,6 +121,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         userType.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED){
                 customerOnlyAttributes.setVisible(Objects.equals(userType.getSelectedItem(), "Customer"));
+                searchResultPanel.removeAll();
             }
         });
         genderSearch = new JComboBox<>(genderTypes);
@@ -415,13 +418,35 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 showAccountPanel(editAccountPanel);
                 editAccount();
             }
+            else if (e.getSource() == resetPassword){
+                String input = JOptionPane.showInputDialog("Type \"RESET\" to reset the password!");
+                if (input != null && input.equals("RESET")){
+                    resetPassword();
+                }
+                else {
+                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Reset canceled!");
+                }
+            }
+            else if (e.getSource() == OKButton){
+                String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
+                if (input != null && input.equals("CONFIRM")){
+                    editAccountDetails();
+                }
+                else {
+                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Edit canceled!");
+                }
+            }
+            else if (e.getSource() == backToSearch){
+                showAccountPanel(searchAccountPanel);
+            }
             else if (e.getSource() == deleteButton){
-                if (JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!").equals("DELETE")){
+                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                if (input != null && input.equals("DELETE")){
                     if (deleteAccount()){
                         JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been deleted!");
                     }
                     else {
-                        throw new lastAdminException();
+                        throw new LastAdminException();
                     }
                 }
                 else {
@@ -444,10 +469,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
         catch (UserNotFoundException userNotFoundException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
-        catch (lastAdminException lastAdminException){
+        catch (LastAdminException lastAdminException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
+            //TODO delete this JOptionPane??
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
         }
     }
@@ -607,21 +633,14 @@ public class AccountFunctions extends JPanel implements ActionListener {
         Customer customerAccount;
         int numberValue = (int) numberSpinner.getValue();
         resetFields(components);
-        usernameEdit.setEnabled(false);
-        passwordEdit.setEditable(false);
 
         if (Objects.equals(userType.getSelectedItem(), "Admin")) {
             adminAccount = FileIO.adminList.get(numberValue - 1);
             usernameEdit.setText(adminAccount.getUsername());
             passwordEdit.setText(adminAccount.getPassword());
-            nameEdit.setEnabled(false);
-            phoneEdit.setEnabled(false);
-            emailEdit.setEnabled(false);
-            addressEdit.setEnabled(false);
-            male.setEnabled(false);
-            female.setEnabled(false);
-            ageEdit.setEnabled(false);
-            pointEdit.setEnabled(false);
+            for (JComponent i : components) {
+                i.setEnabled(false);
+            }
         }
         else {
             customerAccount = FileIO.customerList.get(numberValue - 1);
@@ -642,18 +661,85 @@ public class AccountFunctions extends JPanel implements ActionListener {
         }
     }
 
-    private void resetFields(JComponent[] components){
+    private void resetFields(JComponent[] components){ //POLYMORPHISM
         for (JComponent i : components) {
             i.setEnabled(true);
+            if (i instanceof JTextField){
+                ((JTextField) i).setText("");
+            }
+            if (i instanceof JRadioButton){
+                ((JRadioButton) i).setSelected(false);
+            }
         }
-        nameEdit.setText("");
-        phoneEdit.setText("");
-        emailEdit.setText("");
-        addressEdit.setText("");
-        male.setSelected(false);
-        female.setSelected(false);
         ageEdit.setValue(17);
         pointEdit.setValue(0);
+    }
+
+    private void resetPassword(){
+        int numberValue = (int) numberSpinner.getValue();
+
+        if (userType.getSelectedItem().equals("Admin")) {
+            Admin admin = FileIO.adminList.get(numberValue - 1);
+            admin.setPassword(admin.getUsername());
+            FileIO.writeAdminFile();
+        }
+        else if (userType.getSelectedItem().equals("Customer")){
+            Customer customer = FileIO.customerList.get(numberValue - 1);
+            customer.setPassword(customer.getUsername());
+            FileIO.writeCustomerFile();
+        }
+    }
+
+    private void editAccountDetails(){
+        int numberValue = (int) numberSpinner.getValue();
+
+        try {
+            if (userType.getSelectedItem().equals("Admin")) {
+                throw new InvalidUserException();
+            }
+            else if (userType.getSelectedItem().equals("Customer")){
+
+                JTextField[] textFields = new JTextField[]{nameEdit, phoneEdit, emailEdit, addressEdit};
+                for (JTextField i: textFields) {
+                    if (i.getText().equals("")) throw new EmptyInputException();
+                }
+
+                char[] chars = nameEdit.getText().toCharArray();
+                for (char c : chars) {
+                    if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
+                }
+
+                if (!phoneEdit.getText().matches("[0-9]+")) throw new InvalidPhoneException();
+
+                String gender;
+                if (male.isSelected()){
+                    gender = "male";
+                }
+                else {
+                    gender = "female";
+                }
+
+                Customer customer = FileIO.customerList.get(numberValue - 1);
+                customer.setName(nameEdit.getText());
+                customer.setPhone(phoneEdit.getText());
+                customer.setGender(gender);
+                customer.setAge((int) ageEdit.getValue());
+                customer.setEmail(emailEdit.getText());
+                customer.setAddress(addressEdit.getText());
+                customer.setPoints((int) pointEdit.getValue());
+                FileIO.writeCustomerFile();
+            }
+        } catch (InvalidUserException invalidUserException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (EmptyInputException emptyInputException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (InvalidNameException invalidNameException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (InvalidPhoneException invalidPhoneException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid phone number entered! Your phone number must only include numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (Exception exception){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private boolean deleteAccount(){

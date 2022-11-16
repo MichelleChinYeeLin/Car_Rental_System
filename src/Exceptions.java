@@ -18,4 +18,6 @@ class UserNotFoundException extends Exception{}
 
 class InvalidPointException extends Exception{}
 
-class lastAdminException extends Exception{}
+class LastAdminException extends Exception{}
+
+class InvalidUserException extends Exception{}
