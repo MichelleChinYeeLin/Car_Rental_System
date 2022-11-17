@@ -102,36 +102,27 @@ public class AdminMenu implements ActionListener {
 
     private void approveRegistration(){
 
-        ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
-        int numberValue = (int)numberSpinner.getValue();
+        int index = (int)numberSpinner.getValue();
+        boolean isSuccess = Customer.approveRegistration(index - 1);
 
-        if(numberValue > 0){
-            Customer newCustomer = accRegistrationList.get(numberValue - 1);
-            accRegistrationList.remove(newCustomer);
-            FileIO.setRegistrationList(accRegistrationList);
-
-            ArrayList<Customer> customerList = FileIO.getCustomerList();
-            customerList.add(newCustomer);
-            FileIO.setCustomerList(customerList);
-            FileIO.writeRegistrationFile();
-            FileIO.writeCustomerFile();
-
+        if(isSuccess){
             showAccRegistration();
+        }
+        else{
+            JOptionPane.showMessageDialog(this.getFrame(), "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
     private void denyRegistration(){
 
-        ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
-        int numberValue = (int)numberSpinner.getValue();
+        int index = (int)numberSpinner.getValue();
+        boolean isSuccess = Customer.denyRegistration(index - 1);
 
-        if(numberValue > 0){
-            Customer deletedRegistration = accRegistrationList.get(numberValue - 1);
-            accRegistrationList.remove(deletedRegistration);
-            FileIO.setRegistrationList(accRegistrationList);
-            FileIO.writeRegistrationFile();
-
+        if(isSuccess){
             showAccRegistration();
+        }
+        else{
+            JOptionPane.showMessageDialog(this.getFrame(), "Unexpected error occurred! Please try again later.", "Registration Deny Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 

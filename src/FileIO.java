@@ -525,4 +525,12 @@ public class FileIO {
         readBookingFile();
         readRegistrationFile();
     }
+
+    public static void writeAllFiles(){
+        writeAdminFile();
+        writeCustomerFile();
+        writeCarFile();
+        writeBookingFile();
+        writeRegistrationFile();
+    }
 }
