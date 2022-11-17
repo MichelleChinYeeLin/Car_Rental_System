@@ -178,7 +178,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchCarAttributesPanel = new JPanel(new GridBagLayout());
         searchCarAttributesPanel.setBackground(Color.white);
         searchResultsPanel = new JPanel(new BorderLayout());
-        searchResultsPanel.setBackground(Color.blue);
+        searchResultsPanel.setBackground(Color.white);
         searchResultsPanel.setPreferredSize(new Dimension(500, 300));
 
         //JLabels
@@ -291,30 +291,16 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchConstraints.gridx = 0;
         searchConstraints.gridy = 0;
         searchConstraints.weightx = 1;
-        //searchConstraints.weighty = 0.3;
         searchCarPanel.add(searchCarAttributesPanel, searchConstraints);
 
-//        GridBagConstraints searchResultsConstraints = new GridBagConstraints();
-//        searchResultsConstraints.fill = GridBagConstraints.BOTH;
-//        searchResultsConstraints.gridx = 0;
-//        searchResultsConstraints.gridy = 0;
         carNotFoundLabel.setVisible(false);
         carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
         searchResultsPanel.add(carNotFoundLabel);
 
-//        searchTable = new JTable();
-//        scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//        searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//        searchTable.setVisible(true);
-//        scrollPane.setVisible(true);
-//        searchResultsPanel.add(scrollPane, searchResultsConstraints);
-
         searchConstraints.gridx = 0;
         searchConstraints.gridy = 1;
         searchConstraints.insets = new Insets(10,10,10,10);
-        //searchConstraints.weighty = 0.7;
         searchCarPanel.add(searchResultsPanel, searchConstraints);
-//        searchResultsPanel.setVisible(true);
 
         //View car panel
         viewCarPanel = new JPanel(new GridBagLayout());
