@@ -24,7 +24,6 @@ public class CarFunctions extends JPanel implements ActionListener{
     private ButtonGroup availability;
     private JSlider priceSearchSlider;
     private JComboBox<String> colorSearchBox, levelSearchBox, availabilitySearchBox;
-    private JComboBox colorSearchBox, levelSearchBox, availabilitySearchBox;
     private JScrollPane searchTableScroll;
     private JButton[] carButtons;
     private static JPanel[] panels;
