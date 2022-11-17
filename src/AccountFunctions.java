@@ -16,15 +16,16 @@ public class AccountFunctions extends JPanel implements ActionListener {
             emailSearchLabel, addressSearchLabel, pointSearchLabel1, pointSearchLabel2;
     private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
             emailEditLabel, addressEditLabel, pointEditLabel;
-    private static JTextField username1;
-    private JTextField username2, usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
+    private static JTextField username1, username2;
+    private JTextField usernameSearch, nameSearch, phoneSearch, emailSearch, addressSearch;
     private JTextField usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit;
-    private JPasswordField password1, password2;
+    private static JPasswordField password1, password2;
     private JPasswordField passwordEdit;
     private JRadioButton male, female;
     private ButtonGroup genderGroup;
     private JComboBox<String> userType, genderSearch;
-    private JSpinner fromAge, toAge, fromPoint, toPoint, numberSpinner, ageEdit, pointEdit;
+    private static JSpinner fromAge, toAge, fromPoint, toPoint;
+    private JSpinner numberSpinner, ageEdit, pointEdit;
     private JTable searchTable;
     private static JTable allAdminTable, allCustomerTable;
     private static JPanel[] panels;
@@ -363,10 +364,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
         showAccountPanel(viewAccountPanel);
     }
 
-    public static JTextField getUsername1() {
-        return username1;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -374,14 +371,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 String passwordInput = String.valueOf(password1.getPassword());
                 String passwordCheckInput = String.valueOf(password2.getPassword());
 
-                if (passwordInput.equals("") || passwordCheckInput.equals("")) throw new EmptyInputException();
-                if (!passwordInput.equals(passwordCheckInput)) throw new MismatchPasswordException();
-
-                CarRentalSystem.loginAdmin.setPassword(passwordInput);
-                FileIO.writeAdminFile();
-                JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password has been successfully changed!");
-                password1.setText("");
-                password2.setText("");
+                Admin.changePassword(passwordInput, passwordCheckInput);
             }
             else if (e.getSource() == cancelEdit){
                 password1.setText("");
@@ -389,20 +379,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == confirmAdd){
                 String newUsername = username2.getText();
-                String newPassword = newUsername;
 
-                if (newUsername.equals("")) throw new EmptyInputException();
-
-                for (Admin a: FileIO.adminList) {
-                    if (newUsername.equals(a.getUsername())){
-                        throw new UsernameTakenException();
-                    }
-                }
-                // New admin account's password same with username
-                FileIO.adminList.add(new Admin(newUsername, newPassword));
-                FileIO.writeAdminFile();
-                JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "New admin account is successfully created!");
-                username2.setText("");
+                Admin.addAdmin(newUsername);
             }
             else if (e.getSource() == cancelAdd){
                 username2.setText("");
@@ -421,7 +399,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == resetPassword){
                 String input = JOptionPane.showInputDialog("Type \"RESET\" to reset the password!");
                 if (input != null && input.equals("RESET")){
-                    resetPassword();
+                    int numberValue = (int) numberSpinner.getValue();
+                    String accountType = (String) userType.getSelectedItem();
+                    Admin.resetPassword(numberValue, accountType);
                 }
                 else {
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Reset canceled!");
@@ -442,7 +422,10 @@ public class AccountFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == deleteButton){
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
-                    if (deleteAccount()){
+                    int numberValue = (int) numberSpinner.getValue();
+                    String accountType = (String) userType.getSelectedItem();
+
+                    if (Admin.deleteAccount(numberValue, accountType)){
                         JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been deleted!");
                     }
                     else {
@@ -453,27 +436,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
                 }
             }
-        }
-        catch (EmptyInputException emptyInputException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch (MismatchPasswordException mismatchPasswordException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            password1.setText("");
-            password2.setText("");
-        }
-        catch (UsernameTakenException usernameTakenException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            username2.setText("");
-        }
-        catch (UserNotFoundException userNotFoundException){
+        } catch (UserNotFoundException userNotFoundException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch (LastAdminException lastAdminException){
+        } catch (LastAdminException lastAdminException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch (Exception exception){
-            //TODO delete this JOptionPane??
+        } catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
         }
     }
@@ -485,147 +452,138 @@ public class AccountFunctions extends JPanel implements ActionListener {
         panel.setVisible(true);
     }
 
+    public static JSpinner getFromAge() {
+        return fromAge;
+    }
+
+    public static JSpinner getToAge() {
+        return toAge;
+    }
+
+    public static JSpinner getFromPoint() {
+        return fromPoint;
+    }
+
+    public static JSpinner getToPoint() {
+        return toPoint;
+    }
+
+    public static JPasswordField getPassword1() {
+        return password1;
+    }
+
+    public static JPasswordField getPassword2() {
+        return password2;
+    }
+
+    public static JTextField getUsername1() {
+        return username1;
+    }
+
+    public static JTextField getUsername2() {
+        return username2;
+    }
+
+
     private void searchAccount(){
-        try {
-//            ArrayList<Admin> searchedAdminList = FileIO.getAdminList(); //亲测无效
-            ArrayList<Admin> searchedAdminList = new ArrayList<>(FileIO.adminList);
-            ArrayList<Customer> searchedCustomerList = new ArrayList<>(FileIO.customerList);
-            String userTypeInput = (String) userType.getSelectedItem();
-            String usernameInput = usernameSearch.getText();
-            String[] tableColumn = new String[]{};
-            Object[][] tempTable = new Object[][]{};
+        ArrayList<Admin> searchedAdminList = new ArrayList<>();
+        ArrayList<Customer> searchedCustomerList = new ArrayList<>();
+        String userTypeInput = (String) userType.getSelectedItem();
+        String usernameInput = usernameSearch.getText();
+        String[] tableColumn = new String[]{};
+        Object[][] tempTable = new Object[][]{};
 
 
-            if (userTypeInput.equals("Admin")){
-                searchedAdminList.removeIf(a -> !a.getUsername().contains(usernameInput));
-                //下面的换成这个
-//                for (Admin a : searchedAdminList) {
-//                    if (!a.getUsername().contains(usernameInput)){
-//                        searchedAdminList.remove(a);
-//                    }
-//                }
+        if (userTypeInput.equals("Admin")){
+            searchedAdminList = Admin.searchAdmin(usernameInput);
 
-                if (!(searchedAdminList.size() == 0)){
-                    tableColumn = new String[]{"No", "Username"};
-                    tempTable = new Object[searchedAdminList.size()][2];
-                    int i = 0;
-                    for (Admin admin : searchedAdminList){
-                        i = insertAdminTable(tempTable, i, admin);
-                    }
+            if (!(searchedAdminList.size() == 0)){
+                tableColumn = new String[]{"No", "Username"};
+                tempTable = new Object[searchedAdminList.size()][2];
+                int i = 0;
+                for (Admin admin : searchedAdminList){
+                    i = insertAdminTable(tempTable, i, admin);
                 }
             }
-            else {
-                if ((int) fromAge.getValue() > (int) toAge.getValue()){
-                    throw new InvalidAgeException();
-                }
+        }
+        else {
+            String nameInput = nameSearch.getText();
+            String phoneInput = phoneSearch.getText();
+            String emailInput = emailSearch.getText();
+            String addressInput = addressSearch.getText();
+            String genderInput = (String) genderSearch.getSelectedItem();
+            int ageValue1 = (int) fromAge.getValue();
+            int ageValue2 = (int) toAge.getValue();
+            int pointValue1 = (int) fromPoint.getValue();
+            int pointValue2 = (int) toPoint.getValue();
 
-                if ((int) fromPoint.getValue() > (int) toPoint.getValue()){
-                    throw new InvalidPointException();
-                }
+            searchedCustomerList = Admin.searchCustomer(usernameInput, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue1, ageValue2, pointValue1, pointValue2);
 
-                searchedCustomerList.removeIf(a -> !a.getUsername().contains(usernameInput));
-
-                if (!nameSearch.getText().equals("")){
-                    searchedCustomerList.removeIf(c -> !c.getUsername().contains(nameSearch.getText()));
-                }
-
-                if (!phoneSearch.getText().equals("")){
-                    searchedCustomerList.removeIf(c -> !c.getPhone().contains(phoneSearch.getText()));
-                }
-
-                if (!emailSearch.getText().equals("")){
-                    searchedCustomerList.removeIf(c -> !c.getEmail().contains(emailSearch.getText()));
-                }
-
-                if (!addressSearch.getText().equals("")){
-                    searchedCustomerList.removeIf(c -> !c.getAddress().contains(addressSearch.getText()));
-                }
-
-                searchedCustomerList.removeIf(c -> !c.getGender().equals(genderSearch.getSelectedItem()));
-
-                searchedCustomerList.removeIf(c -> !(c.getAge() >= (int) fromAge.getValue() && c.getAge() <= (int) toAge.getValue()));
-
-                searchedCustomerList.removeIf(c -> !(c.getPoints() >= (int) fromPoint.getValue() && c.getPoints() <= (int) toPoint.getValue()));
-
-                if (!(searchedCustomerList.size() == 0)){
-                    tableColumn = new String[]{"No", "Username", "Name", "Phone Num.", "Gender", "Age", "Email", "Address", "Points"};
-                    tempTable = new Object[searchedCustomerList.size()][9];
-                    int i = 0;
-                    for (Customer customer : searchedCustomerList){
-                        i = insertCustomerTable(tempTable, i, customer);
-                    }
+            if (!(searchedCustomerList.size() == 0)){
+                tableColumn = new String[]{"No", "Username", "Name", "Phone Num.", "Gender", "Age", "Email", "Address", "Points"};
+                tempTable = new Object[searchedCustomerList.size()][9];
+                int i = 0;
+                for (Customer customer : searchedCustomerList){
+                    i = insertCustomerTable(tempTable, i, customer);
                 }
             }
-
-            searchTable = new JTable(tempTable, tableColumn);
-            searchTable.setVisible(true);
-            JScrollPane scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-            searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            scrollPane.setPreferredSize(new Dimension(500,200));
-
-            JPanel bottomPanel = new JPanel(new GridBagLayout());
-            bottomPanel.setBackground(Color.white);
-            GridBagConstraints bottomConstraints = new GridBagConstraints();
-
-            bottomConstraints.fill = GridBagConstraints.BOTH;
-            bottomConstraints.anchor = GridBagConstraints.WEST;
-            bottomConstraints.gridx = 0;
-            bottomConstraints.insets = new Insets(5,5,5,20);
-            JLabel numberLabel = new JLabel("Row Number: ");
-            GUI.JLabelSetup(numberLabel);
-            bottomPanel.add(numberLabel, bottomConstraints);
-
-            bottomConstraints.gridx = 1;
-            int maxNum;
-            if (userTypeInput.equals("Admin")){
-                maxNum = searchedAdminList.size();
-            }
-            else {
-                maxNum = searchedCustomerList.size();
-            }
-            numberSpinner = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
-            bottomPanel.add(numberSpinner, bottomConstraints);
-
-            editButton = new JButton("EDIT");
-            deleteButton = new JButton("DELETE");
-            editButton.addActionListener(this);
-            deleteButton.addActionListener(this);
-            JButton[] buttons = new JButton[]{editButton, deleteButton};
-            GUI.subJButtonSetup(buttons, new Dimension(100,30));
-
-            bottomConstraints.gridx = 3;
-            bottomPanel.add(editButton, bottomConstraints);
-
-            bottomConstraints.gridx = 4;
-            bottomPanel.add(deleteButton, bottomConstraints);
-
-            GridBagConstraints constraints = new GridBagConstraints();
-            constraints.gridx = 0;
-            constraints.gridy = 0;
-            constraints.weighty = 0.8;
-            searchResultPanel.add(scrollPane, constraints);
-
-            constraints.gridy = 1;
-            constraints.weighty = 0.2;
-            constraints.fill = GridBagConstraints.HORIZONTAL;
-            constraints.anchor = GridBagConstraints.WEST;
-            searchResultPanel.add(bottomPanel, constraints);
-
-            searchResultPanel.validate();
         }
-        catch (InvalidAgeException invalidAgeException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid age entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            fromAge.setValue(17);
-            toAge.setValue(17);
+
+        searchTable = new JTable(tempTable, tableColumn);
+        searchTable.setVisible(true);
+        JScrollPane scrollPane = new JScrollPane(searchTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        scrollPane.setPreferredSize(new Dimension(500,200));
+
+        JPanel bottomPanel = new JPanel(new GridBagLayout());
+        bottomPanel.setBackground(Color.white);
+        GridBagConstraints bottomConstraints = new GridBagConstraints();
+
+        bottomConstraints.fill = GridBagConstraints.BOTH;
+        bottomConstraints.anchor = GridBagConstraints.WEST;
+        bottomConstraints.gridx = 0;
+        bottomConstraints.insets = new Insets(5,5,5,20);
+        JLabel numberLabel = new JLabel("Row Number: ");
+        GUI.JLabelSetup(numberLabel);
+        bottomPanel.add(numberLabel, bottomConstraints);
+
+        bottomConstraints.gridx = 1;
+        int maxNum;
+        if (userTypeInput.equals("Admin")){
+            maxNum = searchedAdminList.size();
         }
-        catch (InvalidPointException invalidPointException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid point entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            fromPoint.setValue(0);
-            toPoint.setValue(0);
+        else {
+            maxNum = searchedCustomerList.size();
         }
-        catch (Exception exception){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Unexpected error. Please try again.");
-        }
+        numberSpinner = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
+        bottomPanel.add(numberSpinner, bottomConstraints);
+
+        editButton = new JButton("EDIT");
+        deleteButton = new JButton("DELETE");
+        editButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+        JButton[] buttons = new JButton[]{editButton, deleteButton};
+        GUI.subJButtonSetup(buttons, new Dimension(100,30));
+
+        bottomConstraints.gridx = 3;
+        bottomPanel.add(editButton, bottomConstraints);
+
+        bottomConstraints.gridx = 4;
+        bottomPanel.add(deleteButton, bottomConstraints);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weighty = 0.8;
+        searchResultPanel.add(scrollPane, constraints);
+
+        constraints.gridy = 1;
+        constraints.weighty = 0.2;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.WEST;
+        searchResultPanel.add(bottomPanel, constraints);
+
+        searchResultPanel.validate();
     }
 
     private void editAccount() {
@@ -661,7 +619,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         }
     }
 
-    private void resetFields(JComponent[] components){ //POLYMORPHISM
+    private void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
         for (JComponent i : components) {
             i.setEnabled(true);
             if (i instanceof JTextField){
@@ -675,21 +633,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
         pointEdit.setValue(0);
     }
 
-    private void resetPassword(){
-        int numberValue = (int) numberSpinner.getValue();
-
-        if (userType.getSelectedItem().equals("Admin")) {
-            Admin admin = FileIO.adminList.get(numberValue - 1);
-            admin.setPassword(admin.getUsername());
-            FileIO.writeAdminFile();
-        }
-        else if (userType.getSelectedItem().equals("Customer")){
-            Customer customer = FileIO.customerList.get(numberValue - 1);
-            customer.setPassword(customer.getUsername());
-            FileIO.writeCustomerFile();
-        }
-    }
-
     private void editAccountDetails(){
         int numberValue = (int) numberSpinner.getValue();
 
@@ -699,64 +642,27 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
             else if (userType.getSelectedItem().equals("Customer")){
 
-                JTextField[] textFields = new JTextField[]{nameEdit, phoneEdit, emailEdit, addressEdit};
-                for (JTextField i: textFields) {
-                    if (i.getText().equals("")) throw new EmptyInputException();
-                }
-
-                char[] chars = nameEdit.getText().toCharArray();
-                for (char c : chars) {
-                    if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
-                }
-
-                if (!phoneEdit.getText().matches("[0-9]+")) throw new InvalidPhoneException();
-
-                String gender;
+                String nameInput = nameEdit.getText();
+                String phoneInput = phoneEdit.getText();
+                String emailInput = emailEdit.getText();
+                String addressInput = addressEdit.getText();
+                String genderInput;
                 if (male.isSelected()){
-                    gender = "male";
+                    genderInput = "male";
                 }
                 else {
-                    gender = "female";
+                    genderInput = "female";
                 }
+                int ageValue = (int) ageEdit.getValue();
+                int pointValue = (int) pointEdit.getValue();
 
-                Customer customer = FileIO.customerList.get(numberValue - 1);
-                customer.setName(nameEdit.getText());
-                customer.setPhone(phoneEdit.getText());
-                customer.setGender(gender);
-                customer.setAge((int) ageEdit.getValue());
-                customer.setEmail(emailEdit.getText());
-                customer.setAddress(addressEdit.getText());
-                customer.setPoints((int) pointEdit.getValue());
-                FileIO.writeCustomerFile();
+                Admin.editAccountDetails(numberValue, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue, pointValue);
             }
         } catch (InvalidUserException invalidUserException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (EmptyInputException emptyInputException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (InvalidNameException invalidNameException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (InvalidPhoneException invalidPhoneException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid phone number entered! Your phone number must only include numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
-    }
-
-    private boolean deleteAccount(){
-        int numberValue = (int) numberSpinner.getValue();
-
-        if (userType.getSelectedItem().equals("Admin")) {
-            if (FileIO.adminList.size() == 1){
-                return false;
-            }
-            FileIO.adminList.remove(numberValue - 1);
-            FileIO.writeAdminFile();
-        }
-        else if (userType.getSelectedItem().equals("Customer")){
-            FileIO.customerList.remove(numberValue - 1);
-            FileIO.writeCustomerFile();
-        }
-        return true;
     }
 
     private static void viewAllAccount() {

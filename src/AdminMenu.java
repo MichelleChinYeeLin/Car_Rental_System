@@ -310,10 +310,6 @@ public class AdminMenu implements ActionListener {
         }
     }
 
-    private void showCustomerList(){
-
-    }
-
     private void showAdminPanel(JPanel bigPanel, JPanel smallPanel){
         for (JPanel i : panels) {
             i.setVisible(false);
