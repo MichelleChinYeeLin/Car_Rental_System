@@ -355,6 +355,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             }
         }
         catch (Exception exception){
+            exception.printStackTrace();
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong");
         }
     }
@@ -387,24 +388,18 @@ public class CarFunctions extends JPanel implements ActionListener{
             double priceInput = Double.parseDouble(price.getText());
 
             /* Input validation */
-            if (numberPlateInput.equals("") || brandInput.equals("") || modelInput.equals("") || colorInput.equals("")){
-                throw new EmptyInputException();
-            }
 
             if (!price.getText().matches("[0-9]+")) throw new InvalidPriceException();
 
             //Other validation??????
 
-            Car newCar = new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true);
-            FileIO.carList.add(newCar);
-            FileIO.writeCarFile();
+            if (Car.addCar(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput)){
+
+            }
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
             clearAddCarField();
         }
-        catch (EmptyInputException emptyInputException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch (ArithmeticException arithmeticException){
+        catch (NumberFormatException numberFormatException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidPriceException e) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -422,10 +417,11 @@ public class CarFunctions extends JPanel implements ActionListener{
         double price = Double.parseDouble(priceSearchIndicator.getText());
         String availability = (String) availabilitySearchBox.getSelectedItem();
 
-        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
+        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color.toUpperCase(), level, price, availability);
 
         if (searchedList.size() == 0){
             carNotFoundLabel.setVisible(true);
+//            searchTableScroll.setVisible(false);
         }
         else {
             String[] tableColumn = {"No.", "No. Plate", "Brand", "Model", "Color", "Level", "Price", "Availability"};

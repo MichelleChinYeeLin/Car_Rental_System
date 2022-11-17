@@ -362,7 +362,8 @@ public class FileIO {
             FileReader fr = new FileReader(carFileName);
             BufferedReader br = new BufferedReader(fr);
 
-            String numberPlate = "", brand = "", model = "", color = "";
+            String numberPlate = "", brand = "", model = "";
+            Car.Color color = Car.Color.NONE;
             int level = 0;
             double price = 0.0;
             boolean availability = false;
@@ -384,7 +385,7 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if (line.startsWith(colorText)){
-                    color = line.substring(colorText.length());
+                    color = Car.Color.valueOf(line.substring(colorText.length()));
                     line = br.readLine();
                 }
                 else if (line.startsWith(levelText)){

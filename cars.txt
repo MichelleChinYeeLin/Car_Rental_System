@@ -1,14 +1,14 @@
 Number Plate: 111
 Brand: 111
 Model: 11
-Color: 111
+Color: YELLOW
 Price: 11.0
 Available: false
 
 Number Plate: 1
 Brand: 1
 Model: 1
-Color: 1
+Color: BLACK
 Price: 1.0
 Available: true
 

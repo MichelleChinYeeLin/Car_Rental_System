@@ -23,3 +23,7 @@ class LastAdminException extends Exception{}
 class InvalidUserException extends Exception{}
 
 class InvalidPriceException extends Exception{}
+
+class NumberPlateTakenException extends Exception{}
+
+class InvalidColorException extends Exception{}

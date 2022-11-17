@@ -1,11 +1,22 @@
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Car {
 
+    public enum Color {
+        BLACK,
+        WHITE,
+        SILVER,
+        RED,
+        BLUE,
+        YELLOW,
+        NONE
+    }
+
     private String numberPlate;
     private String brand;
     private String model;
-    private String color;
+    private Color color;
     private int level;
     private double price;
     private boolean availability;
@@ -14,13 +25,13 @@ public class Car {
         this.numberPlate = "";
         this.brand = "";
         this.model = "";
-        this.color = "";
+        this.color = Color.NONE;
         this.level = 0;
         this.price = 0.0;
         this.availability = false;
     }
 
-    public Car(String numberPlate, String brand, String model, String color, int level, double price, boolean availability){
+    public Car(String numberPlate, String brand, String model, Color color, int level, double price, boolean availability){
         this.numberPlate = numberPlate;
         this.brand = brand;
         this.model = model;
@@ -47,11 +58,11 @@ public class Car {
     }
 
     public String getColor() {
-        return color;
+        return String.valueOf(color);
     }
 
     public void setColor(String color) {
-        this.color = color;
+        this.color = Color.valueOf(color);
     }
 
     public double getPrice() {
@@ -86,8 +97,40 @@ public class Car {
         this.availability = availability;
     }
 
-    public void addCar(String numberPlate, String brand, String model, String color, String levelText, double price){
+    public static boolean addCar(String numberPlate, String brand, String model, String color, int level, double price){
+        try {
+            if (numberPlate.equals("") || brand.equals("") || model.equals("") || color.equals("")){
+                throw new EmptyInputException();
+            }
 
+            for (Car car : FileIO.carList) {
+                if (car.numberPlate.equals(numberPlate)){
+                    throw new NumberPlateTakenException();
+                }
+            }
+
+            for (Color c : Color.values()) {
+                if (!Color.valueOf(color).equals(c)){
+                    throw new InvalidColorException();
+                }
+            }
+
+//            Car newCar = new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true);
+//            FileIO.carList.add(newCar);
+//            FileIO.writeCarFile();
+
+
+        }
+        catch (EmptyInputException emptyInputException){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (NumberPlateTakenException e) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Number plate already taken!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidColorException e) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid color!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        return false;
     }
 
     public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
@@ -109,9 +152,9 @@ public class Car {
                 isMatch = false;
             }
 
-            if (!color.equals("Any")){
+            if (!color.equals("ANY")) {
 
-                if (!car.getColor().equalsIgnoreCase(color)){
+                if (!car.getColor().equals(color)) {
                     isMatch = false;
                 }
             }
