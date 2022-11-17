@@ -87,34 +87,132 @@ public class Car {
     }
 
     //Still thinking
-    public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
-        ArrayList<Car> foundCars = new ArrayList<Car>();
-        for (Car c : FileIO.carList) {
-            if (numberPlate.equals(c.numberPlate)){
-                foundCars.add(c);
+    public static Car checkField(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
+        if (!flag){
+            if (price == 0.0){
+                if (!numberPlate.equals("") && brand.equals("") && model.equals("") && color.equals("") && level == 0){
+                }
+                else if (!numberPlate.equals("") && !brand.equals("") && model.equals("") && color.equals("") && level == 0){
+                }
             }
-            if (brand.equals(c.brand)){
-                foundCars.add(c);
+            else {
+
             }
-            if (model.equals(c.model)){
-                foundCars.add(c);
+        }
+        else {
+
+        }
+        return null;
+    }
+
+    public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
+        ArrayList<Car> carList = FileIO.getCarList();
+        ArrayList<Car> searchedList = new ArrayList<>();
+
+        for(Car car : carList){
+            boolean isMatch = true;
+
+            if (!car.getNumberPlate().toLowerCase().contains(numberPlate.toLowerCase())) {
+                isMatch = false;
             }
-            if (color.equals(c.color)){
-                foundCars.add(c);
+
+            if (!car.getBrand().toLowerCase().contains(brand.toLowerCase())) {
+                isMatch = false;
             }
-            if (level == c.level){
-                foundCars.add(c);
+
+            if (!car.getModel().toLowerCase().contains(model.toLowerCase())){
+                isMatch = false;
             }
-            if (price == c.price){
-                foundCars.add(c);
+
+            if (!color.equals("Any")){
+
+                if (!car.getColor().equalsIgnoreCase(color)){
+                    isMatch = false;
+                }
             }
-            if (flag){
-                if (available == c.availability){
-                    foundCars.add(c);
+
+            if (!levelText.equals("Any")){
+                if (car.getLevel() != Integer.parseInt(levelText)){
+                    isMatch = false;
+                }
+            }
+
+            if (car.getPrice() > price){
+                isMatch = false;
+            }
+
+            if (!availabilityText.equals("Any")){
+
+                boolean availability = availabilityText.equalsIgnoreCase("Available");
+
+                if (car.isAvailability() != availability){
+                    isMatch = false;
+                }
+            }
+
+            if (isMatch){
+                searchedList.add(car);
+            }
+        }
+        /*
+        if (!numberPlate.equals("")) {
+            for (Car car : searchedList) {
+                if (!car.getNumberPlate().contains(numberPlate)) {
+                    searchedList.remove(car);
                 }
             }
         }
-        return foundCars;
-    }
 
+        if (!brand.equals("")) {
+            for (Car car : searchedList) {
+                if (!car.getBrand().contains(brand)) {
+                    searchedList.remove(car);
+                }
+            }
+        }
+
+        if (!model.equals("")) {
+            for (Car car : searchedList) {
+                if (!car.getModel().contains(model)) {
+                    searchedList.remove(car);
+                }
+            }
+        }
+
+        if (!color.equals("Any")) {
+            for (Car car : searchedList) {
+                if (!car.getColor().equals(color)) {
+                    searchedList.remove(car);
+                }
+            }
+        }
+
+        if (!levelText.equals("Any")) {
+            int level = Integer.parseInt(levelText);
+
+            for (Car car : searchedList) {
+                if (car.getLevel() != level) {
+                    searchedList.remove(car);
+                }
+            }
+        }
+
+        for (Car car : searchedList) {
+            if (car.getPrice() > price) {
+                searchedList.remove(car);
+            }
+        }
+
+        if (!availabilityText.equals("Any")) {
+            boolean availability = availabilityText.equals("Available");
+
+            for (Car car : searchedList) {
+                if (car.isAvailability() != availability) {
+                    searchedList.remove(car);
+                }
+            }
+        }
+         */
+        return searchedList;
+    }
 }

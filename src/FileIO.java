@@ -388,7 +388,7 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if (line.startsWith(levelText)){
-                    color = line.substring(levelText.length());
+                    level = Integer.parseInt(line.substring(levelText.length()));
                     line = br.readLine();
                 }
                 else if (line.startsWith(priceText)){
