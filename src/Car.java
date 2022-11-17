@@ -112,21 +112,21 @@ public class Car {
         for(Car car : carList){
             boolean isMatch = true;
 
-            if (!car.getNumberPlate().contains(numberPlate)) {
+            if (!car.getNumberPlate().toLowerCase().contains(numberPlate.toLowerCase())) {
                 isMatch = false;
             }
 
-            if (!car.getBrand().contains(brand)) {
+            if (!car.getBrand().toLowerCase().contains(brand.toLowerCase())) {
                 isMatch = false;
             }
 
-            if (!car.getModel().contains(model)){
+            if (!car.getModel().toLowerCase().contains(model.toLowerCase())){
                 isMatch = false;
             }
 
             if (!color.equals("Any")){
 
-                if (!car.getColor().equals(color)){
+                if (!car.getColor().equalsIgnoreCase(color)){
                     isMatch = false;
                 }
             }
@@ -141,8 +141,13 @@ public class Car {
                 isMatch = false;
             }
 
-            if (!car.isAvailability() == availabilityText.equals("Available")){
-                isMatch = false;
+            if (!availabilityText.equals("Any")){
+
+                boolean availability = availabilityText.equalsIgnoreCase("Available");
+
+                if (car.isAvailability() != availability){
+                    isMatch = false;
+                }
             }
 
             if (isMatch){

@@ -24,7 +24,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private ButtonGroup availability;
     private JSlider priceSearchSlider;
     private JComboBox colorSearchBox, levelSearchBox, availabilitySearchBox;
-    private JScrollPane scrollPane;
+    private JScrollPane searchTableScroll;
     private JButton[] carButtons;
     private static JPanel[] panels;
     private JLabel[] carLabels, carLabels2;
@@ -178,7 +178,8 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchCarAttributesPanel = new JPanel(new GridBagLayout());
         searchCarAttributesPanel.setBackground(Color.white);
         searchResultsPanel = new JPanel(new BorderLayout());
-        searchResultsPanel.setBackground(Color.black);
+        searchResultsPanel.setBackground(Color.blue);
+        searchResultsPanel.setPreferredSize(new Dimension(500, 300));
 
         //JLabels
         numberPlateSearchLabel = new JLabel("No. Plate:");
@@ -290,7 +291,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchConstraints.gridx = 0;
         searchConstraints.gridy = 0;
         searchConstraints.weightx = 1;
-        searchConstraints.weighty = 0.3;
+        //searchConstraints.weighty = 0.3;
         searchCarPanel.add(searchCarAttributesPanel, searchConstraints);
 
 //        GridBagConstraints searchResultsConstraints = new GridBagConstraints();
@@ -310,9 +311,10 @@ public class CarFunctions extends JPanel implements ActionListener{
 
         searchConstraints.gridx = 0;
         searchConstraints.gridy = 1;
-        searchConstraints.weighty = 0.7;
+        searchConstraints.insets = new Insets(10,10,10,10);
+        //searchConstraints.weighty = 0.7;
         searchCarPanel.add(searchResultsPanel, searchConstraints);
-        searchResultsPanel.setVisible(true);
+//        searchResultsPanel.setVisible(true);
 
         //View car panel
         viewCarPanel = new JPanel(new GridBagLayout());
@@ -420,10 +422,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     }
 
     private void searchCar(){
-        //searchResultsPanel.setVisible(false);
-        //carNotFoundLabel.setVisible(false);
-        //searchTable.setVisible(false);
-        //scrollPane.setVisible(false);
+        carNotFoundLabel.setVisible(false);
 
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
@@ -454,17 +453,25 @@ public class CarFunctions extends JPanel implements ActionListener{
                 i++;
             }
 
-            //TODO scrollpane not displaying properly
             JTable searchTable = new JTable(tempTable, tableColumn);
-            searchTable.setPreferredSize(new Dimension(500, 500));
-            //searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            searchResultsPanel.add(searchTable, BorderLayout.CENTER);
-            searchTable.setVisible(true);
-            //scrollPane.setVisible(true);
+
+            if (searchTableScroll == null){
+                searchTableScroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+                searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
+            }
+
+//            else {
+//                searchTableScroll.removeAll();
+//                searchTableScroll.add(searchTable);
+//                //searchTableScroll.setViewportView(searchTable);
+//            }
+
+
+            searchTableScroll.setViewportView(searchTable);
+            searchTableScroll.setVisible(true);
             searchResultsPanel.setVisible(true);
-//            searchTable.validate();
-//            scrollPane.validate();
-//            searchResultsPanel.validate();
+            searchResultsPanel.validate();
         }
 
         searchCarPanel.validate();
