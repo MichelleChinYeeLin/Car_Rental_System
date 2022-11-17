@@ -21,3 +21,5 @@ class InvalidPointException extends Exception{}
 class LastAdminException extends Exception{}
 
 class InvalidUserException extends Exception{}
+
+class InvalidPriceException extends Exception{}

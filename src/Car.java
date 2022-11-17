@@ -86,23 +86,8 @@ public class Car {
         this.availability = availability;
     }
 
-    //Still thinking
-    public static Car checkField(String numberPlate, String brand, String model, String color, int level, double price, boolean available, boolean flag){
-        if (!flag){
-            if (price == 0.0){
-                if (!numberPlate.equals("") && brand.equals("") && model.equals("") && color.equals("") && level == 0){
-                }
-                else if (!numberPlate.equals("") && !brand.equals("") && model.equals("") && color.equals("") && level == 0){
-                }
-            }
-            else {
+    public void addCar(String numberPlate, String brand, String model, String color, String levelText, double price){
 
-            }
-        }
-        else {
-
-        }
-        return null;
     }
 
     public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
@@ -154,65 +139,6 @@ public class Car {
                 searchedList.add(car);
             }
         }
-        /*
-        if (!numberPlate.equals("")) {
-            for (Car car : searchedList) {
-                if (!car.getNumberPlate().contains(numberPlate)) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-
-        if (!brand.equals("")) {
-            for (Car car : searchedList) {
-                if (!car.getBrand().contains(brand)) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-
-        if (!model.equals("")) {
-            for (Car car : searchedList) {
-                if (!car.getModel().contains(model)) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-
-        if (!color.equals("Any")) {
-            for (Car car : searchedList) {
-                if (!car.getColor().equals(color)) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-
-        if (!levelText.equals("Any")) {
-            int level = Integer.parseInt(levelText);
-
-            for (Car car : searchedList) {
-                if (car.getLevel() != level) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-
-        for (Car car : searchedList) {
-            if (car.getPrice() > price) {
-                searchedList.remove(car);
-            }
-        }
-
-        if (!availabilityText.equals("Any")) {
-            boolean availability = availabilityText.equals("Available");
-
-            for (Car car : searchedList) {
-                if (car.isAvailability() != availability) {
-                    searchedList.remove(car);
-                }
-            }
-        }
-         */
         return searchedList;
     }
 }

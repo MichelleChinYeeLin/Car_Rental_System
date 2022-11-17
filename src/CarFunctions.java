@@ -307,7 +307,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         //Create car functions panel
         panels = new JPanel[]{addCarPanel, editCarPanel, deleteCarPanel, searchCarPanel, viewCarPanel};
         GUI.JPanelSetup(panels);
-        setPreferredSize(new Dimension(500,500));
+        setPreferredSize(new Dimension(600,500));
         add(addCarPanel);
         add(editCarPanel);
         add(deleteCarPanel);
@@ -391,19 +391,23 @@ public class CarFunctions extends JPanel implements ActionListener{
                 throw new EmptyInputException();
             }
 
+            if (!price.getText().matches("[0-9]+")) throw new InvalidPriceException();
+
             //Other validation??????
 
             Car newCar = new Car(numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, true);
-            ArrayList<Car> newCarList = FileIO.getCarList();
-            newCarList.add(newCar);
-            FileIO.setCarList(newCarList);
-            //FileIO.carList.add(newCar);
+            FileIO.carList.add(newCar);
             FileIO.writeCarFile();
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
             clearAddCarField();
         }
         catch (EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (ArithmeticException arithmeticException){
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (InvalidPriceException e) {
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -443,11 +447,11 @@ public class CarFunctions extends JPanel implements ActionListener{
 
             if (searchTableScroll == null){
                 searchTableScroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-                searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                 searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
             }
 
             searchTableScroll.setViewportView(searchTable);
+            searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             searchTableScroll.setVisible(true);
             searchResultsPanel.setVisible(true);
             searchResultsPanel.validate();
