@@ -17,6 +17,10 @@ public class GUI {
         return frameBackgroundColor;
     }
 
+    public static Font getDefaultFont(){
+        return new Font("Serif", Font.PLAIN, 16);
+    }
+
     public static void JButtonSetup(JButton[] buttons){
         for (JButton button : buttons) {
             button.setFocusable(false);
@@ -26,11 +30,19 @@ public class GUI {
         }
     }
 
-    public static void JButtonLeftTabSetup(JButton[] buttons){
-        for (JButton button : buttons){
-            button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+    public static void JButtonSetup(JButton button){
+        button.setFocusable(false);
+        button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        button.setBackground(Color.white);
+        button.setPreferredSize(new Dimension(150, 40));
+    }
+
+    public static void subJButtonSetup(JButton[] buttons, Dimension dim) {
+        for (JButton button : buttons) {
+            button.setFocusable(false);
+            button.setFont(new Font(Font.SERIF, Font.BOLD, 16));
             button.setBackground(Color.white);
-            button.setPreferredSize(new Dimension(150, 40));
+            button.setPreferredSize(dim);
         }
     }
 
@@ -38,9 +50,8 @@ public class GUI {
         ImageIcon logo = new ImageIcon("src/images/Logo.png");
         frame.setSize(frameLength,frameHeight);
         frame.setIconImage(logo.getImage());
-        frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
-        frame.setLocation(600, 180);
+        frame.setLocationRelativeTo(null);
     }
 
     public static void JLabelSetup(JLabel[] labels){
@@ -50,12 +61,24 @@ public class GUI {
         }
     }
 
+    public static void JLabelSetup(JLabel label){
+        label.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
+        label.setHorizontalAlignment(JLabel.LEFT);
+    }
+
+    public static void JPanelSetup(JPanel[] panels){
+        for (JPanel panel : panels) {
+            panel.setVisible(false);
+            panel.setBackground(Color.white);
+        }
+    }
+
     public static void playSound(String soundName) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile( ));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            clip.start();
+            //clip.start();
         } catch(Exception ex) {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();

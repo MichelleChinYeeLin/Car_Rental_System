@@ -32,6 +32,7 @@ public class FileIO {
     private static final String brandText = "Brand: ";
     private static final String modelText = "Model: ";
     private static final String colorText = "Color: ";
+    private static final String levelText = "Level: ";
     private static final String priceText = "Price: ";
     private static final String availabilityText = "Available: ";
 
@@ -43,7 +44,7 @@ public class FileIO {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-    //ArrayLists 我把这些改成public了
+    //ArrayLists
     public static ArrayList<Admin> adminList = new ArrayList<>();
     public static ArrayList<Customer> customerList= new ArrayList<>();
     public static ArrayList<Car> carList= new ArrayList<>();
@@ -119,6 +120,7 @@ public class FileIO {
             BufferedReader br = new BufferedReader(fr);
 
             String line = br.readLine();
+            String line2 = "";
 
             while (line != null){
                 String nextLine = br.readLine();
@@ -128,7 +130,7 @@ public class FileIO {
                 Admin admin = new Admin(username, password);
                 adminList.add(admin);
 
-                line = br.readLine();
+                line2 = br.readLine();
                 line = br.readLine();
             }
             br.close();
@@ -360,7 +362,9 @@ public class FileIO {
             FileReader fr = new FileReader(carFileName);
             BufferedReader br = new BufferedReader(fr);
 
-            String numberPlate = "", brand = "", model = "", color = "";
+            String numberPlate = "", brand = "", model = "";
+            Car.Color color = Car.Color.NONE;
+            int level = 0;
             double price = 0.0;
             boolean availability = false;
             String line = br.readLine();
@@ -381,7 +385,11 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if (line.startsWith(colorText)){
-                    color = line.substring(colorText.length());
+                    color = Car.Color.valueOf(line.substring(colorText.length()));
+                    line = br.readLine();
+                }
+                else if (line.startsWith(levelText)){
+                    level = Integer.parseInt(line.substring(levelText.length()));
                     line = br.readLine();
                 }
                 else if (line.startsWith(priceText)){
@@ -389,13 +397,13 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if (line.startsWith(availabilityText)){
-                    availability = line.substring(availabilityText.length()).equals("True");
-                    Car car = new Car(numberPlate, brand, model, color, price, availability);
+                    availability = line.substring(availabilityText.length()).equals("true");
+                    Car car = new Car(numberPlate, brand, model, color, level, price, availability);
                     carList.add(car);
+                    line2 = br.readLine();
+                    line = br.readLine();
                 }
 
-                line2 = br.readLine();
-                line = br.readLine();
             }
             br.close();
             fr.close();
@@ -417,8 +425,9 @@ public class FileIO {
                 fw.write(brandText + car.getBrand() + "\n");
                 fw.write(modelText + car.getModel() + "\n");
                 fw.write(colorText + car.getColor() + "\n");
+                fw.write(levelText + car.getLevel() + "\n");
                 fw.write(priceText + car.getPrice() + "\n");
-                fw.write(availabilityText + car.isAvailable() + "\n\n");
+                fw.write(availabilityText + car.isAvailability() + "\n\n");
             }
             fw.close();
         }
@@ -526,4 +535,13 @@ public class FileIO {
         readBookingFile();
         readRegistrationFile();
     }
+
+    public static void writeAllFiles(){
+        writeAdminFile();
+        writeCustomerFile();
+        writeCarFile();
+        writeBookingFile();
+        writeRegistrationFile();
+    }
+
 }

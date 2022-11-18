@@ -82,13 +82,16 @@ public class HomePage implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == login){
+            GUI.playSound("ji.wav");
             frame.setVisible(false);
             CarRentalSystem.loginPage.getFrame().setVisible(true);
         } else if (e.getSource() == signUp) {
+            GUI.playSound("ji.wav");
             frame.setVisible(false);
             CarRentalSystem.signUpPage.getFrame().setVisible(true);
         } else if (e.getSource() == quit) {
-            System.exit(0); // 先这样 过后再看要不要做一个新的confirm page hmmmmmmmmmmmmmmmm
+            FileIO.writeAllFiles();
+            System.exit(0);
         }
     }
 }

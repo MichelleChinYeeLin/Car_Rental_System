@@ -139,7 +139,50 @@ public class Customer extends User{
         int newPoints = 0;
         newAccList.add(new Customer(username, password, name, phone, gender, age, email, address, newPoints));
         FileIO.setRegistrationList(newAccList);
-        FileIO.writeRegistrationFile();
         return true;
+    }
+
+    public static boolean approveRegistration(int index){
+        try{
+            ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
+
+            if(index >= 0){
+                Customer newCustomer = accRegistrationList.get(index);
+                accRegistrationList.remove(newCustomer);
+                FileIO.setRegistrationList(accRegistrationList);
+
+                ArrayList<Customer> customerList = FileIO.getCustomerList();
+                customerList.add(newCustomer);
+                FileIO.setCustomerList(customerList);
+
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(Exception exception){
+            return false;
+        }
+    }
+
+    public static boolean denyRegistration(int index){
+        try{
+            ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
+
+            if(index >= 0){
+                Customer deletedRegistration = accRegistrationList.get(index);
+                accRegistrationList.remove(deletedRegistration);
+                FileIO.setRegistrationList(accRegistrationList);
+
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(Exception exception){
+            return false;
+        }
     }
 }

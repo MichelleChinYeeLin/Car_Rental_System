@@ -5,10 +5,29 @@ import java.awt.event.ActionListener;
 
 public class CustomerMenu implements ActionListener {
 
+    /* MAIN */
     private JFrame frame;
-    private JLabel title;
-    private JButton logout;
-    private JButton[] buttons;
+    private JPanel carsPanel, bookingsPanel, accountPanel;
+    private JButton logout, cars, booking, account;
+    private JButton[] buttons, carButtons, bookingButtons, accountButtons;
+    private JPanel[] panels;
+
+    /* CAR */
+    private CarFunctions carFunctionsPanel;
+    private JButton searchCar, allCar;
+    // search -> book?
+
+    /* BOOKING */
+    private JPanel bookingFunctionsPanel;
+//    private CarFunctions forSearchOnly;
+    private JButton makeBooking, deleteBooking, viewBooking;
+    // book -> search car -> book
+    // view -> (return car -> payment)/receipt/feedback
+    // cant quit during payment!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    /* ACCOUNT */
+    private JPanel accountFunctionsPanel; // show profile
+    private JButton editAccount, deleteAccount;
 
     public CustomerMenu(){
         frame = new JFrame("Customer Menu");
@@ -17,10 +36,16 @@ public class CustomerMenu implements ActionListener {
         frame.setLayout(new GridBagLayout());
 
         //Create buttons
+        cars = new JButton("Cars");
+        booking = new JButton("Bookings");
+        account = new JButton("Account");
         logout = new JButton("Logout");
-        buttons = new JButton[]{logout};
+        buttons = new JButton[]{cars, booking, account, logout};
+        cars.addActionListener(this);
+        booking.addActionListener(this);
+        account.addActionListener(this);
         logout.addActionListener(this);
-        GUI.JButtonLeftTabSetup(buttons);
+        GUI.JButtonSetup(buttons);
 
         //Button Panel
         GridBagLayout buttonLayout = new GridBagLayout();
@@ -42,9 +67,98 @@ public class CustomerMenu implements ActionListener {
         constraints.weightx = 0.01;
         frame.add(buttonPanel, constraints);
 
+        /* CAR */
+        //Create buttons
+        searchCar = new JButton("Search");
+        allCar = new JButton("All Cars");
+        carButtons = new JButton[]{searchCar, allCar};
+        searchCar.addActionListener(this);
+        allCar.addActionListener(this);
+        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
+
+        //Create car panel
+        carsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints carConstraints = new GridBagConstraints();
+        carFunctionsPanel = new CarFunctions();
+
+        //Car button panel
+        JPanel carButtonPanel = new JPanel(new GridBagLayout());
+        carButtonPanel.add(searchCar);
+        carButtonPanel.add(allCar);
+
+        //Position elements in car panel
+        carConstraints.gridy = 0;
+        carsPanel.add(carButtonPanel, carConstraints);
+        carConstraints.gridy = 1;
+        carsPanel.add(carFunctionsPanel, carConstraints);
+
+
+        /* BOOKING */
+        //Create buttons
+        makeBooking = new JButton("Make Booking");
+        deleteBooking = new JButton("Delete Booking");
+        viewBooking = new JButton("All Bookings");
+        bookingButtons = new JButton[]{makeBooking, deleteBooking, viewBooking};
+        makeBooking.addActionListener(this);
+        deleteBooking.addActionListener(this);
+        viewBooking.addActionListener(this);
+        GUI.subJButtonSetup(bookingButtons, new Dimension(140, 40));
+
+        //Create booking panel
+        bookingsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints bkgConstraints = new GridBagConstraints();
+        bookingFunctionsPanel = new JPanel(); // to change
+
+        //Booking button panel
+        JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
+        bookingButtonPanel.add(makeBooking);
+        bookingButtonPanel.add(deleteBooking);
+        bookingButtonPanel.add(viewBooking);
+
+        //Position elements in booking panel
+        bkgConstraints.gridy = 0;
+        bookingsPanel.add(bookingButtonPanel, bkgConstraints);
+        bkgConstraints.gridy = 1;
+        bookingsPanel.add(bookingFunctionsPanel, bkgConstraints);
+
+
+        /* ACCOUNT */
+        //Create buttons
+        editAccount = new JButton("Edit Account");
+        deleteAccount = new JButton("Delete Account");
+        accountButtons = new JButton[]{editAccount, deleteAccount};
+        editAccount.addActionListener(this);
+        deleteAccount.addActionListener(this);
+        GUI.subJButtonSetup(accountButtons, new Dimension(140, 40));
+
+        //Create account panel
+        accountPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints accConstraints = new GridBagConstraints();
+        accountFunctionsPanel = new JPanel(); // to change
+
+        //Account button panel
+        JPanel accountButtonPanel = new JPanel(new GridBagLayout());
+        accountButtonPanel.add(editAccount);
+        accountButtonPanel.add(deleteAccount);
+
+        //Position elements in account panel
+        accConstraints.gridy = 0;
+        accountPanel.add(accountButtonPanel, accConstraints);
+        accConstraints.gridy = 1;
+        accountPanel.add(accountFunctionsPanel, accConstraints);
+
+
+        /* MAIN */
+        //Create panels
+        panels = new JPanel[]{carsPanel, carFunctionsPanel, bookingsPanel, bookingFunctionsPanel, accountPanel, accountFunctionsPanel};
+        GUI.JPanelSetup(panels);
+
         //Create main panel
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(Color.white);
+        mainPanel.add(carsPanel);
+        mainPanel.add(bookingsPanel);
+        mainPanel.add(accountPanel);
 
         //Position main panel in the frame
         constraints.insets = new Insets(5,0,5,5);
@@ -63,12 +177,42 @@ public class CustomerMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == logout){
+                GUI.playSound("ji.wav");
                 CarRentalSystem.loginCustomer = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
+            else if (e.getSource() == cars){
+                GUI.playSound("ji.wav");
+                showCustomerPanel(carsPanel, carFunctionsPanel);
+            }
+            else if (e.getSource() == booking){
+                GUI.playSound("ji.wav");
+                showCustomerPanel(bookingsPanel, bookingFunctionsPanel);
+            }
+            else if (e.getSource() == account){
+                GUI.playSound("ji.wav");
+                showCustomerPanel(accountPanel, accountFunctionsPanel);
+            }
+            else if (e.getSource() == searchCar){
+                GUI.playSound("ji.wav");
+                CarFunctions.showSearchCarPanel();
+            }
+            else if (e.getSource() == allCar){
+                GUI.playSound("ji.wav");
+                CarFunctions.showAllCarPanel();
+            }
         } catch (Exception exception){
+            GUI.playSound("niganma.wav");
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
+    }
+
+    private void showCustomerPanel(JPanel bigPanel, JPanel smallPanel){
+        for (JPanel i : panels) {
+            i.setVisible(false);
+        }
+        bigPanel.setVisible(true);
+        smallPanel.setVisible(true);
     }
 }

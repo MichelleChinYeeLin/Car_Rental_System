@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Booking {
 
@@ -17,6 +19,15 @@ public class Booking {
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public Booking (Car car, Customer customer, String status, Date startDate, Date endDate) {
+        this.car = car;
+        this.customer = customer;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalPrice = calcTotalPrice(car, startDate, endDate);
     }
 
     public Car getCar() {
@@ -65,5 +76,40 @@ public class Booking {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public double calcTotalPrice(Car car, Date startDate, Date endDate){
+        long milliSecDiff = Math.abs(endDate.getTime() - startDate.getTime());
+        long duration = TimeUnit.DAYS.convert(milliSecDiff, TimeUnit.MILLISECONDS);
+
+        return car.getPrice() * duration;
+    }
+
+    public static boolean addBooking(Car car, Customer customer, Date startDate, Date endDate){
+        try{
+            String status = "Booked";
+            Booking booking = new Booking(car, customer, status, startDate, endDate);
+            ArrayList<Booking> bookingList = FileIO.getBookingList();
+            bookingList.add(booking);
+            FileIO.setBookingList(bookingList);
+
+            return true;
+        }
+        catch(Exception exception){
+            return false;
+        }
+    }
+
+    public static boolean deleteBooking(int index){
+        try{
+            ArrayList<Booking> bookingList = FileIO.getBookingList();
+            bookingList.remove(index);
+            FileIO.setBookingList(bookingList);
+
+            return true;
+        }
+        catch (ArrayIndexOutOfBoundsException arrayIndexOutOfBoundsException){
+            return false;
+        }
     }
 }

@@ -46,13 +46,13 @@ public class SignUpPage implements ActionListener {
         //Create labels
         usernameLabel = new JLabel("A Unique Username:");
         passwordLabel = new JLabel("Password: ");
-        passwordCheckLabel = new JLabel("Check your password: ");
+        passwordCheckLabel = new JLabel("Validate your password: ");
         nameLabel = new JLabel("Name: ");
         ageLabel = new JLabel("Age:");
         phoneNumLabel = new JLabel("Phone Number: ");
         emailLabel = new JLabel("Email: ");
         addressLabel = new JLabel("Address: ");
-        JLabel[] labels = {usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
+        labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
         GUI.JLabelSetup(labels);
 
         //Set label positions
@@ -136,7 +136,7 @@ public class SignUpPage implements ActionListener {
         cancel = new JButton("Cancel");
         signUp.addActionListener(this);
         cancel.addActionListener(this);
-        JButton buttons[] = {signUp, cancel};
+        buttons = new JButton[]{signUp, cancel};
         GUI.JButtonSetup(buttons);
 
         //Create and set buttons
@@ -167,6 +167,7 @@ public class SignUpPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == signUp){
+                GUI.playSound("ji.wav");
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String passwordCheckInput = String.valueOf(passwordCheck.getPassword());
@@ -228,6 +229,7 @@ public class SignUpPage implements ActionListener {
                 }
             }
             else if (e.getSource() == cancel) {
+                GUI.playSound("ji.wav");
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
@@ -274,18 +276,3 @@ public class SignUpPage implements ActionListener {
         address.setText("");
     }
 }
-class InvalidAgeException extends Exception{}
-
-class InvalidNameException extends Exception{}
-
-class InvalidPhoneException extends Exception{}
-
-class MismatchPasswordException extends Exception{}
-
-class EmptyInputException extends Exception{}
-
-class UsernameTakenException extends Exception{}
-
-class WrongPasswordException extends Exception{}
-
-class UserNotFoundException extends Exception{}
