@@ -218,7 +218,8 @@ public class SignUpPage implements ActionListener {
                 // Email & Address ??
                 //TODO email input validation
 
-                if (Customer.signUp(usernameInput, passwordInput, nameInput, ageInput, gender, phoneNumInput, emailInput, addressInput)){
+                Customer newCustomer = new Customer(usernameInput, passwordInput, nameInput, phoneNumInput, gender, ageInput, emailInput, addressInput);
+                if (newCustomer.signUp()){
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);

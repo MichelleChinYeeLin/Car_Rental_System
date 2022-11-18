@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Booking {
 
-    private String bookingID;
+    //private String bookingID;
     private Car car;
     private Customer customer;
     private double totalPrice;

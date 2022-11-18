@@ -78,8 +78,8 @@ public class CarFunctions extends JPanel implements ActionListener{
         priceSearchIndicator = new JLabel("10");
         availabilitySearchLabel = new JLabel("Availability:");
         carNotFoundLabel = new JLabel("No cars found!");
-        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
-//        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
+        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel,
+                                       priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
         GUI.JLabelSetup(searchCarLabels);
 
         //Create input fields
@@ -234,51 +234,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchResultsPanel = new JPanel(new BorderLayout());
         searchResultsPanel.setBackground(Color.white);
         searchResultsPanel.setPreferredSize(new Dimension(500, 300));
-
-        //JLabels
-        numberPlateSearchLabel = new JLabel("No. Plate:");
-        brandSearchLabel = new JLabel("Brand:");
-        modelSearchLabel = new JLabel("Model:");
-        colorSearchLabel = new JLabel("Color:");
-        levelSearchLabel = new JLabel("Level:");
-        priceSearchLabel = new JLabel("Price:");
-        priceSearchIndicator = new JLabel("200");
-        availabilitySearchLabel = new JLabel("Availability:");
-        carNotFoundLabel = new JLabel("No cars found!");
-        JLabel[] searchLabels = {numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
-//        JLabel[] searchLabels = {numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
-        GUI.JLabelSetup(searchLabels);
-
-        //JTextFields
-        numberPlateSearch = new JTextField(10);
-        brandSearch = new JTextField(10);
-        modelSearch = new JTextField(10);
-
-        //JSlider
-        priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, 200, 200);
-        priceSearchSlider.setMajorTickSpacing(50);
-        priceSearchSlider.setMinorTickSpacing(10);
-        priceSearchSlider.setFont(GUI.getDefaultFont());
-        priceSearchSlider.setPaintTicks(true);
-        priceSearchSlider.setPaintLabels(true);
-        priceSearchSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                priceSearchIndicator.setText(String.valueOf(priceSearchSlider.getValue()));
-            }
-        });
-
-        //JComboBox
-        colorSearchBox = new JComboBox<>(colorType);
-        colorSearchBox.setFont(GUI.getDefaultFont());
-        levelSearchBox = new JComboBox<>(levelType);
-        levelSearchBox.setFont(GUI.getDefaultFont());
-        availabilitySearchBox = new JComboBox<>(availabilityType);
-        availabilitySearchBox.setFont(GUI.getDefaultFont());
-
-        //JButton
-        searchButton = new JButton("Search");
-        searchButton.addActionListener(this);
 
         //Position components in the search field panel
         GridBagConstraints searchAttributeConstraints = new GridBagConstraints();

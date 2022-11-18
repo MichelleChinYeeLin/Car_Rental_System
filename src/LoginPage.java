@@ -109,14 +109,17 @@ public class LoginPage implements ActionListener {
                 }
 
                 if (userTypeInput.equals("Customer")) {
-                    if (Customer.login(usernameInput, passwordInput)) {
+                    Customer loginCustomer = new Customer(usernameInput, passwordInput);
+
+                    if (loginCustomer.login()) {
                         GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
                     }
                 }
                 else if (userTypeInput.equals("Admin")) {
-                    if (Admin.login(usernameInput, passwordInput)) {
+                    Admin loginAdmin = new Admin(usernameInput, passwordInput);
+                    if (loginAdmin.login()) {
                         GUI.playSound("ji.wav");
                         frame.setVisible(false);
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);

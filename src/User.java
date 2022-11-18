@@ -1,4 +1,4 @@
-public class User { // 要不要弄成abstract class 反正好像也不会用到
+public abstract class User {
 
     private String username;
     private String password;
@@ -24,11 +24,7 @@ public class User { // 要不要弄成abstract class 反正好像也不会用到
         this.password = password;
     }
 
-    public static boolean login(String username, String password){
-        return false;
-    }
+    public abstract boolean login();
 
-    public static boolean signUp(String username, String password, int age, String gender, String phoneNum, String email, String address){
-        return false;
-    }
+    public abstract boolean signUp();
 }

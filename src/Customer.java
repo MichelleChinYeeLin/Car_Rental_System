@@ -23,6 +23,16 @@ public class Customer extends User{
         this.points = 0;
     }
 
+    public Customer(String username, String password){
+        super(username, password);
+        this.name = "";
+        this.phone = "";
+        this.gender = "";
+        this.email = "";
+        this.address = "";
+        this.points = 0;
+    }
+
     public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address) {
         super(username, password);
         this.name = name;
@@ -95,11 +105,11 @@ public class Customer extends User{
 //        this.myBookings = myBookings;
 //    }
 
-    public static boolean login(String username, String password){
+    public boolean login(){
         try {
             for (Customer c : FileIO.customerList) {
-                if (username.equals(c.getUsername())){
-                    if (password.equals(c.getPassword())){
+                if (getUsername().equals(c.getUsername())){
+                    if (getPassword().equals(c.getPassword())){
                         CarRentalSystem.loginCustomer = c;
                         return true;
                     }
@@ -114,30 +124,31 @@ public class Customer extends User{
         } catch (WrongPasswordException wrongPasswordException) {
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (UserNotFoundException e) {
-            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+username+"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+ getUsername() +"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
 
-    public static boolean signUp(String username, String password, String name, int age, String gender, String phone, String email, String address) {
+    @Override
+    public boolean signUp() {
 
         ArrayList<Customer> customerList = FileIO.getCustomerList();
         ArrayList<Customer> newAccList = FileIO.getRegistrationList();
 
         for(Customer customer: customerList){
-            if(customer.getUsername().equals(username)){
+            if(customer.getUsername().equals(getUsername())){
                 return false;
             }
         }
 
         for(Customer newAcc: newAccList){
-            if(newAcc.getUsername().equals(username)){
+            if(newAcc.getUsername().equals(getUsername())){
                 return false;
             }
         }
 
         int newPoints = 0;
-        newAccList.add(new Customer(username, password, name, phone, gender, age, email, address, newPoints));
+        newAccList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), newPoints));
         FileIO.setRegistrationList(newAccList);
         return true;
     }

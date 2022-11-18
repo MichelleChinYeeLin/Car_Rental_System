@@ -7,10 +7,10 @@ public class Admin  extends User{
         super(username, password);
     }
 
-    public static boolean login(String username, String password){
+    public boolean login(){
         for (Admin a : FileIO.adminList) {
-            if (username.equals(a.getUsername())) {
-                if (password.equals(a.getPassword())) {
+            if (getUsername().equals(a.getUsername())) {
+                if (getPassword().equals(a.getPassword())) {
                     CarRentalSystem.loginAdmin = a;
                     return true;
                 }
@@ -39,6 +39,12 @@ public class Admin  extends User{
             AccountFunctions.getPassword1().setText("");
             AccountFunctions.getPassword2().setText("");
         }
+    }
+
+    @Override
+    public boolean signUp(){
+        //TODO: addAdmin function move here?
+        return false;
     }
 
     public static void addAdmin(String username){

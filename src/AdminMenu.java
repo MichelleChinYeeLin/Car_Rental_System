@@ -163,7 +163,7 @@ public class AdminMenu implements ActionListener {
         //Create booking panel
         bookingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bkgConstraints = new GridBagConstraints();
-        bookingFunctionsPanel = new JPanel(); // to change
+        bookingFunctionsPanel = new BookingFunctions();
 
         //Booking button panel
         JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
@@ -175,7 +175,6 @@ public class AdminMenu implements ActionListener {
         bookingsPanel.add(bookingButtonPanel, bkgConstraints);
         bkgConstraints.gridy = 1;
         bookingsPanel.add(bookingFunctionsPanel, bkgConstraints);
-
 
         /* REPORT */
         //Create buttons
