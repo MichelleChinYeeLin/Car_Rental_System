@@ -30,18 +30,20 @@ public class GUI {
         }
     }
 
-    public static void subJButtonSetup(JButton[] buttons, Dimension dim){
+    public static void JButtonSetup(JButton button){
+        button.setFocusable(false);
+        button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        button.setBackground(Color.white);
+        button.setPreferredSize(new Dimension(150, 40));
+    }
+
+    public static void subJButtonSetup(JButton[] buttons, Dimension dim) {
         for (JButton button : buttons) {
             button.setFocusable(false);
             button.setFont(new Font(Font.SERIF, Font.BOLD, 16));
             button.setBackground(Color.white);
             button.setPreferredSize(dim);
         }
-    public static void JButtonSetup(JButton button){
-        button.setFocusable(false);
-        button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
-        button.setBackground(Color.white);
-        button.setPreferredSize(new Dimension(150, 40));
     }
 
     public static void JFrameSetup(JFrame frame){

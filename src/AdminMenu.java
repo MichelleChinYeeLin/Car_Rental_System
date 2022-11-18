@@ -12,10 +12,9 @@ public class AdminMenu implements ActionListener {
     private JPanel mainPanel;
     private JLabel title;
     private JSpinner numberSpinner;
-    private JButton logout, accRegistration, customers, bookings, cars, settings, approveButton, denyButton;
-    private JButton[] buttons;
     private JPanel carsPanel, registrationsPanel, accountsPanel, bookingsPanel, reportsPanel;
     private JButton logout, accRegistrations, accounts, bookings, cars, reports;
+    private JButton approveButton, denyButton;
     private JButton[] buttons, carButtons, accountButtons, bookingButtons, reportButtons;
     private JPanel[] panels;
 
@@ -114,8 +113,9 @@ public class AdminMenu implements ActionListener {
 
         /* REGISTRATION */
         registrationsPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints regConstraints = new GridBagConstraints();
-        registrationFunctionsPanel = new JPanel(); // to change
+        //GridBagConstraints regConstraints = new GridBagConstraints();
+        registrationFunctionsPanel = new JPanel(new GridBagLayout());
+        registrationsPanel.add(registrationFunctionsPanel);
 
 
         /* ACCOUNT */
@@ -218,7 +218,9 @@ public class AdminMenu implements ActionListener {
 
         //Create main panel
         mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(600, 500));
         mainPanel.setBackground(Color.white);
+        mainPanel.add(registrationsPanel);
         mainPanel.add(carsPanel);
         mainPanel.add(accountsPanel);
         mainPanel.add(bookingsPanel);
@@ -250,6 +252,7 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == accRegistrations){
                 GUI.playSound("ji.wav");
                 showAdminPanel(registrationsPanel, registrationFunctionsPanel);
+                showAccRegistration();
             }
             else if (e.getSource() == accounts){
                 GUI.playSound("ji.wav");
@@ -316,8 +319,6 @@ public class AdminMenu implements ActionListener {
         smallPanel.setVisible(true);
     }
 
-    }
-
     private void approveRegistration(){
 
         int index = (int)numberSpinner.getValue();
@@ -345,15 +346,13 @@ public class AdminMenu implements ActionListener {
     }
 
     private void showAccRegistration(){
-        mainPanel.removeAll();
         ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
 
         if(accRegistrationList.size() == 0){
             JLabel emptyTableLabel = new JLabel("No pending registration requests!");
             GUI.JLabelSetup(emptyTableLabel);
 
-            mainPanel.add(emptyTableLabel);
-            mainPanel.updateUI();
+            registrationFunctionsPanel.add(emptyTableLabel);
         }
         else{
             String[] tableColumn = {"No.", "Username", "Name", "Password", "Age", "Gender", "Phone", "Email", "Address"};
@@ -408,14 +407,14 @@ public class AdminMenu implements ActionListener {
             constraints.gridx = 0;
             constraints.gridy = 0;
             constraints.weighty = 0.8;
-            mainPanel.add(scrollPane, constraints);
+            registrationFunctionsPanel.add(scrollPane, constraints);
 
             constraints.gridy = 1;
             constraints.weighty = 0.2;
             constraints.fill = GridBagConstraints.HORIZONTAL;
-            constraints.anchor = GridBagConstraints.WEST;
-            mainPanel.add(bottomPanel, constraints);
-            mainPanel.updateUI();
+            registrationFunctionsPanel.add(bottomPanel, constraints);
         }
+
+        registrationFunctionsPanel.updateUI();
     }
 }
