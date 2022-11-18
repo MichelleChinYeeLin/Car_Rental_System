@@ -1,10 +1,10 @@
-Username: shuaigee
-Password: 1
-Name: michelle
-Phone Number: 123
+Username: a
+Password: a
+Name: hy
+Phone Number: 0123456789
 Gender: male
 Age: 17
-Email: heyuandeemail
+Email: heyuandeemail@gmail.com
 Address: 111
 Points: 0
 

@@ -110,6 +110,88 @@ public class Customer extends User{
 //        this.myBookings = myBookings;
 //    }
 
+    public static boolean validateCustomerDetails(boolean isExist, String username, String name, int age, String password, String passwordCheck, String phone, String email){
+        boolean flag = false;
+        try {
+            // Username
+            if (!isExist){
+                if(username.equals("")) throw new EmptyInputException();
+                ArrayList<Customer> customerList = FileIO.getCustomerList();
+                ArrayList<Customer> newAccList = FileIO.getRegistrationList();
+
+                for(Customer customer: customerList){
+                    if(customer.getUsername().equals(username)){
+                        throw new UsernameTakenException();
+                    }
+                }
+
+                for(Customer newAcc: newAccList){
+                    if(newAcc.getUsername().equals(username)){
+                        throw new UsernameTakenException();
+                    }
+                }
+
+                //Password
+                if (password.equals("") || passwordCheck.equals("")) throw new EmptyInputException();
+                if (!password.equals(passwordCheck)) throw new MismatchPasswordException();
+            }
+
+            // Name
+            if(name.equals("")) throw new EmptyInputException();
+
+            else{
+                char[] chars = name.toCharArray();
+                for (char c : chars) {
+                    if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
+                }
+            }
+
+            // Age
+            if (age < 17) throw new InvalidAgeException();
+
+            // Phone Number
+            Pattern phonePattern = Pattern.compile(Customer.phonePattern);
+            Matcher phoneMatcher = phonePattern.matcher(phone);
+            if (!phoneMatcher.matches()) throw new InvalidPhoneException();
+
+            // Email
+            Pattern emailPattern = Pattern.compile(Customer.emailPattern);
+            Matcher emailMatcher = emailPattern.matcher(email);
+            if (!emailMatcher.matches()) throw new InvalidEmailException();
+
+            flag = true;
+        }
+        catch(EmptyInputException emptyInputException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch(UsernameTakenException usernameTakenException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getUsername().setText("");
+        }
+        catch(InvalidNameException invalidNameException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getName().setText("");
+        }
+        catch(InvalidAgeException invalidAgeException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getAge().setValue(17);
+        }
+        catch(MismatchPasswordException mismatchPasswordException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getPassword().setText("");
+            SignUpPage.getPasswordCheck().setText("");
+        }
+        catch(InvalidPhoneException invalidPhoneException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid phone number entered! Your phone number must only include 10 to 11 numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getPhoneNum().setText("");
+        }
+        catch(InvalidEmailException invalidEmailException){
+            JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid email entered! Your email must only include 6 and 30\ncharacters(a-z), numbers(0-9), underscore(_) and end with @gmail.com", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            SignUpPage.getEmail().setText("");
+        }
+        return flag;
+    }
+
     public boolean login(){
         try {
             for (Customer c : FileIO.customerList) {
@@ -128,34 +210,16 @@ public class Customer extends User{
             }
         } catch (WrongPasswordException wrongPasswordException) {
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException userNotFoundException) {
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+ getUsername() +"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
 
     @Override
-    public boolean signUp() {
-
-        ArrayList<Customer> customerList = FileIO.getCustomerList();
-        ArrayList<Customer> newAccList = FileIO.getRegistrationList();
-
-        for(Customer customer: customerList){
-            if(customer.getUsername().equals(getUsername())){
-                return false;
-            }
-        }
-
-        for(Customer newAcc: newAccList){
-            if(newAcc.getUsername().equals(getUsername())){
-                return false;
-            }
-        }
-
-        int newPoints = 0;
-        newAccList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), newPoints));
-        FileIO.setRegistrationList(newAccList);
-        return true;
+    public void signUp() {
+        FileIO.registrationList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), 0));
+        FileIO.writeRegistrationFile();
     }
 
     public static boolean approveRegistration(int index){

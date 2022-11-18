@@ -26,5 +26,5 @@ public abstract class User {
 
     public abstract boolean login();
 
-    public abstract boolean signUp();
+    public abstract void signUp();
 }

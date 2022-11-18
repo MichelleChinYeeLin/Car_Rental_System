@@ -380,7 +380,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == confirmAdd){
                 String newUsername = username2.getText();
 
-                Admin.addAdmin(newUsername);
+                if (Admin.addAdmin(newUsername)){
+                    Admin newAdmin = new Admin(newUsername, newUsername);
+                    newAdmin.signUp();
+                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "New admin account is successfully created!");
+                }
             }
             else if (e.getSource() == cancelAdd){
                 username2.setText("");

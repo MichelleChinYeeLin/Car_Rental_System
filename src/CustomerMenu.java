@@ -69,7 +69,7 @@ public class CustomerMenu implements ActionListener {
 
         /* CAR */
         //Create buttons
-        searchCar = new JButton("Search");
+        searchCar = new JButton("Search car");
         allCar = new JButton("All Cars");
         carButtons = new JButton[]{searchCar, allCar};
         searchCar.addActionListener(this);

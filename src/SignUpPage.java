@@ -13,11 +13,11 @@ public class SignUpPage implements ActionListener {
     private JFrame frame;
     private JButton signUp, cancel;
     private JLabel title, usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel;
-    private JTextField username, name, phoneNum, email, address;
-    private JPasswordField password, passwordCheck;
+    private static JTextField username, name, phoneNum, email, address;
+    private static JPasswordField password, passwordCheck;
     private JRadioButton male, female;
     private ButtonGroup genderGroup;
-    private JSpinner age;
+    private static JSpinner age;
     private JButton[] buttons;
     private JLabel[] labels;
 
@@ -165,6 +165,34 @@ public class SignUpPage implements ActionListener {
         return frame;
     }
 
+    public static JTextField getUsername() {
+        return username;
+    }
+
+    public static JTextField getName() {
+        return name;
+    }
+
+    public static JTextField getPhoneNum() {
+        return phoneNum;
+    }
+
+    public static JTextField getEmail() {
+        return email;
+    }
+
+    public static JPasswordField getPassword() {
+        return password;
+    }
+
+    public static JPasswordField getPasswordCheck() {
+        return passwordCheck;
+    }
+
+    public static JSpinner getAge() {
+        return age;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -179,27 +207,7 @@ public class SignUpPage implements ActionListener {
                 String addressInput = address.getText();
                 int ageInput = (int) age.getValue();
 
-                String gender = "";
-
-                /* Input validation */
-
-                // Username
-                if(usernameInput.equals("")) throw new EmptyInputException();
-
-                // Name
-                if(nameInput.equals("")) throw new EmptyInputException();
-
-                else{
-                    char[] chars = nameInput.toCharArray();
-                    for (char c : chars) {
-                        if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
-                    }
-                }
-
-                // Age
-                if (ageInput < 17) throw new InvalidAgeException();
-
-                // Gender
+                String gender;
                 if (male.isSelected()){
                     gender = male.getText();
                 }
@@ -210,30 +218,13 @@ public class SignUpPage implements ActionListener {
                     throw new EmptyInputException();
                 }
 
-                //Password
-                if (passwordInput.equals("") || passwordCheckInput.equals("")) throw new EmptyInputException();
-                if (!passwordInput.equals(passwordCheckInput)) throw new MismatchPasswordException();
-
-                // Phone Number
-                Pattern phonePattern = Pattern.compile(Customer.phonePattern);
-                Matcher phoneMatcher = phonePattern.matcher(phoneNumInput);
-                if (!phoneMatcher.matches()) throw new InvalidPhoneException();
-
-                // Email
-                Pattern emailPattern = Pattern.compile(Customer.emailPattern);
-                Matcher emailMatcher = emailPattern.matcher(emailInput);
-                if (!emailMatcher.matches()) throw new InvalidEmailException();
-
-
-                Customer newCustomer = new Customer(usernameInput, passwordInput, nameInput, phoneNumInput, gender, ageInput, emailInput, addressInput);
-                if (newCustomer.signUp()){
+                if (Customer.validateCustomerDetails(false, usernameInput, nameInput, ageInput, passwordInput, passwordCheckInput, phoneNumInput, emailInput)){
+                    Customer newCustomer = new Customer(usernameInput, passwordInput, nameInput, phoneNumInput, gender, ageInput, emailInput, addressInput);
+                    newCustomer.signUp();
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
                     frame.setVisible(false);
                     CarRentalSystem.homePage.getFrame().setVisible(true);
                     clearSignUpField();
-                }
-                else {
-                    throw new UsernameTakenException();
                 }
             }
             else if (e.getSource() == cancel) {
@@ -244,34 +235,6 @@ public class SignUpPage implements ActionListener {
         }
         catch(EmptyInputException emptyInputException){
             JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch(InvalidNameException invalidNameException){
-            JOptionPane.showMessageDialog(frame, "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            name.setText("");
-        }
-        catch(InvalidAgeException invalidAgeException){
-            JOptionPane.showMessageDialog(frame, "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            age.setValue(17);
-        }
-        catch(MismatchPasswordException mismatchPasswordException){
-            JOptionPane.showMessageDialog(frame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            password.setText("");
-            passwordCheck.setText("");
-        }
-        catch(InvalidPhoneException invalidPhoneException){
-            JOptionPane.showMessageDialog(frame, "Invalid phone number entered! Your phone number must only include 10 to 11 numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            phoneNum.setText("");
-        }
-        catch(InvalidEmailException invalidEmailException){
-            JOptionPane.showMessageDialog(frame, "Invalid email entered! Your email must only include 6 and 30\ncharacters(a-z), numbers(0-9), underscore(_) and end with @gmail.com", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            email.setText("");
-        }
-        catch(UsernameTakenException usernameTakenException){
-            JOptionPane.showMessageDialog(frame, "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            username.setText("");
-        }
-        catch(Exception exception){
-            JOptionPane.showMessageDialog(frame, "Unexpected error has occurred!", "Unexpected error!", JOptionPane.WARNING_MESSAGE);
         }
     }
 

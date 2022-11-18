@@ -402,6 +402,9 @@ public class AdminMenu implements ActionListener {
             denyButton.addActionListener(this);
             bottomPanel.add(denyButton, bottomConstraints);
 
+            JButton[] registrationButtons = new JButton[]{approveButton, denyButton};
+            GUI.subJButtonSetup(registrationButtons, new Dimension(100,30));
+
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.gridx = 0;
             constraints.gridy = 0;
