@@ -425,6 +425,7 @@ public class FileIO {
                 fw.write(brandText + car.getBrand() + "\n");
                 fw.write(modelText + car.getModel() + "\n");
                 fw.write(colorText + car.getColor() + "\n");
+                fw.write(levelText + String.valueOf(car.getLevel()) +"\n");
                 fw.write(priceText + car.getPrice() + "\n");
                 fw.write(availabilityText + car.isAvailability() + "\n\n");
             }
