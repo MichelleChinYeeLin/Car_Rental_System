@@ -37,13 +37,17 @@ public class GUI {
             button.setBackground(Color.white);
             button.setPreferredSize(dim);
         }
+    public static void JButtonSetup(JButton button){
+        button.setFocusable(false);
+        button.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        button.setBackground(Color.white);
+        button.setPreferredSize(new Dimension(150, 40));
     }
 
     public static void JFrameSetup(JFrame frame){
         ImageIcon logo = new ImageIcon("src/images/Logo.png");
         frame.setSize(frameLength,frameHeight);
         frame.setIconImage(logo.getImage());
-//        frame.setResizable(true);
         frame.getContentPane().setBackground(getFrameBackgroundColor());
         frame.setLocationRelativeTo(null);
     }
