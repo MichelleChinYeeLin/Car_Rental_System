@@ -1,16 +1,16 @@
-Number Plate: 111
-Brand: 111
-Model: 11
+Number Plate: xyz 333
+Brand: LAMBORGHINI
+Model: URUS
 Color: YELLOW
 Level: 1
-Price: 11.0
-Available: false
+Price: 222.0
+Available: true
 
-Number Plate: 1
-Brand: 1
-Model: 1
-Color: BLACK
-Level: 0
-Price: 1.0
+Number Plate: abc 123
+Brand: PROTON
+Model: SAGA
+Color: WHITE
+Level: 3
+Price: 333.0
 Available: true
 

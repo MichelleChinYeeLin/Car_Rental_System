@@ -106,34 +106,26 @@ public class Car {
         return false;
     }
 
-    public static void addCar(String numberPlate, String brand, String model, String color, int level, String price){
+    private static double validateCarDetails(boolean flag, String numberPlate, String brand, String model, String color, String price) {
+        double priceInDouble = 0;
         try {
-            /* Input validation */
-
-            if (numberPlate.equals("") || brand.equals("") || model.equals("") || color.equals("")){
+            if (numberPlate.equals("") || brand.equals("") || model.equals("") || color.equals("")) {
                 throw new EmptyInputException();
             }
 
             for (Car car : FileIO.carList) {
-                if (car.numberPlate.equals(numberPlate)){
+                if (car.numberPlate.equals(numberPlate) && !flag) {
                     throw new NumberPlateTakenException();
                 }
             }
 
-            if (!isExist(color)){
+            if (!isExist(color)) {
                 throw new InvalidColorException();
             }
 
             if (!price.matches("[0-9]+")) throw new InvalidPriceException();
-            double priceInDouble = Double.parseDouble(price);
-
-
-            Car newCar = new Car(numberPlate, brand, model, Color.valueOf(color), level, priceInDouble, true);
-            FileIO.carList.add(newCar);
-            FileIO.writeCarFile();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
-
-        } catch (EmptyInputException emptyInputException){
+            priceInDouble = Double.parseDouble(price);
+        } catch (EmptyInputException emptyInputException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberPlateTakenException numberPlateTakenException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Number plate already taken!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -141,9 +133,19 @@ public class Car {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid color!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidPriceException invalidPriceException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (NumberFormatException numberFormatException){
+        } catch (NumberFormatException numberFormatException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
+        return priceInDouble;
+    }
+
+    public static void addCar(String numberPlate, String brand, String model, String color, int level, String price){
+
+        double priceInDouble = validateCarDetails(false, numberPlate, brand, model, color, price);
+        Car newCar = new Car(numberPlate, brand, model, Color.valueOf(color), level, priceInDouble, true);
+        FileIO.carList.add(newCar);
+        FileIO.writeCarFile();
+        JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
     }
 
     public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
@@ -196,5 +198,29 @@ public class Car {
             }
         }
         return searchedList;
+    }
+
+    public static void editCarDetails(int numberValue, String numberPlate, String brand, String model, String color, int level, String price, boolean availability){
+
+        boolean flag = true;
+        Car car = FileIO.carList.get(numberValue - 1);
+        if (!car.numberPlate.equals(numberPlate)){
+            flag = false;
+        }
+        double priceInDouble = validateCarDetails(flag, numberPlate, brand, model, color, price);
+
+        car.setNumberPlate(numberPlate);
+        car.setBrand(brand);
+        car.setModel(model);
+        car.setColor(color);
+        car.setLevel(level);
+        car.setPrice(priceInDouble);
+        car.setAvailability(availability);
+        FileIO.writeCarFile();
+    }
+
+    public static void deleteCar(int numberValue){
+        FileIO.carList.remove(numberValue - 1);
+        FileIO.writeCarFile();
     }
 }
