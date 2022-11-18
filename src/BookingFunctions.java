@@ -1,4 +1,4 @@
-import javafx.scene.control.DatePicker;
+//import javafx.scene.control.DatePicker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +13,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private JTextField carNumberPlate, customerName;
     private JSlider totalPrice;
     private JComboBox<String> status;
-    private DatePicker startDate, endDate;
+//    private DatePicker startDate, endDate;
     public BookingFunctions(){
 
         //Create labels

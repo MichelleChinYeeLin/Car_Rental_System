@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignUpPage implements ActionListener {
 
@@ -44,14 +46,14 @@ public class SignUpPage implements ActionListener {
         mainPanel.add(title, constraints);
 
         //Create labels
-        usernameLabel = new JLabel("A Unique Username:");
-        passwordLabel = new JLabel("Password: ");
-        passwordCheckLabel = new JLabel("Validate your password: ");
-        nameLabel = new JLabel("Name: ");
+        usernameLabel = new JLabel("Unique Username:");
+        passwordLabel = new JLabel("Password:");
+        passwordCheckLabel = new JLabel("Confirm your password:");
+        nameLabel = new JLabel("Name:");
         ageLabel = new JLabel("Age:");
-        phoneNumLabel = new JLabel("Phone Number: ");
-        emailLabel = new JLabel("Email: ");
-        addressLabel = new JLabel("Address: ");
+        phoneNumLabel = new JLabel("Phone(ex. 0123456789):");
+        emailLabel = new JLabel("Email(ex. xxx@gmail.com):");
+        addressLabel = new JLabel("Address:");
         labels = new JLabel[]{usernameLabel, passwordLabel, passwordCheckLabel, nameLabel, ageLabel, phoneNumLabel, emailLabel, addressLabel};
         GUI.JLabelSetup(labels);
 
@@ -213,10 +215,15 @@ public class SignUpPage implements ActionListener {
                 if (!passwordInput.equals(passwordCheckInput)) throw new MismatchPasswordException();
 
                 // Phone Number
-                if (!phoneNumInput.matches("[0-9]+")) throw new InvalidPhoneException();
+                Pattern phonePattern = Pattern.compile(Customer.phonePattern);
+                Matcher phoneMatcher = phonePattern.matcher(phoneNumInput);
+                if (!phoneMatcher.matches()) throw new InvalidPhoneException();
 
-                // Email & Address ??
-                //TODO email input validation
+                // Email
+                Pattern emailPattern = Pattern.compile(Customer.emailPattern);
+                Matcher emailMatcher = emailPattern.matcher(emailInput);
+                if (!emailMatcher.matches()) throw new InvalidEmailException();
+
 
                 Customer newCustomer = new Customer(usernameInput, passwordInput, nameInput, phoneNumInput, gender, ageInput, emailInput, addressInput);
                 if (newCustomer.signUp()){
@@ -235,25 +242,29 @@ public class SignUpPage implements ActionListener {
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         }
-        catch(InvalidAgeException invalidAgeException){
-            JOptionPane.showMessageDialog(frame, "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            age.setValue(17);
+        catch(EmptyInputException emptyInputException){
+            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(InvalidNameException invalidNameException){
             JOptionPane.showMessageDialog(frame, "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             name.setText("");
         }
-        catch(InvalidPhoneException invalidPhoneException){
-            JOptionPane.showMessageDialog(frame, "Invalid phone number entered! Your phone number must only include numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            phoneNum.setText("");
+        catch(InvalidAgeException invalidAgeException){
+            JOptionPane.showMessageDialog(frame, "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            age.setValue(17);
         }
         catch(MismatchPasswordException mismatchPasswordException){
             JOptionPane.showMessageDialog(frame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             password.setText("");
             passwordCheck.setText("");
         }
-        catch(EmptyInputException emptyInputException){
-            JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        catch(InvalidPhoneException invalidPhoneException){
+            JOptionPane.showMessageDialog(frame, "Invalid phone number entered! Your phone number must only include 10 to 11 numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            phoneNum.setText("");
+        }
+        catch(InvalidEmailException invalidEmailException){
+            JOptionPane.showMessageDialog(frame, "Invalid email entered! Your email must only include 6 and 30\ncharacters(a-z), numbers(0-9), underscore(_) and end with @gmail.com", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            email.setText("");
         }
         catch(UsernameTakenException usernameTakenException){
             JOptionPane.showMessageDialog(frame, "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);

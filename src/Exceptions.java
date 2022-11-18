@@ -6,6 +6,8 @@ class InvalidNameException extends Exception{}
 
 class InvalidPhoneException extends Exception{}
 
+class InvalidEmailException extends Exception{}
+
 class MismatchPasswordException extends Exception{}
 
 class EmptyInputException extends Exception{}

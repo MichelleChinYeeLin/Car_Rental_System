@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Car {
 
@@ -20,6 +22,7 @@ public class Car {
     private int level;
     private double price;
     private boolean availability;
+    public static final String pricePattern = "\\d+(.\\d{1,2})?"; // at most 1 "." and two tailing numbers
 
     public Car(){
         this.numberPlate = "";
@@ -123,8 +126,11 @@ public class Car {
                 throw new InvalidColorException();
             }
 
-            if (!price.matches("[0-9]+")) throw new InvalidPriceException();
+            Pattern pricePattern = Pattern.compile(Car.pricePattern);
+            Matcher priceMatcher = pricePattern.matcher(price);
+            if (!priceMatcher.matches()) throw new InvalidPriceException();
             priceInDouble = Double.parseDouble(price);
+
         } catch (EmptyInputException emptyInputException) {
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberPlateTakenException numberPlateTakenException) {

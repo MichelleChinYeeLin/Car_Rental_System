@@ -1,5 +1,7 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Customer extends User{
 
@@ -10,8 +12,11 @@ public class Customer extends User{
     private String email;
     private String address;
     private int points;
+    public static final String phonePattern = "\\d{10,11}"; // 10 - 11 numbers
+    public static final String emailPattern = "\\w{6,30}@gmail.com";  // at least 6 words and only one "@gmail.com"
 
 //    private ArrayList<Booking> myBookings = new ArrayList<>();
+
 
     public Customer(){
         super("", "");
