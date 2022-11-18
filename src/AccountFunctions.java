@@ -394,7 +394,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     throw new UserNotFoundException();
                 }
                 showAccountPanel(editAccountPanel);
-                editAccount();
+                showAccountDetails();
             }
             else if (e.getSource() == resetPassword){
                 String input = JOptionPane.showInputDialog("Type \"RESET\" to reset the password!");
@@ -586,11 +586,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
         searchResultPanel.validate();
     }
 
-    private void editAccount() {
+    private void showAccountDetails() {
         Admin adminAccount;
         Customer customerAccount;
         int numberValue = (int) numberSpinner.getValue();
         resetFields(components);
+        ageEdit.setValue(17);
+        pointEdit.setValue(0);
 
         if (Objects.equals(userType.getSelectedItem(), "Admin")) {
             adminAccount = FileIO.adminList.get(numberValue - 1);
@@ -619,7 +621,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         }
     }
 
-    private void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
+    public static void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
         for (JComponent i : components) {
             i.setEnabled(true);
             if (i instanceof JTextField){
@@ -629,8 +631,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 ((JRadioButton) i).setSelected(false);
             }
         }
-        ageEdit.setValue(17);
-        pointEdit.setValue(0);
     }
 
     private void editAccountDetails(){

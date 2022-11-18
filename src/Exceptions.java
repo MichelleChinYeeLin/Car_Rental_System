@@ -27,3 +27,5 @@ class InvalidPriceException extends Exception{}
 class NumberPlateTakenException extends Exception{}
 
 class InvalidColorException extends Exception{}
+
+class CarNotFoundException extends Exception{}

@@ -14,7 +14,7 @@ public class AdminMenu implements ActionListener {
 
     /* CAR */
     private CarFunctions carFunctionsPanel;
-    private JButton addCar, editCar, deleteCar, searchCar, allCar;
+    private JButton addCar, searchCar, allCar;
 
     /* REGISTRATION */
     private JPanel registrationFunctionsPanel;
@@ -79,18 +79,14 @@ public class AdminMenu implements ActionListener {
 
         /* CAR */
         //Create buttons
-        addCar = new JButton("Add");
-        editCar = new JButton("Edit");
-        deleteCar = new JButton("Delete");
-        searchCar = new JButton("Search");
+        addCar = new JButton("Add Car");
+        searchCar = new JButton("Search Car");
         allCar = new JButton("All Cars");
-        carButtons = new JButton[]{addCar, editCar, deleteCar, searchCar, allCar};
+        carButtons = new JButton[]{addCar, searchCar, allCar};
         addCar.addActionListener(this);
-        editCar.addActionListener(this);
-        deleteCar.addActionListener(this);
         searchCar.addActionListener(this);
         allCar.addActionListener(this);
-        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
+        GUI.subJButtonSetup(carButtons, new Dimension(110, 40));
 
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
@@ -100,8 +96,6 @@ public class AdminMenu implements ActionListener {
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
         carButtonPanel.add(addCar);
-        carButtonPanel.add(editCar);
-        carButtonPanel.add(deleteCar);
         carButtonPanel.add(searchCar);
         carButtonPanel.add(allCar);
 
@@ -287,14 +281,6 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == addCar){
                 GUI.playSound("ji.wav");
                 CarFunctions.showAddCarPanel();
-            }
-            else if (e.getSource() == editCar){
-                GUI.playSound("ji.wav");
-                CarFunctions.showEditCarPanel();
-            }
-            else if (e.getSource() == deleteCar){
-                GUI.playSound("ji.wav");
-                CarFunctions.showDeleteCarPanel();
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
