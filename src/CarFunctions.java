@@ -77,9 +77,9 @@ public class CarFunctions extends JPanel implements ActionListener{
         priceSearchLabel = new JLabel("Price:");
         priceSearchIndicator = new JLabel("10");
         availabilitySearchLabel = new JLabel("Availability:");
-//        carNotFoundLabel = new JLabel("No cars found!");
-//        JLabel[] searchCarLabels = {numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
-        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
+        carNotFoundLabel = new JLabel("No cars found!");
+        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
+//        searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
         GUI.JLabelSetup(searchCarLabels);
 
         //Create input fields
@@ -269,9 +269,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         });
 
         //JComboBox
-        String[] colorType = {"Any", "Black", "White", "Silver", "Red", "Blue", "Yellow"};
-        String[] levelType = {"Any", "1", "2", "3"};
-        String[] availabilityType = {"Any", "Available", "Unavailable"};
         colorSearchBox = new JComboBox<>(colorType);
         colorSearchBox.setFont(GUI.getDefaultFont());
         levelSearchBox = new JComboBox<>(levelType);
@@ -497,10 +494,10 @@ public class CarFunctions extends JPanel implements ActionListener{
             JTable searchTable = new JTable(tempTable, tableColumn);
 
             searchTableScroll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-            searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
             searchTableScroll.setViewportView(searchTable);
             searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             searchTableScroll.setVisible(true);
+            searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
 
             JPanel bottomPanel = new JPanel(new GridBagLayout());
             bottomPanel.setBackground(Color.white);

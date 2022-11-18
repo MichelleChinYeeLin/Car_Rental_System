@@ -3,14 +3,14 @@ Brand: LAMBORGHINI
 Model: URUS
 Color: YELLOW
 Level: 1
-Price: 222.0
-Available: true
+Price: 25.0
+Available: false
 
 Number Plate: abc 123
 Brand: PROTON
 Model: SAGA
 Color: WHITE
 Level: 3
-Price: 333.0
+Price: 33.0
 Available: true
 
