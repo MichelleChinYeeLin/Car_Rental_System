@@ -12,6 +12,7 @@ public class Customer extends User{
     private String email;
     private String address;
     private int points;
+    private static int chance;
     public static final String phonePattern = "\\d{10,11}"; // 10 - 11 numbers
     public static final String emailPattern = "\\w{6,30}@gmail.com";  // at least 6 words and only one "@gmail.com"
 
@@ -26,6 +27,7 @@ public class Customer extends User{
         this.email = "";
         this.address = "";
         this.points = 0;
+        chance = 2;
     }
 
     public Customer(String username, String password){
@@ -36,6 +38,7 @@ public class Customer extends User{
         this.email = "";
         this.address = "";
         this.points = 0;
+        chance = 2;
     }
 
     public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address) {
@@ -47,6 +50,7 @@ public class Customer extends User{
         this.email = email;
         this.address = address;
         this.points = 0;
+        chance = 2;
     }
 
     public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address, int points){
@@ -58,6 +62,7 @@ public class Customer extends User{
         this.email = email;
         this.address = address;
         this.points = points;
+        chance = 2;
     }
 
     public String getName(){return name;}
@@ -189,6 +194,9 @@ public class Customer extends User{
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid email entered! Your email must only include 6 and 30\ncharacters(a-z), numbers(0-9), underscore(_) and end with @gmail.com", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getEmail().setText("");
         }
+        finally {
+            if (!flag) GUI.playSound("NormalVoice.wav");
+        }
         return flag;
     }
 
@@ -209,8 +217,10 @@ public class Customer extends User{
                 }
             }
         } catch (WrongPasswordException wrongPasswordException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (UserNotFoundException userNotFoundException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+ getUsername() +"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return false;
@@ -263,6 +273,33 @@ public class Customer extends User{
         }
         catch(Exception exception){
             return false;
+        }
+    }
+
+    public static void checkIdentity(){
+        try {
+            String input = JOptionPane.showInputDialog("Enter your password to check your identity!");
+            if (input != null && input.equals(CarRentalSystem.loginCustomer.getPassword())) {
+                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "You can now change your password!");
+                CustomerMenu.getPasswordEdit().setEditable(true);
+                if (chance < 2) chance = 2;
+            }
+            else {
+                throw new WrongPasswordException();
+            }
+        }
+        catch (WrongPasswordException wrongPasswordException){
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            chance--;
+        }
+        finally {
+            if (chance == 0){
+                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "We are sorry. Please contact admin to change your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
+                CarRentalSystem.loginCustomer = null;
+                CarRentalSystem.customerMenu.getFrame().setVisible(false);
+                CarRentalSystem.homePage.getFrame().setVisible(true);
+            }
         }
     }
 }

@@ -299,13 +299,15 @@ public class AdminMenu implements ActionListener {
                 CarFunctions.showAllCarPanel();
             }
             else if (e.getSource() == approveButton){
+                GUI.playSound("ji.wav");
                 approveRegistration();
             }
             else if (e.getSource() == denyButton){
+                GUI.playSound("ji.wav");
                 denyRegistration();
             }
         } catch (Exception exception){
-            GUI.playSound("niganma.wav");
+            GUI.playSound("NormalVoice.wav");
             System.out.println("HI something wrong");
         }
     }

@@ -372,6 +372,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 String passwordCheckInput = String.valueOf(password2.getPassword());
 
                 Admin.changePassword(passwordInput, passwordCheckInput);
+                GUI.playSound("DontSayFiveDe.wav");
             }
             else if (e.getSource() == cancelEdit){
                 password1.setText("");
@@ -383,6 +384,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 if (Admin.addAdmin(newUsername)){
                     Admin newAdmin = new Admin(newUsername, newUsername);
                     newAdmin.signUp();
+                    GUI.playSound("DontSayFiveDe.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "New admin account is successfully created!");
                 }
             }
@@ -408,6 +410,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     Admin.resetPassword(numberValue, accountType);
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Reset canceled!");
                 }
             }
@@ -417,6 +420,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     editAccountDetails();
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Edit canceled!");
                 }
             }
@@ -430,6 +434,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     String accountType = (String) userType.getSelectedItem();
 
                     if (Admin.deleteAccount(numberValue, accountType)){
+                        GUI.playSound("DontSayFiveDe.wav");
                         JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been deleted!");
                     }
                     else {
@@ -437,14 +442,18 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     }
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
                 }
             }
         } catch (UserNotFoundException userNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (LastAdminException lastAdminException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
         }
     }
@@ -634,6 +643,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             if (i instanceof JRadioButton){
                 ((JRadioButton) i).setSelected(false);
             }
+            if (i instanceof JPasswordField){
+                ((JPasswordField) i).setText("");
+            }
         }
     }
 
@@ -663,6 +675,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 Admin.editAccountDetails(numberValue, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue, pointValue);
             }
         } catch (InvalidUserException invalidUserException) {
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);

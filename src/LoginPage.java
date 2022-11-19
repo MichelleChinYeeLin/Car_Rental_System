@@ -125,9 +125,8 @@ public class LoginPage implements ActionListener {
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
                     }
                     else {
-                        GUI.playSound("niganma.wav");
+                        GUI.playSound("ReflectYourself.wav");
                         JOptionPane.showMessageDialog(frame, "Invalid account credentials!");
-                        frame.setVisible(true);
                     }
                 }
             }
@@ -138,7 +137,7 @@ public class LoginPage implements ActionListener {
             }
         }
         catch (EmptyInputException emptyInputException) {
-            GUI.playSound("niganma.wav");
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         finally {

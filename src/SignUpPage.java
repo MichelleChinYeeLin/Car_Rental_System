@@ -197,7 +197,6 @@ public class SignUpPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == signUp){
-                GUI.playSound("ji.wav");
                 String usernameInput = username.getText();
                 String passwordInput = String.valueOf(password.getPassword());
                 String passwordCheckInput = String.valueOf(passwordCheck.getPassword());
@@ -219,6 +218,7 @@ public class SignUpPage implements ActionListener {
                 }
 
                 if (Customer.validateCustomerDetails(false, usernameInput, nameInput, ageInput, passwordInput, passwordCheckInput, phoneNumInput, emailInput)){
+                    GUI.playSound("ji.wav");
                     Customer newCustomer = new Customer(usernameInput, passwordInput, nameInput, phoneNumInput, gender, ageInput, emailInput, addressInput);
                     newCustomer.signUp();
                     JOptionPane.showMessageDialog(frame, "Your registration request has been sent to admin!");
@@ -234,6 +234,7 @@ public class SignUpPage implements ActionListener {
             }
         }
         catch(EmptyInputException emptyInputException){
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(frame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
     }

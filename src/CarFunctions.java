@@ -6,9 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import static java.lang.Math.ceil;
-import static java.lang.Math.max;
-
 public class CarFunctions extends JPanel implements ActionListener{
 
     private JPanel addCarAttributesPanel, editCarAttributesPanel, searchCarAttributesPanel;
@@ -126,9 +123,9 @@ public class CarFunctions extends JPanel implements ActionListener{
         //JSlider
         double maxPrice = 0.0;
         for (Car c : FileIO.carList) {
-            maxPrice = max(maxPrice, c.getPrice());
+            maxPrice = Math.max(maxPrice, c.getPrice());
         }
-        int maxPriceInInt = (int) ceil(maxPrice);
+        int maxPriceInInt = (int) Math.ceil(maxPrice);
         priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, maxPriceInInt, 10);
         priceSearchSlider.setMajorTickSpacing(maxPriceInInt/5);
         priceSearchSlider.setMinorTickSpacing(maxPriceInInt/10);
@@ -356,6 +353,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 showCarDetails();
             }
             else if (e.getSource() == OKButton){
+                GUI.playSound("DontSayFiveDe.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editCarDetails();
@@ -365,6 +363,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 }
             }
             else if (e.getSource() == deleteButton){
+                GUI.playSound("DontSayFiveDe.wav");
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
                     int numberValue = (int) numberSpinner.getValue();
@@ -381,10 +380,10 @@ public class CarFunctions extends JPanel implements ActionListener{
             }
         }
         catch (CarNotFoundException carNotFoundException){
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
-            exception.printStackTrace();
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong");
         }
     }

@@ -27,7 +27,16 @@ public class CustomerMenu implements ActionListener {
 
     /* ACCOUNT */
     private JPanel accountFunctionsPanel; // show profile
-    private JButton editAccount, deleteAccount;
+    private JButton changePassword, editAccount, deleteAccount, OKButton, cancelButton;
+    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+            emailEditLabel, addressEditLabel, pointEditLabel;
+    private JTextField usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit;
+    private static JPasswordField passwordEdit;
+    private JSpinner ageEdit, pointEdit;
+    private JRadioButton male, female;
+    private ButtonGroup genderGroup;
+    private JLabel[] accountLabels;
+    private JComponent[] components;
 
     public CustomerMenu(){
         frame = new JFrame("Customer Menu");
@@ -74,12 +83,13 @@ public class CustomerMenu implements ActionListener {
         carButtons = new JButton[]{searchCar, allCar};
         searchCar.addActionListener(this);
         allCar.addActionListener(this);
-        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
+        GUI.subJButtonSetup(carButtons, new Dimension(120, 40));
 
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
         carFunctionsPanel = new CarFunctions();
+        //TODO dont know why cant display
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -124,20 +134,124 @@ public class CustomerMenu implements ActionListener {
 
         /* ACCOUNT */
         //Create buttons
+        changePassword = new JButton("Change Password");
         editAccount = new JButton("Edit Account");
         deleteAccount = new JButton("Delete Account");
-        accountButtons = new JButton[]{editAccount, deleteAccount};
+        OKButton = new JButton("OK");
+        cancelButton = new JButton("CANCEL");
+        accountButtons = new JButton[]{changePassword, editAccount, deleteAccount, OKButton, cancelButton};
+        changePassword.addActionListener(this);
         editAccount.addActionListener(this);
         deleteAccount.addActionListener(this);
+        OKButton.addActionListener(this);
+        cancelButton.addActionListener(this);
         GUI.subJButtonSetup(accountButtons, new Dimension(140, 40));
+        changePassword.setPreferredSize(new Dimension(160,40));
+
+        //Create labels
+        usernameEditLabel = new JLabel("Username:");
+        passwordEditLabel = new JLabel("Password:");
+        nameEditLabel = new JLabel("Name:");
+        phoneEditLabel = new JLabel("Phone:");
+        genderEditLabel = new JLabel("Gender:");
+        ageEditLabel = new JLabel("Age:");
+        emailEditLabel = new JLabel("Email:");
+        addressEditLabel = new JLabel("Address:");
+        pointEditLabel = new JLabel("Point:");
+        accountLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+                emailEditLabel, addressEditLabel, pointEditLabel};
+        GUI.JLabelSetup(accountLabels);
+
+        //Create input fields
+        //JTextField
+        usernameEdit = new JTextField(20);
+        nameEdit = new JTextField(20);
+        phoneEdit = new JTextField(20);
+        emailEdit = new JTextField(20);
+        addressEdit = new JTextField(20);
+
+        //JPasswordField
+        passwordEdit = new JPasswordField(20);
+
+        //JSpinner
+        ageEdit = new JSpinner(new SpinnerNumberModel(17, 17,122,1));
+        ageEdit.setPreferredSize(new Dimension(100,25));
+        pointEdit = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+        pointEdit.setPreferredSize(new Dimension(100,25));
+
+        //JRadioButtons
+        male = new JRadioButton("male");
+        male.setFocusable(false);
+        female = new JRadioButton("female");
+        female.setFocusable(false);
+        genderGroup = new ButtonGroup();
+        genderGroup.add(male);
+        genderGroup.add(female);
+
+        //JComponent array
+        components = new JComponent[]{usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit, passwordEdit, ageEdit, pointEdit, male, female};
+
+        //Create control unit
+        JPanel selectionPanel = new JPanel();
+        selectionPanel.setBackground(Color.white);
+        selectionPanel.add(OKButton);
+        selectionPanel.add(cancelButton);
 
         //Create account panel
         accountPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-        accountFunctionsPanel = new JPanel(); // to change
+
+        accountFunctionsPanel = new JPanel(new GridBagLayout());
+        accConstraints.insets = new Insets(8,5,8,5);
+        accConstraints.weightx = 1;
+        accConstraints.weighty = 1;
+        accConstraints.gridx = 0;
+        accConstraints.ipady = 0;
+        accConstraints.gridwidth = 2;
+        for(int i = 0; i < accountLabels.length; i++){
+            accConstraints.gridy = i + 1;
+            accountFunctionsPanel.add(accountLabels[i], accConstraints);
+        }
+
+        //Setup fields
+        accConstraints.gridx = 2;
+        accConstraints.gridy = 1;
+        accountFunctionsPanel.add(usernameEdit, accConstraints);
+
+        accConstraints.gridy = 2;
+        accountFunctionsPanel.add(passwordEdit, accConstraints);
+
+        accConstraints.gridy = 3;
+        accountFunctionsPanel.add(nameEdit, accConstraints);
+
+        accConstraints.gridy = 4;
+        accountFunctionsPanel.add(phoneEdit, accConstraints);
+
+        accConstraints.gridy = 5;
+        JPanel genderPanel = new JPanel();
+        genderPanel.setBackground(Color.white);
+        genderPanel.add(male);
+        genderPanel.add(female);
+        accountFunctionsPanel.add(genderPanel, accConstraints);
+
+        accConstraints.gridy = 6;
+        accountFunctionsPanel.add(ageEdit, accConstraints);
+
+        accConstraints.gridy = 7;
+        accountFunctionsPanel.add(emailEdit, accConstraints);
+
+        accConstraints.gridy = 8;
+        accountFunctionsPanel.add(addressEdit, accConstraints);
+
+        accConstraints.gridy = 9;
+        accountFunctionsPanel.add(pointEdit, accConstraints);
+
+        accConstraints.gridy = 10;
+        accountFunctionsPanel.add(selectionPanel, accConstraints);
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
+        accountButtonPanel.add(changePassword);
         accountButtonPanel.add(editAccount);
         accountButtonPanel.add(deleteAccount);
 
@@ -155,10 +269,12 @@ public class CustomerMenu implements ActionListener {
 
         //Create main panel
         JPanel mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(600, 500));
         mainPanel.setBackground(Color.white);
         mainPanel.add(carsPanel);
         mainPanel.add(bookingsPanel);
         mainPanel.add(accountPanel);
+        mainPanel.validate();
 
         //Position main panel in the frame
         constraints.insets = new Insets(5,0,5,5);
@@ -171,6 +287,10 @@ public class CustomerMenu implements ActionListener {
 
     public JFrame getFrame() {
         return frame;
+    }
+
+    public static JPasswordField getPasswordEdit() {
+        return passwordEdit;
     }
 
     @Override
@@ -193,6 +313,7 @@ public class CustomerMenu implements ActionListener {
             else if (e.getSource() == account){
                 GUI.playSound("ji.wav");
                 showCustomerPanel(accountPanel, accountFunctionsPanel);
+                showCustomerDetails();
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
@@ -202,8 +323,25 @@ public class CustomerMenu implements ActionListener {
                 GUI.playSound("ji.wav");
                 CarFunctions.showAllCarPanel();
             }
+            else if (e.getSource() == changePassword){
+                GUI.playSound("ji.wav");
+                Customer.checkIdentity();
+            }
+            else if (e.getSource() == editAccount){
+                GUI.playSound("ji.wav");
+            }
+            else if (e.getSource() == deleteAccount){
+                GUI.playSound("ji.wav");
+            }
+            else if (e.getSource() == OKButton){
+                GUI.playSound("ji.wav");
+            }
+            else if (e.getSource() == cancelButton){
+                GUI.playSound("ji.wav");
+                GUI.disableFields(components);
+            }
         } catch (Exception exception){
-            GUI.playSound("niganma.wav");
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
     }
@@ -214,5 +352,25 @@ public class CustomerMenu implements ActionListener {
         }
         bigPanel.setVisible(true);
         smallPanel.setVisible(true);
+    }
+
+    private void showCustomerDetails(){
+        AccountFunctions.resetFields(components);
+        GUI.disableFields(components);
+
+        usernameEdit.setText(CarRentalSystem.loginCustomer.getUsername());
+        nameEdit.setText(CarRentalSystem.loginCustomer.getName());
+        phoneEdit.setText(CarRentalSystem.loginCustomer.getPhone());
+        emailEdit.setText(CarRentalSystem.loginCustomer.getEmail());
+        addressEdit.setText(CarRentalSystem.loginCustomer.getAddress());
+        passwordEdit.setText(CarRentalSystem.loginCustomer.getPassword());
+        ageEdit.setValue(CarRentalSystem.loginCustomer.getAge());
+        pointEdit.setValue(CarRentalSystem.loginCustomer.getPoints());
+        if (CarRentalSystem.loginCustomer.getGender().equals("male")){
+            male.setSelected(true);
+        }
+        else {
+            female.setSelected(true);
+        }
     }
 }

@@ -132,14 +132,19 @@ public class Car {
             priceInDouble = Double.parseDouble(price);
 
         } catch (EmptyInputException emptyInputException) {
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberPlateTakenException numberPlateTakenException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Number plate already taken!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidColorException invalidColorException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid color!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidPriceException invalidPriceException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberFormatException numberFormatException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return priceInDouble;
