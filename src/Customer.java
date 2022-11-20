@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Customer extends User{
+public class Customer extends User {
 
     private String name;
     private String phone;
@@ -19,7 +19,7 @@ public class Customer extends User{
 //    private ArrayList<Booking> myBookings = new ArrayList<>();
 
 
-    public Customer(){
+    public Customer() {
         super("", "");
         this.name = "";
         this.phone = "";
@@ -30,7 +30,7 @@ public class Customer extends User{
         chance = 2;
     }
 
-    public Customer(String username, String password){
+    public Customer(String username, String password) {
         super(username, password);
         this.name = "";
         this.phone = "";
@@ -53,7 +53,7 @@ public class Customer extends User{
         chance = 2;
     }
 
-    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address, int points){
+    public Customer(String username, String password, String name, String phone, String gender, int age, String email, String address, int points) {
         super(username, password);
         this.name = name;
         this.phone = phone;
@@ -65,9 +65,13 @@ public class Customer extends User{
         chance = 2;
     }
 
-    public String getName(){return name;}
+    public String getName() {
+        return name;
+    }
 
-    public void setName(String name){this.name = name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getPhone() {
         return phone;
@@ -77,9 +81,13 @@ public class Customer extends User{
         this.phone = phone;
     }
 
-    public String getGender(){return gender;}
+    public String getGender() {
+        return gender;
+    }
 
-    public void setGender(String gender){this.gender = gender;}
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
     public int getAge() {
         return age;
@@ -101,11 +109,17 @@ public class Customer extends User{
         return address;
     }
 
-    public void setAddress(String address) { this.address = address; }
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
-    public int getPoints() { return points; }
+    public int getPoints() {
+        return points;
+    }
 
-    public void setPoints(int points) { this.points = points;}
+    public void setPoints(int points) {
+        this.points = points;
+    }
 
 //    public ArrayList<Booking> getMyBookings() {
 //        return myBookings;
@@ -115,23 +129,23 @@ public class Customer extends User{
 //        this.myBookings = myBookings;
 //    }
 
-    public static boolean validateCustomerDetails(boolean isExist, String username, String name, int age, String password, String passwordCheck, String phone, String email){
+    public static boolean validateCustomerDetails(boolean isExist, String username, String name, int age, String password, String passwordCheck, String phone, String email) {
         boolean flag = false;
         try {
             // Username
-            if (!isExist){
-                if(username.equals("")) throw new EmptyInputException();
+            if (!isExist) {
+                if (username.equals("")) throw new EmptyInputException();
                 ArrayList<Customer> customerList = FileIO.getCustomerList();
                 ArrayList<Customer> newAccList = FileIO.getRegistrationList();
 
-                for(Customer customer: customerList){
-                    if(customer.getUsername().equals(username)){
+                for (Customer customer : customerList) {
+                    if (customer.getUsername().equals(username)) {
                         throw new UsernameTakenException();
                     }
                 }
 
-                for(Customer newAcc: newAccList){
-                    if(newAcc.getUsername().equals(username)){
+                for (Customer newAcc : newAccList) {
+                    if (newAcc.getUsername().equals(username)) {
                         throw new UsernameTakenException();
                     }
                 }
@@ -142,9 +156,9 @@ public class Customer extends User{
             }
 
             // Name
-            if(name.equals("")) throw new EmptyInputException();
+            if (name.equals("")) throw new EmptyInputException();
 
-            else{
+            else {
                 char[] chars = name.toCharArray();
                 for (char c : chars) {
                     if (!Character.isLetter(c) && !Character.isSpaceChar(c)) throw new InvalidNameException();
@@ -165,54 +179,44 @@ public class Customer extends User{
             if (!emailMatcher.matches()) throw new InvalidEmailException();
 
             flag = true;
-        }
-        catch(EmptyInputException emptyInputException){
+        } catch (EmptyInputException emptyInputException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        }
-        catch(UsernameTakenException usernameTakenException){
+        } catch (UsernameTakenException usernameTakenException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getUsername().setText("");
-        }
-        catch(InvalidNameException invalidNameException){
+        } catch (InvalidNameException invalidNameException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid name entered! Your name must only include characters or spaces.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getName().setText("");
-        }
-        catch(InvalidAgeException invalidAgeException){
+        } catch (InvalidAgeException invalidAgeException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid age entered! You must be 17 or above to register.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getAge().setValue(17);
-        }
-        catch(MismatchPasswordException mismatchPasswordException){
+        } catch (MismatchPasswordException mismatchPasswordException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getPassword().setText("");
             SignUpPage.getPasswordCheck().setText("");
-        }
-        catch(InvalidPhoneException invalidPhoneException){
+        } catch (InvalidPhoneException invalidPhoneException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid phone number entered! Your phone number must only include 10 to 11 numbers.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getPhoneNum().setText("");
-        }
-        catch(InvalidEmailException invalidEmailException){
+        } catch (InvalidEmailException invalidEmailException) {
             JOptionPane.showMessageDialog(CarRentalSystem.signUpPage.getFrame(), "Invalid email entered! Your email must only include 6 and 30\ncharacters(a-z), numbers(0-9), underscore(_) and end with @gmail.com", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             SignUpPage.getEmail().setText("");
-        }
-        finally {
+        } finally {
             if (!flag) GUI.playSound("NormalVoice.wav");
         }
         return flag;
     }
 
-    public boolean login(){
+    public boolean login() {
         try {
             for (Customer c : FileIO.customerList) {
-                if (getUsername().equals(c.getUsername())){
-                    if (getPassword().equals(c.getPassword())){
+                if (getUsername().equals(c.getUsername())) {
+                    if (getPassword().equals(c.getPassword())) {
                         CarRentalSystem.loginCustomer = c;
                         return true;
-                    }
-                    else {
+                    } else {
                         throw new WrongPasswordException();
                     }
-                }
-                else {
+                } else {
                     throw new UserNotFoundException();
                 }
             }
@@ -221,7 +225,7 @@ public class Customer extends User{
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (UserNotFoundException userNotFoundException) {
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \""+ getUsername() +"\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "User \"" + getUsername() + "\"not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return false;
     }
@@ -232,11 +236,11 @@ public class Customer extends User{
         FileIO.writeRegistrationFile();
     }
 
-    public static boolean approveRegistration(int index){
-        try{
+    public static boolean approveRegistration(int index) {
+        try {
             ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
 
-            if(index >= 0){
+            if (index >= 0) {
                 Customer newCustomer = accRegistrationList.get(index);
                 accRegistrationList.remove(newCustomer);
                 FileIO.setRegistrationList(accRegistrationList);
@@ -246,55 +250,48 @@ public class Customer extends User{
                 FileIO.setCustomerList(customerList);
 
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        catch(Exception exception){
+        } catch (Exception exception) {
             return false;
         }
     }
 
-    public static boolean denyRegistration(int index){
-        try{
+    public static boolean denyRegistration(int index) {
+        try {
             ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
 
-            if(index >= 0){
+            if (index >= 0) {
                 Customer deletedRegistration = accRegistrationList.get(index);
                 accRegistrationList.remove(deletedRegistration);
                 FileIO.setRegistrationList(accRegistrationList);
 
                 return true;
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        catch(Exception exception){
+        } catch (Exception exception) {
             return false;
         }
     }
 
-    public static void checkIdentity(){
+    public static void checkIdentity() {
         try {
             String input = JOptionPane.showInputDialog("Enter your password to check your identity!");
             if (input != null && input.equals(CarRentalSystem.loginCustomer.getPassword())) {
                 JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "You can now change your password!");
                 CustomerMenu.getPasswordEdit().setEditable(true);
                 if (chance < 2) chance = 2;
-            }
-            else {
+            } else {
                 throw new WrongPasswordException();
             }
-        }
-        catch (WrongPasswordException wrongPasswordException){
+        } catch (WrongPasswordException wrongPasswordException) {
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             chance--;
-        }
-        finally {
-            if (chance == 0){
+        } finally {
+            if (chance == 0) {
                 JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "We are sorry. Please contact admin to change your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
                 CarRentalSystem.loginCustomer = null;
                 CarRentalSystem.customerMenu.getFrame().setVisible(false);
@@ -302,4 +299,51 @@ public class Customer extends User{
             }
         }
     }
+
+    public static boolean changePassword(String password) {
+        boolean flag = false;
+        try {
+            if (password.equals("")) throw new EmptyInputException();
+
+            String passwordCheck = JOptionPane.showInputDialog("Confirm your password again:");
+            if (passwordCheck != null && passwordCheck.equals(password)) {
+                CarRentalSystem.loginCustomer.setPassword(password);
+                FileIO.writeCustomerFile();
+                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Your password has been successfully changed!");
+                flag = true;
+            } else {
+                throw new MismatchPasswordException();
+            }
+
+        } catch (EmptyInputException emptyInputException) {
+            GUI.playSound("ElectricVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (MismatchPasswordException mismatchPasswordException) {
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        return flag;
+    }
+
+    public static boolean editAccountDetails(String name, String phone, String email, String address, String gender, int age) {
+        boolean flag = false;
+        if (Customer.validateCustomerDetails(true, CarRentalSystem.loginCustomer.getUsername(), name, age, CarRentalSystem.loginCustomer.getPassword(), CarRentalSystem.loginCustomer.getPassword(), phone, email)) {
+            flag = true;
+            CarRentalSystem.loginCustomer.setName(name);
+            CarRentalSystem.loginCustomer.setPhone(phone);
+            CarRentalSystem.loginCustomer.setGender(gender);
+            CarRentalSystem.loginCustomer.setAge(age);
+            CarRentalSystem.loginCustomer.setEmail(email);
+            CarRentalSystem.loginCustomer.setAddress(address);
+            FileIO.writeCustomerFile();
+            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your account has been modified!");
+        }
+        return flag;
+    }
+
+    public static void deleteAccount() {
+        FileIO.customerList.remove(CarRentalSystem.loginCustomer);
+        FileIO.writeCustomerFile();
+    }
+
 }

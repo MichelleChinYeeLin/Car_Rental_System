@@ -19,6 +19,12 @@ public class Admin extends User{
         return false;
     }
 
+    @Override
+    public void signUp(){
+        FileIO.adminList.add(new Admin(getUsername(), getUsername()));
+        FileIO.writeAdminFile();
+    }
+
     public static void changePassword(String password, String passwordCheck){
         try {
             if (password.equals("") || passwordCheck.equals("")) throw new EmptyInputException();
@@ -38,12 +44,6 @@ public class Admin extends User{
             AccountFunctions.getPassword1().setText("");
             AccountFunctions.getPassword2().setText("");
         }
-    }
-
-    @Override
-    public void signUp(){
-        FileIO.adminList.add(new Admin(getUsername(), getUsername()));
-        FileIO.writeAdminFile();
     }
 
     public static boolean addAdmin(String username){

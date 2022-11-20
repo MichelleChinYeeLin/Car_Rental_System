@@ -325,16 +325,58 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == changePassword){
                 GUI.playSound("ji.wav");
+                GUI.disableFields(components);
                 Customer.checkIdentity();
             }
             else if (e.getSource() == editAccount){
                 GUI.playSound("ji.wav");
+                passwordEdit.setEditable(false);
+                nameEdit.setEditable(true);
+                phoneEdit.setEditable(true);
+                emailEdit.setEditable(true);
+                addressEdit.setEditable(true);
+                ageEdit.setEnabled(true);
+                male.setEnabled(true);
+                female.setEnabled(true);
             }
             else if (e.getSource() == deleteAccount){
                 GUI.playSound("ji.wav");
+                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                if (input != null && input.equals("DELETE")){
+                    GUI.playSound("DontSayFiveDe.wav");
+                    Customer.deleteAccount();
+                    JOptionPane.showMessageDialog(frame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
+                    CarRentalSystem.loginCustomer = null;
+                    frame.setVisible(false);
+                    CarRentalSystem.homePage.getFrame().setVisible(true);
+                }
+                else {
+                    GUI.playSound("ElectricVoice.wav");
+                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
+                }
             }
             else if (e.getSource() == OKButton){
                 GUI.playSound("ji.wav");
+                if (passwordEdit.isEditable()){
+                    String password = String.valueOf(passwordEdit.getPassword());
+                    if (Customer.changePassword(password)){
+                        passwordEdit.setEditable(false);
+                    }
+                }
+                else {
+                    String name = nameEdit.getText();
+                    String phone = phoneEdit.getText();
+                    String email = emailEdit.getText();
+                    String address = addressEdit.getText();
+                    int age = (int) ageEdit.getValue();
+                    String gender;
+                    if (male.isSelected()) gender = "male";
+                    else gender = "female";
+
+                    if (Customer.editAccountDetails(name, phone, email, address, gender, age)){
+                        GUI.disableFields(components);
+                    }
+                }
             }
             else if (e.getSource() == cancelButton){
                 GUI.playSound("ji.wav");
