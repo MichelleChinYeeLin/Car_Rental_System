@@ -181,6 +181,7 @@ public class CustomerMenu implements ActionListener {
                 CarRentalSystem.loginCustomer = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
+                CarRentalSystem.currentFrame = CarRentalSystem.homePage.getFrame();
             }
             else if (e.getSource() == cars){
                 GUI.playSound("ji.wav");

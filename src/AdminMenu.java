@@ -249,6 +249,7 @@ public class AdminMenu implements ActionListener {
                 CarRentalSystem.loginAdmin = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
+                CarRentalSystem.currentFrame = CarRentalSystem.homePage.getFrame();
             }
             else if (e.getSource() == accRegistrations){
                 GUI.playSound("ji.wav");
