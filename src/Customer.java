@@ -276,28 +276,37 @@ public class Customer extends User {
         }
     }
 
-    public static void checkIdentity() {
+    public static boolean checkIdentity(String message) {
+        boolean flag = false;
         try {
             String input = JOptionPane.showInputDialog("Enter your password to check your identity!");
-            if (input != null && input.equals(CarRentalSystem.loginCustomer.getPassword())) {
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "You can now change your password!");
-                CustomerMenu.getPasswordEdit().setEditable(true);
+            if (input == null) {
+                throw new EmptyInputException();
+            }
+            else if (input.equals(CarRentalSystem.loginCustomer.getPassword())) {
+                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), message);
                 if (chance < 2) chance = 2;
-            } else {
+            }
+            else {
                 throw new WrongPasswordException();
             }
+
+            flag = true;
+        } catch (EmptyInputException emptyInputException) {
+            GUI.playSound("ElectricVoice.wav");
         } catch (WrongPasswordException wrongPasswordException) {
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             chance--;
         } finally {
             if (chance == 0) {
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "We are sorry. Please contact admin to change your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "We are sorry. Please contact admin to reset your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
                 CarRentalSystem.loginCustomer = null;
                 CarRentalSystem.customerMenu.getFrame().setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
             }
         }
+        return flag;
     }
 
     public static boolean changePassword(String password) {

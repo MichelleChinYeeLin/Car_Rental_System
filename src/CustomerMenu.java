@@ -31,7 +31,7 @@ public class CustomerMenu implements ActionListener {
     private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
             emailEditLabel, addressEditLabel, pointEditLabel;
     private JTextField usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit;
-    private static JPasswordField passwordEdit;
+    private JPasswordField passwordEdit;
     private JSpinner ageEdit, pointEdit;
     private JRadioButton male, female;
     private ButtonGroup genderGroup;
@@ -289,10 +289,6 @@ public class CustomerMenu implements ActionListener {
         return frame;
     }
 
-    public static JPasswordField getPasswordEdit() {
-        return passwordEdit;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
@@ -326,7 +322,9 @@ public class CustomerMenu implements ActionListener {
             else if (e.getSource() == changePassword){
                 GUI.playSound("ji.wav");
                 GUI.disableFields(components);
-                Customer.checkIdentity();
+                if (Customer.checkIdentity("You can now change your password!")){
+                    passwordEdit.setEditable(true);
+                }
             }
             else if (e.getSource() == editAccount){
                 GUI.playSound("ji.wav");
@@ -340,19 +338,22 @@ public class CustomerMenu implements ActionListener {
                 female.setEnabled(true);
             }
             else if (e.getSource() == deleteAccount){
+                GUI.disableFields(components);
                 GUI.playSound("ji.wav");
-                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
-                if (input != null && input.equals("DELETE")){
-                    GUI.playSound("DontSayFiveDe.wav");
-                    Customer.deleteAccount();
-                    JOptionPane.showMessageDialog(frame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
-                    CarRentalSystem.loginCustomer = null;
-                    frame.setVisible(false);
-                    CarRentalSystem.homePage.getFrame().setVisible(true);
-                }
-                else {
-                    GUI.playSound("ElectricVoice.wav");
-                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
+                if (Customer.checkIdentity("Verification success!")){ //TODO && don't have ongoing booking!
+                    String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                    if (input != null && input.equals("DELETE")){
+                        GUI.playSound("DontSayFiveDe.wav");
+                        Customer.deleteAccount();
+                        JOptionPane.showMessageDialog(frame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
+                        CarRentalSystem.loginCustomer = null;
+                        frame.setVisible(false);
+                        CarRentalSystem.homePage.getFrame().setVisible(true);
+                    }
+                    else {
+                        GUI.playSound("ElectricVoice.wav");
+                        JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
+                    }
                 }
             }
             else if (e.getSource() == OKButton){
