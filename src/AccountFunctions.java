@@ -590,7 +590,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         Admin adminAccount;
         Customer customerAccount;
         int numberValue = (int) numberSpinner.getValue();
-        resetFields(components);
+        GUI.resetFields(components);
         ageEdit.setValue(17);
         pointEdit.setValue(0);
 
@@ -601,8 +601,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             for (JComponent i : components) {
                 i.setEnabled(false);
             }
-        }
-        else {
+        } else {
             customerAccount = FileIO.customerList.get(numberValue - 1);
             usernameEdit.setText(customerAccount.getUsername());
             passwordEdit.setText(customerAccount.getPassword());
@@ -610,26 +609,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
             phoneEdit.setText(customerAccount.getPhone());
             emailEdit.setText(customerAccount.getEmail());
             addressEdit.setText(customerAccount.getAddress());
-            if (customerAccount.getGender().equals("male")){
+            if (customerAccount.getGender().equals("male")) {
                 male.setSelected(true);
-            }
-            else {
+            } else {
                 female.setSelected(true);
             }
             ageEdit.setValue(customerAccount.getAge());
             pointEdit.setValue(customerAccount.getPoints());
-        }
-    }
-
-    public static void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
-        for (JComponent i : components) {
-            i.setEnabled(true);
-            if (i instanceof JTextField){
-                ((JTextField) i).setText("");
-            }
-            if (i instanceof JRadioButton){
-                ((JRadioButton) i).setSelected(false);
-            }
         }
     }
 

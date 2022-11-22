@@ -268,7 +268,7 @@ public class FileIO {
             Car car = new Car();
             Customer customer = new Customer();
             double totalPrice = 0.0;
-            String status = "";
+            Booking.Status status = Booking.Status.ANY;
             Date startDate = new Date();
             Date endDate = new Date();
             String line = br.readLine();
@@ -305,7 +305,7 @@ public class FileIO {
                     line = br.readLine();
                 }
                 else if(line.startsWith(statusText)){
-                    status = line.substring(statusText.length());
+                    status = Booking.Status.valueOf(line.substring(statusText.length()));
                     line = br.readLine();
                 }
                 else if(line.startsWith(startDateText)){

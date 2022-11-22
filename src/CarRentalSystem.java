@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class CarRentalSystem {
@@ -8,7 +9,9 @@ public class CarRentalSystem {
     public static CustomerMenu customerMenu;
     public static AdminMenu adminMenu;
     public static Customer loginCustomer = null;
-    public static Admin loginAdmin = null; // 不懂有没有更好的方法
+    public static Admin loginAdmin = null;
+
+    public static JFrame currentFrame;
 
     public static void main (String[] args) {
         FileIO.readAllFiles();
@@ -17,6 +20,7 @@ public class CarRentalSystem {
         signUpPage = new SignUpPage();
         customerMenu = new CustomerMenu();
         adminMenu = new AdminMenu();
-//        adminMenu.getFrame().setVisible(true);
+
+        currentFrame = homePage.getFrame();
     }
 }

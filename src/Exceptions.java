@@ -29,3 +29,13 @@ class NumberPlateTakenException extends Exception{}
 class InvalidColorException extends Exception{}
 
 class CarNotFoundException extends Exception{}
+
+class InvalidDateDurationException extends Exception{}
+
+class NumberPlateNotFoundException extends Exception{}
+
+class NameNotFoundException extends Exception{}
+
+class InvalidStatusException extends Exception{}
+
+class BookingNotFoundException extends Exception{}

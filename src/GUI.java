@@ -84,4 +84,16 @@ public class GUI {
             ex.printStackTrace();
         }
     }
+
+    public static void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
+        for (JComponent i : components) {
+            i.setEnabled(true);
+            if (i instanceof JTextField){
+                ((JTextField) i).setText("");
+            }
+            if (i instanceof JRadioButton){
+                ((JRadioButton) i).setSelected(false);
+            }
+        }
+    }
 }

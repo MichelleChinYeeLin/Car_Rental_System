@@ -1,0 +1,7 @@
+Number Plate: abc 123
+Username: shuaigee
+Total Price: 50.0
+Status: IN_PROGRESS
+Start Date: 10-05-2022
+End Date: 17-05-2022
+

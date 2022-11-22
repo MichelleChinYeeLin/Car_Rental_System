@@ -31,7 +31,7 @@ public class AdminMenu implements ActionListener {
     // search -> edit/delete
 
     /* BOOKING */
-    private JPanel bookingFunctionsPanel;
+    private BookingFunctions bookingFunctionsPanel;
     private JButton searchBooking, allBooking;
     // search -> confirm/decline/generate receipt
 
@@ -171,10 +171,12 @@ public class AdminMenu implements ActionListener {
         bookingButtonPanel.add(allBooking);
 
         //Position elements in booking panel
+        bkgConstraints.gridx = 0;
         bkgConstraints.gridy = 0;
         bookingsPanel.add(bookingButtonPanel, bkgConstraints);
         bkgConstraints.gridy = 1;
         bookingsPanel.add(bookingFunctionsPanel, bkgConstraints);
+
 
         /* REPORT */
         //Create buttons
@@ -205,7 +207,7 @@ public class AdminMenu implements ActionListener {
         repConstraints.gridy = 0;
         reportsPanel.add(reportButtonPanel, repConstraints);
         repConstraints.gridy = 1;
-        reportsPanel.add(bookingFunctionsPanel, repConstraints);
+        reportsPanel.add(reportFunctionsPanel, repConstraints);
 
 
         /* MAIN */
@@ -260,6 +262,14 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == bookings){
                 GUI.playSound("ji.wav");
                 showAdminPanel(bookingsPanel, bookingFunctionsPanel);
+            }
+            else if (e.getSource() == searchBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showSearchBookingPanel();
+            }
+            else if (e.getSource() == allBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showAllBookingPanel();
             }
             else if (e.getSource() == cars){
                 GUI.playSound("ji.wav");
