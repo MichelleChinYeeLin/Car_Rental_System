@@ -4,289 +4,421 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.max;
 import static java.lang.Math.ceil;
 
 public class BookingFunctions extends JPanel implements ActionListener {
 
-    private static JPanel searchBookingPanel, searchBookingAttributesPanel, searchBookingResultsPanel, editBookingPanel, editBookingAttributesPanel, viewBookingPanel;
+    private boolean isAdmin;
+    private String receiptText;
+
+    //Admin Booking
+    private static JPanel searchBookingPanel, searchBookingAttributesPanel, searchBookingResultsPanel, editBookingPanel, editBookingAttributesPanel, viewBookingPanel, adminReceiptPanel;
     private JPanel startDatePanel, endDatePanel, totalPricePanel;
-    private JLabel carNumberPlateSearchLabel, customerNameSearchLabel, totalPriceSearchLabel, statusSearchLabel, startDateSearchLabel, endDateSearchLabel;
-    private JLabel totalPriceIndicator;
-    private JLabel carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, startDateEditLabel, endDateEditLabel;
-    private JTextField carNumberPlateSearch, customerNameSearch;
-    private JTextField carNumberPlateEdit, customerNameEdit, totalPriceEdit;
+    private JLabel carNumberPlateSearchLabel, customerNameSearchLabel, totalPriceSearchLabel, statusSearchLabel, startDateSearchLabel, endDateSearchLabel, penaltyTypeSearchLabel, totalPriceIndicator;
+    private JLabel carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, startDateEditLabel, endDateEditLabel, penaltyTypeEditLabel;
+    private JTextField carNumberPlateSearch, customerNameSearch, carNumberPlateEdit, customerNameEdit, totalPriceEdit;
     private JSlider totalPriceSlider;
-    private JSpinner startDateDaySearch, endDateDaySearch, numberSpinner;
-    private JSpinner startDateDayEdit, endDateDayEdit;
-    private JComboBox<String> startDateYearSearch, endDateYearSearch;
-    private JComboBox<String> startDateYearEdit, endDateYearEdit;
-    private JComboBox<Booking.Status> statusBoxSearch;
-    private JComboBox<Booking.Status> statusBoxEdit;
-    private JComboBox<Booking.Month> startDateMonthSearch, endDateMonthSearch;
-    private JComboBox<Booking.Month> startDateMonthEdit, endDateMonthEdit;
-    private JButton searchButton, editButton, deleteButton, OKButton, backToSearchButton;
+    private JSpinner startDateDaySearch, endDateDaySearch, numberSpinnerEdit, numberSpinnerReceipt, startDateDayEdit, endDateDayEdit;
+    private JComboBox<String> startDateYearSearch, endDateYearSearch, startDateYearEdit, endDateYearEdit;
+    private JComboBox<Booking.Status> statusBoxSearch, statusBoxEdit;
+    private JComboBox<Booking.Month> startDateMonthSearch, endDateMonthSearch, startDateMonthEdit, endDateMonthEdit;
+    private JComboBox<Booking.PenaltyType> penaltyTypeSearch, penaltyTypeEdit;
+    private JButton searchButton, editAdminButton, deleteAdminButton, OKAdminButton, backToSearchButton, receiptAdminButton;
     private JScrollPane searchTableScroll;
-    private static JPanel[] panels;
+    private static JPanel[] adminPanels, customerPanels;
     private static JTable allBookingTable;
-    public BookingFunctions(){
 
-        //Search Booking Panel
-        //Create panels
-        searchBookingPanel = new JPanel(new GridBagLayout());
-        viewBookingPanel = new JPanel(new GridBagLayout());
-        searchBookingAttributesPanel = new JPanel(new GridBagLayout());
-        searchBookingResultsPanel = new JPanel();
-        searchBookingResultsPanel.setPreferredSize(new Dimension(500, 300));
-        searchBookingResultsPanel.setBackground(Color.white);
+    //Customer Booking
+    private static JPanel ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerEditBookingAttributesPanel, customerReceiptPanel;
+    private static JTable ongoingBookingTable, completedBookingTable, customerAllBookingTable;
+    private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton;
+    private ArrayList<Booking> customerBookingList = new ArrayList<>();
+    public BookingFunctions(boolean isAdmin){
 
-        startDatePanel = new JPanel();
-        endDatePanel = new JPanel();
-        totalPricePanel = new JPanel();
-        startDatePanel.setBackground(Color.white);
-        endDatePanel.setBackground(Color.white);
-        totalPricePanel.setBackground(Color.white);
-
-        //Create labels
-        carNumberPlateSearchLabel = new JLabel("No. Plate:");
-        customerNameSearchLabel = new JLabel("Customer:");
-        totalPriceSearchLabel = new JLabel("Total Price:");
-        statusSearchLabel = new JLabel("Status:");
-        startDateSearchLabel = new JLabel("Start Date:");
-        endDateSearchLabel = new JLabel("End Date:");
-        totalPriceIndicator = new JLabel();
-        JLabel labels[] = {carNumberPlateSearchLabel, customerNameSearchLabel, totalPriceSearchLabel, statusSearchLabel, startDateSearchLabel, endDateSearchLabel, totalPriceIndicator};
-        GUI.JLabelSetup(labels);
-
-        //Create input fields
-        //JTextField
-        carNumberPlateSearch = new JTextField(5);
-        customerNameSearch = new JTextField(10);
-
-        //JSlider
-        double maxTotalPrice = 0.0;
-        for (Booking booking : FileIO.getBookingList()) {
-            maxTotalPrice = max(maxTotalPrice, booking.getTotalPrice());
-        }
-        int maxTotalPriceinInt = (int) ceil(maxTotalPrice);
-        totalPriceSlider = new JSlider(JSlider.HORIZONTAL, 10, maxTotalPriceinInt, maxTotalPriceinInt);
-        totalPriceSlider.setMajorTickSpacing(maxTotalPriceinInt/5);
-        totalPriceSlider.setMinorTickSpacing(maxTotalPriceinInt/10);
-        totalPriceSlider.setFont(GUI.getDefaultFont());
-        totalPriceSlider.setPaintTicks(true);
-        totalPriceSlider.setPaintLabels(true);
-        totalPriceSlider.setPreferredSize(new Dimension(150, 50));
-
-        totalPriceIndicator.setText(String.valueOf(maxTotalPriceinInt));
-
-        totalPriceSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                totalPriceIndicator.setText(String.valueOf(totalPriceSlider.getValue()));
-            }
-        });
-
-        totalPricePanel.add(totalPriceSlider);
-        totalPricePanel.add(totalPriceIndicator);
+        this.isAdmin = isAdmin;
 
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
-
-        startDateDaySearch = new JSpinner(new SpinnerNumberModel(0,0,31,1));
-        endDateDaySearch = new JSpinner(new SpinnerNumberModel(0,0,31,1));
-
         Booking.Status[] statusType = Booking.Status.values();
-        statusBoxSearch = new JComboBox<>(statusType);
-        statusBoxSearch.setFont(GUI.getDefaultFont());
-
         Booking.Month[] month = Booking.Month.values();
-        startDateMonthSearch = new JComboBox<>(month);
-        endDateMonthSearch = new JComboBox<>(month);
-        startDateMonthSearch.setFont(GUI.getDefaultFont());
-        endDateMonthSearch.setFont(GUI.getDefaultFont());
-
         String[] year = {"ANY", String.valueOf(gregorianCalendar.get(Calendar.YEAR)), String.valueOf(gregorianCalendar.get(Calendar.YEAR) + 1)};
-        startDateYearSearch = new JComboBox<>(year);
-        endDateYearSearch = new JComboBox<>(year);
-        startDateYearSearch.setFont(GUI.getDefaultFont());
-        endDateYearSearch.setFont(GUI.getDefaultFont());
+        Booking.PenaltyType[] penaltyType = Booking.PenaltyType.values();
 
-        startDatePanel.add(startDateDaySearch);
-        startDatePanel.add(startDateMonthSearch);
-        startDatePanel.add(startDateYearSearch);
-        endDatePanel.add(endDateDaySearch);
-        endDatePanel.add(endDateMonthSearch);
-        endDatePanel.add(endDateYearSearch);
+        if (isAdmin){
+            //Search Booking Panel
+            //Create panels
+            searchBookingPanel = new JPanel(new GridBagLayout());
+            searchBookingAttributesPanel = new JPanel(new GridBagLayout());
+            searchBookingResultsPanel = new JPanel();
+            searchBookingResultsPanel.setPreferredSize(new Dimension(500, 300));
+            searchBookingResultsPanel.setBackground(Color.white);
 
-        searchButton = new JButton("SEARCH");
-        GUI.JButtonSetup(searchButton);
-        searchButton.addActionListener(this);
+            startDatePanel = new JPanel();
+            endDatePanel = new JPanel();
+            totalPricePanel = new JPanel();
+            startDatePanel.setBackground(Color.white);
+            endDatePanel.setBackground(Color.white);
+            totalPricePanel.setBackground(Color.white);
 
-        GridBagConstraints searchAttributesConstraints = new GridBagConstraints();
-        searchAttributesConstraints.fill = GridBagConstraints.HORIZONTAL;
-        searchAttributesConstraints.insets = new Insets(2,2,2,2);
-        searchAttributesConstraints.weightx = 0.1;
-        searchAttributesConstraints.gridy = 0;
+            //Create labels
+            carNumberPlateSearchLabel = new JLabel("No. Plate:");
+            customerNameSearchLabel = new JLabel("Customer:");
+            totalPriceSearchLabel = new JLabel("Total Price:");
+            statusSearchLabel = new JLabel("Status:");
+            startDateSearchLabel = new JLabel("Start Date:");
+            endDateSearchLabel = new JLabel("End Date:");
+            totalPriceIndicator = new JLabel();
+            penaltyTypeSearchLabel = new JLabel("Penalty:");
+            JLabel labels[] = {carNumberPlateSearchLabel, customerNameSearchLabel, totalPriceSearchLabel, statusSearchLabel, startDateSearchLabel, endDateSearchLabel, totalPriceIndicator, penaltyTypeSearchLabel};
+            GUI.JLabelSetup(labels);
 
-        searchAttributesConstraints.gridx = 0;
-        searchAttributesConstraints.gridwidth = 1;
-        searchBookingAttributesPanel.add(customerNameSearchLabel, searchAttributesConstraints);
+            //Create input fields
+            //JTextField
+            carNumberPlateSearch = new JTextField(5);
+            customerNameSearch = new JTextField(10);
 
-        searchAttributesConstraints.gridx = 2;
-        searchBookingAttributesPanel.add(customerNameSearch, searchAttributesConstraints);
+            //JSlider
+            double maxTotalPrice = 0.0;
+            for (Booking booking : FileIO.getBookingList()) {
+                maxTotalPrice = max(maxTotalPrice, booking.getTotalPrice());
+            }
+            int maxTotalPriceinInt = (int) ceil(maxTotalPrice);
+            totalPriceSlider = new JSlider(JSlider.HORIZONTAL, 10, maxTotalPriceinInt, maxTotalPriceinInt);
+            totalPriceSlider.setMajorTickSpacing(maxTotalPriceinInt/5);
+            totalPriceSlider.setMinorTickSpacing(maxTotalPriceinInt/10);
+            totalPriceSlider.setFont(GUI.getDefaultFont());
+            totalPriceSlider.setPaintTicks(true);
+            totalPriceSlider.setPaintLabels(true);
+            totalPriceSlider.setPreferredSize(new Dimension(150, 50));
 
-        searchAttributesConstraints.gridx = 3;
-        searchBookingAttributesPanel.add(carNumberPlateSearchLabel, searchAttributesConstraints);
+            totalPriceIndicator.setText(String.valueOf(maxTotalPriceinInt));
 
-        searchAttributesConstraints.gridx = 4;
-        searchBookingAttributesPanel.add(carNumberPlateSearch, searchAttributesConstraints);
+            totalPriceSlider.addChangeListener(new ChangeListener() {
+                @Override
+                public void stateChanged(ChangeEvent changeEvent) {
+                    totalPriceIndicator.setText(String.valueOf(totalPriceSlider.getValue()));
+                }
+            });
 
-        searchAttributesConstraints.gridx = 5;
-        searchBookingAttributesPanel.add(statusSearchLabel, searchAttributesConstraints);
+            totalPricePanel.add(totalPriceSlider);
+            totalPricePanel.add(totalPriceIndicator);
 
-        searchAttributesConstraints.gridx = 6;
-        searchBookingAttributesPanel.add(statusBoxSearch, searchAttributesConstraints);
+            startDateDaySearch = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+            endDateDaySearch = new JSpinner(new SpinnerNumberModel(0,0,31,1));
 
-        searchAttributesConstraints.gridy = 1;
-        searchAttributesConstraints.gridx = 0;
-        searchBookingAttributesPanel.add(startDateSearchLabel, searchAttributesConstraints);
+            statusBoxSearch = new JComboBox<>(statusType);
+            statusBoxSearch.setFont(GUI.getDefaultFont());
 
-        searchAttributesConstraints.gridx = 1;
-        searchAttributesConstraints.gridwidth = 3;
-        searchBookingAttributesPanel.add(startDatePanel, searchAttributesConstraints);
+            startDateMonthSearch = new JComboBox<>(month);
+            endDateMonthSearch = new JComboBox<>(month);
+            startDateMonthSearch.setFont(GUI.getDefaultFont());
+            endDateMonthSearch.setFont(GUI.getDefaultFont());
 
-        searchAttributesConstraints.gridx = 4;
-        searchAttributesConstraints.gridwidth = 1;
-        searchBookingAttributesPanel.add(totalPriceSearchLabel, searchAttributesConstraints);
+            startDateYearSearch = new JComboBox<>(year);
+            endDateYearSearch = new JComboBox<>(year);
+            startDateYearSearch.setFont(GUI.getDefaultFont());
+            endDateYearSearch.setFont(GUI.getDefaultFont());
 
-        searchAttributesConstraints.gridx = 5;
-        searchAttributesConstraints.gridwidth = 2;
-        searchBookingAttributesPanel.add(totalPricePanel, searchAttributesConstraints);
+            penaltyTypeSearch = new JComboBox<>(penaltyType);
+            penaltyTypeSearch.setFont(GUI.getDefaultFont());
 
-        searchAttributesConstraints.gridy = 2;
-        searchAttributesConstraints.gridx = 0;
-        searchAttributesConstraints.gridwidth = 1;
-        searchBookingAttributesPanel.add(endDateSearchLabel, searchAttributesConstraints);
+            startDatePanel.add(startDateDaySearch);
+            startDatePanel.add(startDateMonthSearch);
+            startDatePanel.add(startDateYearSearch);
+            endDatePanel.add(endDateDaySearch);
+            endDatePanel.add(endDateMonthSearch);
+            endDatePanel.add(endDateYearSearch);
 
-        searchAttributesConstraints.gridx = 1;
-        searchAttributesConstraints.gridwidth = 3;
-        searchBookingAttributesPanel.add(endDatePanel, searchAttributesConstraints);
+            searchButton = new JButton("SEARCH");
+            GUI.JButtonSetup(searchButton);
+            searchButton.addActionListener(this);
 
-        searchAttributesConstraints.gridx = 6;
-        searchAttributesConstraints.gridwidth = 1;
-        searchBookingAttributesPanel.add(searchButton, searchAttributesConstraints);
+            GridBagConstraints searchAttributesConstraints = new GridBagConstraints();
+            searchAttributesConstraints.fill = GridBagConstraints.HORIZONTAL;
+            searchAttributesConstraints.insets = new Insets(2,2,2,2);
+            searchAttributesConstraints.weightx = 0.1;
+            searchAttributesConstraints.gridy = 0;
 
-        searchBookingAttributesPanel.setBackground(Color.white);
+            searchAttributesConstraints.gridx = 0;
+            searchAttributesConstraints.gridwidth = 1;
+            searchBookingAttributesPanel.add(customerNameSearchLabel, searchAttributesConstraints);
 
-        GridBagConstraints searchConstraints = new GridBagConstraints();
-        searchConstraints.fill = GridBagConstraints.BOTH;
-        searchConstraints.gridx = 0;
-        searchConstraints.gridy = 0;
-        searchConstraints.weightx = 1;
-        searchBookingPanel.add(searchBookingAttributesPanel, searchConstraints);
+            searchAttributesConstraints.gridx = 1;
+            searchBookingAttributesPanel.add(customerNameSearch, searchAttributesConstraints);
 
-        searchConstraints.gridx = 0;
-        searchConstraints.gridy = 1;
-        searchConstraints.insets = new Insets(10,10,10,10);
-        searchBookingPanel.add(searchBookingResultsPanel, searchConstraints);
+            searchAttributesConstraints.gridx = 2;
+            searchBookingAttributesPanel.add(carNumberPlateSearchLabel, searchAttributesConstraints);
 
-        //Edit Booking Panel
-        editBookingPanel = new JPanel(new GridBagLayout());
-        editBookingAttributesPanel = new JPanel(new GridBagLayout());
-        carNumberPlateEditLabel = new JLabel("Car Number Plate:");
-        customerNameEditLabel = new JLabel("Customer Username:");
-        totalPriceEditLabel = new JLabel("Total Price:");
-        statusEditLabel = new JLabel("Status:");
-        startDateEditLabel = new JLabel("Start Date:");
-        endDateEditLabel = new JLabel("End Date:");
-        JLabel editBookingLabels[] = {carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, startDateEditLabel, endDateEditLabel};
-        GUI.JLabelSetup(editBookingLabels);
+            searchAttributesConstraints.gridx = 3;
+            searchBookingAttributesPanel.add(carNumberPlateSearch, searchAttributesConstraints);
 
-        carNumberPlateEdit = new JTextField(20);
-        customerNameEdit = new JTextField(20);
-        totalPriceEdit = new JTextField(20);
-        totalPriceEdit.setEnabled(false);
+            searchAttributesConstraints.gridx = 4;
+            searchBookingAttributesPanel.add(statusSearchLabel, searchAttributesConstraints);
 
-        statusBoxEdit = new JComboBox<>(statusType);
-        statusBoxEdit.setFont(GUI.getDefaultFont());
+            searchAttributesConstraints.gridx = 5;
+            searchBookingAttributesPanel.add(statusBoxSearch, searchAttributesConstraints);
 
-        startDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
-        endDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+            searchAttributesConstraints.gridy = 1;
+            searchAttributesConstraints.gridx = 0;
+            searchBookingAttributesPanel.add(startDateSearchLabel, searchAttributesConstraints);
 
-        startDateMonthEdit = new JComboBox<>(month);
-        endDateMonthEdit = new JComboBox<>(month);
-        startDateMonthEdit.setFont(GUI.getDefaultFont());
-        endDateMonthEdit.setFont(GUI.getDefaultFont());
+            searchAttributesConstraints.gridx = 1;
+            searchAttributesConstraints.gridwidth = 3;
+            searchBookingAttributesPanel.add(startDatePanel, searchAttributesConstraints);
 
-        startDateYearEdit = new JComboBox<>(year);
-        endDateYearEdit = new JComboBox<>(year);
-        startDateYearEdit.setFont(GUI.getDefaultFont());
-        endDateYearEdit.setFont(GUI.getDefaultFont());
+            searchAttributesConstraints.gridx = 4;
+            searchAttributesConstraints.gridwidth = 1;
+            searchBookingAttributesPanel.add(totalPriceSearchLabel, searchAttributesConstraints);
 
-        JPanel startDateEditPanel = new JPanel();
-        startDateEditPanel.add(startDateDayEdit);
-        startDateEditPanel.add(startDateMonthEdit);
-        startDateEditPanel.add(startDateYearEdit);
+            searchAttributesConstraints.gridx = 5;
+            searchAttributesConstraints.gridwidth = 2;
+            searchBookingAttributesPanel.add(totalPricePanel, searchAttributesConstraints);
 
-        JPanel endDateEditPanel = new JPanel();
-        endDateEditPanel.add(endDateDayEdit);
-        endDateEditPanel.add(endDateMonthEdit);
-        endDateEditPanel.add(endDateYearEdit);
+            searchAttributesConstraints.gridy = 2;
+            searchAttributesConstraints.gridx = 0;
+            searchAttributesConstraints.gridwidth = 1;
+            searchBookingAttributesPanel.add(endDateSearchLabel, searchAttributesConstraints);
 
-        GridBagConstraints editAttributesConstraints = new GridBagConstraints();
-        editAttributesConstraints.gridx = 0;
-        for(int i = 0; i < editBookingLabels.length; i++){
-            editAttributesConstraints.gridy = i;
-            editBookingAttributesPanel.add(editBookingLabels[i], editAttributesConstraints);
+            searchAttributesConstraints.gridx = 1;
+            searchAttributesConstraints.gridwidth = 3;
+            searchBookingAttributesPanel.add(endDatePanel, searchAttributesConstraints);
+
+            searchAttributesConstraints.gridy = 3;
+            searchAttributesConstraints.gridx = 0;
+            searchAttributesConstraints.gridwidth = 1;
+            searchBookingAttributesPanel.add(penaltyTypeSearchLabel, searchAttributesConstraints);
+
+            searchAttributesConstraints.gridx = 1;
+            searchAttributesConstraints.gridwidth =3;
+            searchBookingAttributesPanel.add(penaltyTypeSearch, searchAttributesConstraints);
+
+            searchAttributesConstraints.gridx = 5;
+            searchAttributesConstraints.gridwidth = 1;
+            searchBookingAttributesPanel.add(searchButton, searchAttributesConstraints);
+
+            searchBookingAttributesPanel.setBackground(Color.white);
+
+            GridBagConstraints searchConstraints = new GridBagConstraints();
+            searchConstraints.fill = GridBagConstraints.BOTH;
+            searchConstraints.gridx = 0;
+            searchConstraints.gridy = 0;
+            searchConstraints.weightx = 1;
+            searchConstraints.insets = new Insets(10,10,10,10);
+            searchBookingPanel.add(searchBookingAttributesPanel, searchConstraints);
+
+            searchConstraints.gridx = 0;
+            searchConstraints.gridy = 1;
+            searchBookingPanel.add(searchBookingResultsPanel, searchConstraints);
+
+            //Edit Booking Panel
+            editBookingPanel = new JPanel(new GridBagLayout());
+            editBookingAttributesPanel = new JPanel(new GridBagLayout());
+            carNumberPlateEditLabel = new JLabel("Car Number Plate:");
+            customerNameEditLabel = new JLabel("Customer Username:");
+            totalPriceEditLabel = new JLabel("Total Price:");
+            statusEditLabel = new JLabel("Status:");
+            penaltyTypeEditLabel = new JLabel("Penalty Type:");
+            startDateEditLabel = new JLabel("Start Date:");
+            endDateEditLabel = new JLabel("End Date:");
+            JLabel editBookingLabels[] = {carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, penaltyTypeEditLabel, startDateEditLabel, endDateEditLabel};
+            GUI.JLabelSetup(editBookingLabels);
+
+            carNumberPlateEdit = new JTextField(20);
+            customerNameEdit = new JTextField(20);
+            totalPriceEdit = new JTextField(20);
+            totalPriceEdit.setEnabled(false);
+
+            statusBoxEdit = new JComboBox<>(statusType);
+            statusBoxEdit.setFont(GUI.getDefaultFont());
+
+            penaltyTypeEdit = new JComboBox<>(penaltyType);
+            penaltyTypeEdit.setFont(GUI.getDefaultFont());
+
+            startDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+            endDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+
+            startDateMonthEdit = new JComboBox<>(month);
+            endDateMonthEdit = new JComboBox<>(month);
+            startDateMonthEdit.setFont(GUI.getDefaultFont());
+            endDateMonthEdit.setFont(GUI.getDefaultFont());
+
+            startDateYearEdit = new JComboBox<>(year);
+            endDateYearEdit = new JComboBox<>(year);
+            startDateYearEdit.setFont(GUI.getDefaultFont());
+            endDateYearEdit.setFont(GUI.getDefaultFont());
+
+            JPanel startDateEditPanel = new JPanel();
+            startDateEditPanel.add(startDateDayEdit);
+            startDateEditPanel.add(startDateMonthEdit);
+            startDateEditPanel.add(startDateYearEdit);
+
+            JPanel endDateEditPanel = new JPanel();
+            endDateEditPanel.add(endDateDayEdit);
+            endDateEditPanel.add(endDateMonthEdit);
+            endDateEditPanel.add(endDateYearEdit);
+
+            GridBagConstraints editAttributesConstraints = new GridBagConstraints();
+            editAttributesConstraints.gridx = 0;
+            for(int i = 0; i < editBookingLabels.length; i++){
+                editAttributesConstraints.gridy = i;
+                editBookingAttributesPanel.add(editBookingLabels[i], editAttributesConstraints);
+            }
+
+            editAttributesConstraints.gridx = 1;
+            editAttributesConstraints.gridy = 0;
+            editBookingAttributesPanel.add(carNumberPlateEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 1;
+            editBookingAttributesPanel.add(customerNameEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 2;
+            editBookingAttributesPanel.add(totalPriceEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 3;
+            editBookingAttributesPanel.add(statusBoxEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 4;
+            editBookingAttributesPanel.add(penaltyTypeEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 5;
+            editBookingAttributesPanel.add(startDateEditPanel, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 6;
+            editBookingAttributesPanel.add(endDateEditPanel, editAttributesConstraints);
+
+            JPanel editBookingSelectionPanel = new JPanel(new FlowLayout());
+            editBookingSelectionPanel.setBackground(Color.white);
+
+            OKAdminButton = new JButton("OK");
+            backToSearchButton = new JButton("BACK");
+            receiptAdminButton = new JButton("RECEIPT");
+            GUI.JButtonSetup(new JButton[]{OKAdminButton, backToSearchButton, receiptAdminButton});
+            OKAdminButton.addActionListener(this);
+            backToSearchButton.addActionListener(this);
+            receiptAdminButton.addActionListener(this);
+            editBookingSelectionPanel.add(OKAdminButton);
+            editBookingSelectionPanel.add(backToSearchButton);
+            editBookingSelectionPanel.add(receiptAdminButton);
+
+            GridBagConstraints editConstraints = new GridBagConstraints();
+            editConstraints.gridy = 0;
+            editBookingPanel.add(editBookingAttributesPanel, editConstraints);
+            editConstraints.gridy = 1;
+            editBookingPanel.add(editBookingSelectionPanel, editConstraints);
+
+            //View Booking Panel
+            //Create Panel
+            viewBookingPanel = new JPanel(new GridBagLayout());
+
+            adminReceiptPanel = new JPanel(new GridBagLayout());
+
+            adminPanels = new JPanel[]{searchBookingPanel, viewBookingPanel, editBookingPanel, adminReceiptPanel};
+            GUI.JPanelSetup(adminPanels);
+            setPreferredSize(new Dimension(600,500));
+            add(searchBookingPanel);
+            add(viewBookingPanel);
+            add(editBookingPanel);
+            add(adminReceiptPanel);
         }
 
-        editAttributesConstraints.gridx = 1;
-        editAttributesConstraints.gridy = 0;
-        editBookingAttributesPanel.add(carNumberPlateEdit, editAttributesConstraints);
+        else {
+            //JPanel
+            ongoingBookingPanel = new JPanel(new GridBagLayout());
+            completedBookingPanel = new JPanel(new GridBagLayout());
+            customerViewBookingPanel = new JPanel(new GridBagLayout());
 
-        editAttributesConstraints.gridy = 1;
-        editBookingAttributesPanel.add(customerNameEdit, editAttributesConstraints);
+            //Edit Panel
+            customerEditBookingPanel = new JPanel(new GridBagLayout());
+            customerEditBookingAttributesPanel = new JPanel(new GridBagLayout());
 
-        editAttributesConstraints.gridy = 2;
-        editBookingAttributesPanel.add(totalPriceEdit, editAttributesConstraints);
+            editBookingPanel = new JPanel(new GridBagLayout());
+            editBookingAttributesPanel = new JPanel(new GridBagLayout());
+            carNumberPlateEditLabel = new JLabel("Car Number Plate:");
+            startDateEditLabel = new JLabel("Start Date:");
+            endDateEditLabel = new JLabel("End Date:");
+            JLabel editBookingLabels[] = {carNumberPlateEditLabel, startDateEditLabel, endDateEditLabel};
+            GUI.JLabelSetup(editBookingLabels);
 
-        editAttributesConstraints.gridy = 3;
-        editBookingAttributesPanel.add(statusBoxEdit, editAttributesConstraints);
+            carNumberPlateEdit = new JTextField(20);
+            startDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+            endDateDayEdit = new JSpinner(new SpinnerNumberModel(0,0,31,1));
 
-        editAttributesConstraints.gridy = 4;
-        editBookingAttributesPanel.add(startDateEditPanel, editAttributesConstraints);
+            startDateMonthEdit = new JComboBox<>(month);
+            endDateMonthEdit = new JComboBox<>(month);
+            startDateMonthEdit.setFont(GUI.getDefaultFont());
+            endDateMonthEdit.setFont(GUI.getDefaultFont());
 
-        editAttributesConstraints.gridy = 5;
-        editBookingAttributesPanel.add(endDateEditPanel, editAttributesConstraints);
+            startDateYearEdit = new JComboBox<>(year);
+            endDateYearEdit = new JComboBox<>(year);
+            startDateYearEdit.setFont(GUI.getDefaultFont());
+            endDateYearEdit.setFont(GUI.getDefaultFont());
 
-        JPanel editBookingSelectionPanel = new JPanel(new FlowLayout());
-        editBookingSelectionPanel.setBackground(Color.white);
+            JPanel startDateEditPanel = new JPanel();
+            startDateEditPanel.add(startDateDayEdit);
+            startDateEditPanel.add(startDateMonthEdit);
+            startDateEditPanel.add(startDateYearEdit);
 
-        OKButton = new JButton("OK");
-        backToSearchButton = new JButton("BACK");
-        GUI.JButtonSetup(new JButton[]{OKButton, backToSearchButton});
-        OKButton.addActionListener(this);
-        backToSearchButton.addActionListener(this);
-        editBookingSelectionPanel.add(OKButton);
-        editBookingSelectionPanel.add(backToSearchButton);
+            JPanel endDateEditPanel = new JPanel();
+            endDateEditPanel.add(endDateDayEdit);
+            endDateEditPanel.add(endDateMonthEdit);
+            endDateEditPanel.add(endDateYearEdit);
 
-        GridBagConstraints editConstraints = new GridBagConstraints();
-        editConstraints.gridy = 0;
-        editBookingPanel.add(editBookingAttributesPanel, editConstraints);
-        editConstraints.gridy = 1;
-        editBookingPanel.add(editBookingSelectionPanel, editConstraints);
+            GridBagConstraints editAttributesConstraints = new GridBagConstraints();
+            editAttributesConstraints.gridx = 0;
+            for(int i = 0; i < editBookingLabels.length; i++){
+                editAttributesConstraints.gridy = i;
+                customerEditBookingAttributesPanel.add(editBookingLabels[i], editAttributesConstraints);
+            }
 
-        panels = new JPanel[]{searchBookingPanel, viewBookingPanel, editBookingPanel};
-        GUI.JPanelSetup(panels);
-        setPreferredSize(new Dimension(600,500));
-        add(searchBookingPanel);
-        add(viewBookingPanel);
-        add(editBookingPanel);
+            editAttributesConstraints.gridx = 1;
+            editAttributesConstraints.gridy = 0;
+            customerEditBookingAttributesPanel.add(carNumberPlateEdit, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 1;
+            customerEditBookingAttributesPanel.add(startDateEditPanel, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 2;
+            customerEditBookingAttributesPanel.add(endDateEditPanel, editAttributesConstraints);
+
+            JPanel editBookingSelectionPanel = new JPanel(new FlowLayout());
+            editBookingSelectionPanel.setBackground(Color.white);
+
+            OKCustomerButton = new JButton("OK");
+            backCustomerButton = new JButton("BACK");
+            GUI.JButtonSetup(new JButton[]{OKCustomerButton, backCustomerButton});
+            OKCustomerButton.addActionListener(this);
+            backCustomerButton.addActionListener(this);
+            editBookingSelectionPanel.add(OKCustomerButton);
+            editBookingSelectionPanel.add(backCustomerButton);
+
+            GridBagConstraints editConstraints = new GridBagConstraints();
+            editConstraints.gridx = 0;
+            editConstraints.gridy = 0;
+            customerEditBookingPanel.add(customerEditBookingAttributesPanel, editConstraints);
+            editConstraints.gridy = 1;
+            customerEditBookingPanel.add(editBookingSelectionPanel, editConstraints);
+
+            customerReceiptPanel = new JPanel(new GridBagLayout());
+
+            customerPanels = new JPanel[]{ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerReceiptPanel};
+            GUI.JPanelSetup(customerPanels);
+            setPreferredSize(new Dimension(600,500));
+            add(ongoingBookingPanel);
+            add(completedBookingPanel);
+            add(customerViewBookingPanel);
+            add(customerEditBookingPanel);
+            add(customerReceiptPanel);
+        }
     }
 
     @Override
@@ -295,21 +427,21 @@ public class BookingFunctions extends JPanel implements ActionListener {
             if (e.getSource() == searchButton) {
                 searchBooking();
             }
-            else if (e.getSource() == editButton) {
-                if ((int) numberSpinner.getValue() == 0) {
+            else if (e.getSource() == editAdminButton) {
+                if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
                 showBookingPanel(editBookingPanel);
-                showBookingDetails();
+                showBookingDetailsAdmin();
             }
-            else if (e.getSource() == deleteButton) {
-                if ((int) numberSpinner.getValue() == 0) {
+            else if (e.getSource() == deleteAdminButton) {
+                if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
 
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")) {
-                    int numberValue = (int) numberSpinner.getValue();
+                    int numberValue = (int) numberSpinnerEdit.getValue();
 
                     Booking.deleteBooking(numberValue);
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car has been deleted!");
@@ -318,10 +450,10 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
                 }
             }
-            else if (e.getSource() == OKButton){
+            else if (e.getSource() == OKAdminButton){
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
-                    editBookingDetails();
+                    editBookingDetailsAdmin();
                     showBookingPanel(searchBookingPanel);
                     searchBooking();
                 }
@@ -332,6 +464,56 @@ public class BookingFunctions extends JPanel implements ActionListener {
             else if (e.getSource() == backToSearchButton){
                 showBookingPanel(searchBookingPanel);
             }
+            else if (e.getSource() == receiptAdminButton){
+                int numberValue = (int) numberSpinnerEdit.getValue();
+                Booking booking = FileIO.bookingList.get(numberValue - 1);
+                generateReceipt(booking);
+            }
+            else if (e.getSource() == editCustomerButton){
+                if ((int) numberSpinnerEdit.getValue() == 0) {
+                    throw new BookingNotFoundException();
+                }
+                showBookingPanel(customerEditBookingPanel);
+                showBookingDetailsCustomer();
+            }
+            else if (e.getSource() == deleteCustomerButton){
+                if ((int) numberSpinnerEdit.getValue() == 0) {
+                    throw new BookingNotFoundException();
+                }
+
+                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                if (input != null && input.equals("DELETE")) {
+                    int numberValue = (int) numberSpinnerEdit.getValue();
+
+                    Booking.deleteBooking(customerBookingList.get(numberValue - 1));
+                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Car has been deleted!");
+                    searchBooking();
+                } else {
+                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
+                }
+            }
+            else if (e.getSource() == OKCustomerButton){
+                String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
+                if (input != null && input.equals("CONFIRM")){
+                    editBookingDetailsCustomer();
+                    showBookingPanel(ongoingBookingPanel);
+                    viewOngoingBookingCustomer();
+                }
+                else {
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
+                }
+            }
+            else if (e.getSource() == backCustomerButton){
+                showBookingCustomerPanel(ongoingBookingPanel);
+            }
+            else if (e.getSource() == receiptCustomerButton){
+                int numberValue = (int) numberSpinnerReceipt.getValue();
+                Booking booking = customerBookingList.get(numberValue - 1);
+                generateReceipt(booking);
+            }
+            else if (e.getSource() == printButton){
+                printReceipt();
+            }
         }
         catch (BookingNotFoundException bookingNotFoundException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid booking selected! Please try again.", "Invalid Booking", JOptionPane.WARNING_MESSAGE);
@@ -339,7 +521,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         catch (Exception exception)
         {
             exception.printStackTrace();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong");
         }
     }
 
@@ -352,20 +534,30 @@ public class BookingFunctions extends JPanel implements ActionListener {
         showBookingPanel(viewBookingPanel);
     }
     public static void showBookingPanel(JPanel panel){
-        for (JPanel i : panels) {
-            i.setVisible(false);
+        if (CarRentalSystem.loginAdmin != null){
+            for (JPanel i : adminPanels) {
+                i.setVisible(false);
+            }
         }
+
+        else if (CarRentalSystem.loginCustomer != null){
+            for (JPanel i : customerPanels) {
+                i.setVisible(false);
+            }
+        }
+
         panel.setVisible(true);
     }
 
-    private void showBookingDetails(){
-        int numberValue = (int) numberSpinner.getValue();
+    private void showBookingDetailsAdmin(){
+        int numberValue = (int) numberSpinnerEdit.getValue();
         Booking booking = FileIO.bookingList.get(numberValue - 1);
 
         carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
         customerNameEdit.setText(booking.getCustomer().getUsername());
         totalPriceEdit.setText(String.valueOf(booking.getTotalPrice()));
         statusBoxEdit.setSelectedItem(booking.getStatus());
+        penaltyTypeEdit.setSelectedItem(booking.getPenalty());
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
@@ -384,11 +576,35 @@ public class BookingFunctions extends JPanel implements ActionListener {
         endDateYearEdit.setSelectedItem(yearFormat.format(endDate));
     }
 
-    private void editBookingDetails(){
-        int numberValue = (int) numberSpinner.getValue();
+    private void showBookingDetailsCustomer(){
+        int numberValue = (int) numberSpinnerEdit.getValue();
+        Booking booking = FileIO.bookingList.get(numberValue - 1);
+
+        carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
+
+        Date startDate = booking.getStartDate();
+        Date endDate = booking.getEndDate();
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
+        SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+        SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+
+        startDateDayEdit.setValue(Integer.parseInt(dayFormat.format(startDate)));
+        endDateDayEdit.setValue(Integer.parseInt(dayFormat.format(endDate)));
+
+        startDateMonthEdit.setSelectedIndex(Integer.parseInt(monthFormat.format(startDate)));
+        endDateMonthEdit.setSelectedIndex(Integer.parseInt(monthFormat.format(endDate)));
+
+        startDateYearEdit.setSelectedItem(yearFormat.format(startDate));
+        endDateYearEdit.setSelectedItem(yearFormat.format(endDate));
+    }
+
+    private void editBookingDetailsAdmin(){
+        int numberValue = (int) numberSpinnerEdit.getValue();
         String carNumberPlate = carNumberPlateEdit.getText();
         String customerName = customerNameEdit.getText();
         Booking.Status status = (Booking.Status) statusBoxEdit.getSelectedItem();
+        Booking.PenaltyType penalty = (Booking.PenaltyType) penaltyTypeEdit.getSelectedItem();
 
         try{
             int startDateDay = (int) startDateDayEdit.getValue();
@@ -406,7 +622,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Date startDate = Booking.convertToDate(startDateDay, startDateMonth, startDateYear);
             Date endDate = Booking.convertToDate(endDateDay, endDateMonth, endDateYear);
 
-            Booking.editBookingDetails(numberValue, carNumberPlate, customerName, status, startDate, endDate);
+            Booking.editBookingDetails(numberValue, carNumberPlate, customerName, status, penalty, startDate, endDate);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
@@ -442,11 +658,11 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
         }
         else{
-            String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Start Date", "End Date"};
+            String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
             Object[][] tempTable = new Object[searchedList.size()][tableColumn.length];
             int i = 0;
             for (Booking booking : searchedList){
-                i = insertBookingTable(tempTable, i, booking);
+                i = insertBookingTableAdmin(tempTable, i, booking);
             }
 
             JTable searchTable = new JTable(tempTable, tableColumn);
@@ -455,7 +671,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             searchTableScroll.setViewportView(searchTable);
             searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             searchTableScroll.setVisible(true);
-            searchTableScroll.setPreferredSize(new Dimension(500, 225));
+            searchTableScroll.setPreferredSize(new Dimension(500, 150));
             searchBookingResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
 
             JPanel bottomPanel = new JPanel(new GridBagLayout());
@@ -473,38 +689,37 @@ public class BookingFunctions extends JPanel implements ActionListener {
             bottomConstraints.gridx = 1;
             int maxNum = searchedList.size();
 
-            numberSpinner = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
-            bottomPanel.add(numberSpinner, bottomConstraints);
+            numberSpinnerEdit = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
+            bottomPanel.add(numberSpinnerEdit, bottomConstraints);
 
-            editButton = new JButton("EDIT");
-            deleteButton = new JButton("DELETE");
-            editButton.addActionListener(this);
-            deleteButton.addActionListener(this);
-            JButton[] buttons = new JButton[]{editButton, deleteButton};
+            editAdminButton = new JButton("EDIT");
+            deleteAdminButton = new JButton("DELETE");
+            editAdminButton.addActionListener(this);
+            deleteAdminButton.addActionListener(this);
+            JButton[] buttons = new JButton[]{editAdminButton, deleteAdminButton};
             GUI.subJButtonSetup(buttons, new Dimension(100,30));
 
             bottomConstraints.gridx = 3;
-            bottomPanel.add(editButton, bottomConstraints);
+            bottomPanel.add(editAdminButton, bottomConstraints);
 
             bottomConstraints.gridx = 4;
-            bottomPanel.add(deleteButton, bottomConstraints);
+            bottomPanel.add(deleteAdminButton, bottomConstraints);
 
             searchBookingResultsPanel.add(bottomPanel, BorderLayout.SOUTH);
 
             searchBookingResultsPanel.setVisible(true);
         }
 
-        searchBookingResultsPanel.updateUI();
         searchBookingResultsPanel.validate();
         searchBookingPanel.validate();
     }
 
     private static void viewAllBooking(){
-        String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Start Date", "End Date"};
+        String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
         Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         int i = 0;
         for (Booking booking: FileIO.bookingList){
-            i = insertBookingTable(tempTable, i, booking);
+            i = insertBookingTableAdmin(tempTable, i, booking);
         }
 
         allBookingTable = new JTable(tempTable, tableColumn);
@@ -520,16 +735,378 @@ public class BookingFunctions extends JPanel implements ActionListener {
         viewBookingPanel.validate();
     }
 
-    private static int insertBookingTable(Object[][] tempTable, int i, Booking booking) {
+    private static int insertBookingTableAdmin(Object[][] tempTable, int i, Booking booking) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         tempTable[i][0] = i + 1;
         tempTable[i][1] = booking.getCar().getNumberPlate();
         tempTable[i][2] = booking.getCustomer().getUsername();
         tempTable[i][3] = booking.getTotalPrice();
         tempTable[i][4] = booking.getStatus();
+        tempTable[i][5] = booking.getPenalty();
+        tempTable[i][6] = dateFormat.format(booking.getStartDate());
+        tempTable[i][7] = dateFormat.format(booking.getEndDate());
+        i++;
+        return i;
+    }
+
+    public static void showAllBookingCustomerPanel(){
+        customerViewBookingPanel.removeAll();
+        viewAllBookingCustomer();
+        showBookingCustomerPanel(customerViewBookingPanel);
+    }
+
+    public static void showOngoingBookingCustomerPanel(){
+        showBookingCustomerPanel(ongoingBookingPanel);
+    }
+
+    public static void showCompletedBookingCustomerPanel(){
+        showBookingCustomerPanel(completedBookingPanel);
+    }
+
+    public static void showBookingCustomerPanel(JPanel panel){
+        for (JPanel i : customerPanels) {
+            i.setVisible(false);
+        }
+        panel.setVisible(true);
+    }
+
+    private static void viewAllBookingCustomer(){
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
+        int i = 0;
+        boolean bookingFound = false;
+        for (Booking booking: FileIO.bookingList){
+            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername())){
+                i = insertBookingTableCustomer(tempTable, i, booking);
+                bookingFound = true;
+            }
+        }
+
+        if (bookingFound){
+            customerAllBookingTable = new JTable(tempTable, tableColumn);
+            customerAllBookingTable.setVisible(true);
+            JScrollPane bookingScrollPane = new JScrollPane(customerAllBookingTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            customerAllBookingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            bookingScrollPane.setPreferredSize(new Dimension(500, 420));
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.insets = new Insets(15,5,10,5);
+            customerViewBookingPanel.add(bookingScrollPane, constraints);
+        }
+
+        else {
+            JLabel bookingNotFoundLabel = new JLabel("No Bookings Found!");
+            GUI.JLabelSetup(bookingNotFoundLabel);
+            customerViewBookingPanel.add(bookingNotFoundLabel);
+        }
+
+        customerViewBookingPanel.validate();
+    }
+
+    public void viewOngoingBookingCustomer(){
+        customerBookingList = new ArrayList<>();
+        ongoingBookingPanel.removeAll();
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
+        int i = 0;
+        boolean bookingFound = false;
+        for (Booking booking: FileIO.bookingList){
+            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername()) &&
+                booking.getStatus() != Booking.Status.COMPLETED){
+                i = insertBookingTableCustomer(tempTable, i, booking);
+                customerBookingList.add(booking);
+                bookingFound = true;
+            }
+        }
+
+        if (bookingFound){
+            ongoingBookingTable = new JTable(tempTable, tableColumn);
+            ongoingBookingTable.setVisible(true);
+            JScrollPane bookingScrollPane = new JScrollPane(ongoingBookingTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            ongoingBookingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            bookingScrollPane.setPreferredSize(new Dimension(500, 350));
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.insets = new Insets(15,5,10,5);
+            ongoingBookingPanel.add(bookingScrollPane, constraints);
+
+            JPanel bottomPanel = new JPanel(new GridBagLayout());
+            bottomPanel.setBackground(Color.white);
+            GridBagConstraints bottomConstraints = new GridBagConstraints();
+
+            bottomConstraints.fill = GridBagConstraints.BOTH;
+            bottomConstraints.anchor = GridBagConstraints.WEST;
+            bottomConstraints.gridx = 0;
+            bottomConstraints.insets = new Insets(5,5,5,20);
+            JLabel numberLabel = new JLabel("Row Number: ");
+            GUI.JLabelSetup(numberLabel);
+            bottomPanel.add(numberLabel, bottomConstraints);
+
+            bottomConstraints.gridx = 1;
+            int maxNum = i;
+
+            numberSpinnerEdit = new JSpinner(new SpinnerNumberModel(0,0,maxNum, 1));
+            bottomPanel.add(numberSpinnerEdit, bottomConstraints);
+
+            editCustomerButton = new JButton("EDIT");
+            deleteCustomerButton = new JButton("DELETE");
+            editCustomerButton.addActionListener(this);
+            deleteCustomerButton.addActionListener(this);
+            JButton[] buttons = new JButton[]{editCustomerButton, deleteCustomerButton};
+            GUI.subJButtonSetup(buttons, new Dimension(100,30));
+
+            bottomConstraints.gridx = 3;
+            bottomPanel.add(editCustomerButton, bottomConstraints);
+
+            bottomConstraints.gridx = 4;
+            bottomPanel.add(deleteCustomerButton, bottomConstraints);
+
+            bottomConstraints.gridx = 0;
+            bottomConstraints.gridwidth = 5;
+            bottomConstraints.gridy = 1;
+            ongoingBookingPanel.add(bottomPanel, bottomConstraints);
+        }
+
+        else {
+            JLabel bookingNotFoundLabel = new JLabel("No Bookings Found!");
+            GUI.JLabelSetup(bookingNotFoundLabel);
+            ongoingBookingPanel.add(bookingNotFoundLabel);
+        }
+
+        ongoingBookingPanel.validate();
+    }
+
+    public void viewCompletedBookingCustomer(){
+        customerBookingList = new ArrayList<>();
+        completedBookingPanel.removeAll();
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
+        int i = 0;
+        boolean bookingFound = false;
+        for (Booking booking: FileIO.bookingList){
+            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername()) &&
+                    booking.getStatus() == Booking.Status.COMPLETED){
+                i = insertBookingTableCustomer(tempTable, i, booking);
+                bookingFound = true;
+                customerBookingList.add(booking);
+            }
+        }
+
+        if (bookingFound){
+            completedBookingTable = new JTable(tempTable, tableColumn);
+            completedBookingTable.setVisible(true);
+            JScrollPane bookingScrollPane = new JScrollPane(completedBookingTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            completedBookingTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            bookingScrollPane.setPreferredSize(new Dimension(500, 320));
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.insets = new Insets(15,5,10,5);
+            completedBookingPanel.add(bookingScrollPane, constraints);
+
+            JPanel bottomPanel = new JPanel(new GridBagLayout());
+            bottomPanel.setBackground(Color.white);
+            GridBagConstraints bottomConstraints = new GridBagConstraints();
+
+            bottomConstraints.fill = GridBagConstraints.BOTH;
+            bottomConstraints.anchor = GridBagConstraints.WEST;
+            bottomConstraints.gridx = 0;
+            bottomConstraints.insets = new Insets(5,5,5,20);
+            JLabel numberLabel = new JLabel("Row Number: ");
+            GUI.JLabelSetup(numberLabel);
+            bottomPanel.add(numberLabel, bottomConstraints);
+
+            bottomConstraints.gridx = 1;
+            int maxNum = i;
+
+            numberSpinnerReceipt = new JSpinner(new SpinnerNumberModel(1,1,maxNum, 1));
+            bottomPanel.add(numberSpinnerReceipt, bottomConstraints);
+
+            receiptCustomerButton = new JButton("RECEIPT");
+            receiptCustomerButton.addActionListener(this);
+            JButton[] buttons = new JButton[]{receiptCustomerButton};
+            GUI.JButtonSetup(buttons);
+
+            bottomConstraints.gridx = 3;
+            bottomPanel.add(receiptCustomerButton, bottomConstraints);
+
+            bottomConstraints.gridx = 0;
+            bottomConstraints.gridwidth = 4;
+            bottomConstraints.gridy = 1;
+            completedBookingPanel.add(bottomPanel, bottomConstraints);
+        }
+
+        else {
+            JLabel bookingNotFoundLabel = new JLabel("No Bookings Found!");
+            GUI.JLabelSetup(bookingNotFoundLabel);
+            completedBookingPanel.add(bookingNotFoundLabel);
+        }
+
+        completedBookingPanel.validate();
+    }
+
+    private void editBookingDetailsCustomer(){
+        int numberValue = (int) numberSpinnerEdit.getValue();
+        Booking booking = customerBookingList.get(numberValue - 1);
+        String carNumberPlate = carNumberPlateEdit.getText();
+
+        try{
+            int startDateDay = (int) startDateDayEdit.getValue();
+            Booking.Month startDateMonth = (Booking.Month) startDateMonthEdit.getSelectedItem();
+            String startDateYear = (String) startDateYearEdit.getSelectedItem();
+
+            int endDateDay = (int) endDateDayEdit.getValue();
+            Booking.Month endDateMonth = (Booking.Month) endDateMonthEdit.getSelectedItem();
+            String endDateYear = (String) endDateYearEdit.getSelectedItem();
+
+            if(!Booking.isValidDate(startDateDay, startDateMonth, startDateYear) || !Booking.isValidDate(endDateDay, endDateMonth, endDateYear)){
+                throw new InvalidDateDurationException();
+            }
+
+            Date startDate = Booking.convertToDate(startDateDay, startDateMonth, startDateYear);
+            Date endDate = Booking.convertToDate(endDateDay, endDateMonth, endDateYear);
+
+            Booking.editBookingDetails(booking, carNumberPlate, startDate, endDate);
+        }
+        catch (InvalidDateDurationException invalidDateDurationException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private static int insertBookingTableCustomer(Object[][] tempTable, int i, Booking booking) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        tempTable[i][0] = i + 1;
+        tempTable[i][1] = booking.getCar().getNumberPlate();
+        tempTable[i][2] = booking.getTotalPrice();
+        tempTable[i][3] = booking.getStatus();
+        tempTable[i][4] = booking.getPenalty();
         tempTable[i][5] = dateFormat.format(booking.getStartDate());
         tempTable[i][6] = dateFormat.format(booking.getEndDate());
         i++;
         return i;
+    }
+
+    private void generateReceipt(Booking booking){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        long milliSecDiff = Math.abs(booking.getEndDate().getTime() - booking.getStartDate().getTime());
+        long duration = TimeUnit.DAYS.convert(milliSecDiff, TimeUnit.MILLISECONDS);
+
+        receiptText = "<html><body><div style=\"max-width:220px\"><h1 style=\"text-align:center;\">Rent A Car</h1>";
+
+        for (int i = 0; i < 40; i++){
+            receiptText += "-";
+        }
+
+        receiptText += "<br/><p>";
+
+        receiptText += "Customer Username: " + booking.getCustomer().getUsername() + "<br/>";
+        receiptText += "Customer Name: " + booking.getCustomer().getName() + "<br/>";
+        receiptText += "Car Number Plate: " + booking.getCar().getNumberPlate() + "<br/>";
+        receiptText += "Start Date: " + dateFormat.format(booking.getStartDate()) + "<br/>";
+        receiptText += "End Date: " + dateFormat.format(booking.getEndDate()) + "<br/></p>";
+
+        for (int i = 0; i < 40; i++){
+            receiptText += "-";
+        }
+
+        JLabel receiptLabel = new JLabel();
+        receiptLabel.setText(receiptText);
+
+        receiptText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Car Price Per Day: </span>\n" +
+                String.format("%.2f", booking.getCar().getPrice()) + "</div>";
+        receiptText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Duration (day): </span>\n" +
+                duration + "</div>";
+        receiptText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Penalty Fee: </span>\n" +
+                String.format("%.2f", booking.calcPenaltyFee()) + "</div>";
+        receiptText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Member Discount: </span>\n" +
+                String.format("%.2f", booking.calcMemberDiscount()) + "</div>";
+        receiptText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Total Price: </span>\n" +
+                String.format("%.2f", booking.getTotalPrice()) + "</div>";
+        receiptText += "<p style=\"text-align:center\">Please come again!</p></div></body></html>";
+
+        JLabel textLabels = new JLabel();
+        textLabels.setText("<html>Car Price Per Day: <br/>" +
+                "Duration (day): <br/>" +
+                "Penalty Fee: <br/>" +
+                "Member Discount: <br/>" +
+                "Total Price: </html>");
+
+        JLabel priceLabels = new JLabel();
+        priceLabels.setText("<html><p style=\"text-align:right;\">" + String.format("%.2f", booking.getCar().getPrice()) + "<br/>" +
+                duration + "<br/>" +
+                String.format("%.2f", booking.calcPenaltyFee()) + "<br/>" +
+                String.format("%.2f", booking.calcMemberDiscount()) + "<br/>" +
+                String.format("%.2f", booking.getTotalPrice()) + "</p></html>");
+        priceLabels.setHorizontalAlignment(JLabel.RIGHT);
+
+        GUI.JLabelSetup(new JLabel[]{receiptLabel, textLabels, priceLabels});
+
+        JPanel receiptPanel = new JPanel(new GridBagLayout());
+        receiptPanel.setBackground(Color.white);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 3;
+        receiptPanel.add(receiptLabel, constraints);
+
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        receiptPanel.add(textLabels, constraints);
+
+        constraints.gridx = 2;
+        constraints.anchor = GridBagConstraints.EAST;
+        receiptPanel.add(priceLabels, constraints);
+
+        printButton = new JButton("PRINT");
+        printButton.addActionListener(this);
+        GUI.JButtonSetup(printButton);
+
+        if (isAdmin){
+            adminReceiptPanel.removeAll();
+
+            GridBagConstraints receiptConstraints = new GridBagConstraints();
+            receiptConstraints.gridy = 0;
+            adminReceiptPanel.add(receiptPanel, receiptConstraints);
+
+            receiptConstraints.gridy = 1;
+            receiptConstraints.insets = new Insets(40,40,40,40);
+            adminReceiptPanel.add(printButton, receiptConstraints);
+            showBookingPanel(adminReceiptPanel);
+        }
+        else {
+            customerReceiptPanel.removeAll();
+
+            GridBagConstraints receiptConstraints = new GridBagConstraints();
+            receiptConstraints.gridy = 0;
+            customerReceiptPanel.add(receiptPanel, receiptConstraints);
+
+            receiptConstraints.gridy = 1;
+            receiptConstraints.insets = new Insets(40,40,40,40);
+            customerReceiptPanel.add(printButton, receiptConstraints);
+
+            showBookingPanel(customerReceiptPanel);
+        }
+    }
+
+    private void printReceipt(){
+        try{
+            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss");
+            Date date = new Date();
+            String fileName = "receipt_" + dateFormat.format(date) + ".html";
+
+            FileWriter fw = new FileWriter(fileName);
+
+            fw.write(receiptText);
+
+            fw.close();
+
+            JOptionPane.showMessageDialog(this, "Receipt printed successfully!", "Receipt Printed", JOptionPane.INFORMATION_MESSAGE);
+        }
+        catch (IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+            ioException.printStackTrace();
+        }
+        catch (Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
     }
 }

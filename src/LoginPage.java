@@ -114,6 +114,7 @@ public class LoginPage implements ActionListener {
                     if (loginCustomer.login()) {
                         GUI.playSound("ji.wav");
                         frame.setVisible(false);
+                        CarRentalSystem.customerMenu = new CustomerMenu();
                         CarRentalSystem.customerMenu.getFrame().setVisible(true);
                         CarRentalSystem.currentFrame = CarRentalSystem.customerMenu.getFrame();
                     }
@@ -123,6 +124,7 @@ public class LoginPage implements ActionListener {
                     if (loginAdmin.login()) {
                         GUI.playSound("ji.wav");
                         frame.setVisible(false);
+                        CarRentalSystem.adminMenu = new AdminMenu();
                         CarRentalSystem.adminMenu.getFrame().setVisible(true);
                         CarRentalSystem.currentFrame = CarRentalSystem.adminMenu.getFrame();
                     }

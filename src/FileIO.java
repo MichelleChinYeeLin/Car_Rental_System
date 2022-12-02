@@ -38,7 +38,9 @@ public class FileIO {
 
     //Booking
     private static final String totalPriceText = "Total Price: ";
+    private static final String outstandingPaymentText = "Outstanding Payment: ";
     private static final String statusText = "Status: ";
+    private static final String penaltyText = "Penalty: ";
     private static final String startDateText = "Start Date: ";
     private static final String endDateText = "End Date: ";
 
@@ -267,8 +269,9 @@ public class FileIO {
 
             Car car = new Car();
             Customer customer = new Customer();
-            double totalPrice = 0.0;
+            double totalPrice = 0.0, outstandingPayment = 0.0;
             Booking.Status status = Booking.Status.ANY;
+            Booking.PenaltyType penalty = Booking.PenaltyType.ANY;
             Date startDate = new Date();
             Date endDate = new Date();
             String line = br.readLine();
@@ -304,8 +307,16 @@ public class FileIO {
                     totalPrice = Double.parseDouble(line.substring(totalPriceText.length()));
                     line = br.readLine();
                 }
+                else if(line.startsWith(outstandingPaymentText)){
+                    outstandingPayment = Double.parseDouble(line.substring(outstandingPaymentText.length()));
+                    line = br.readLine();
+                }
                 else if(line.startsWith(statusText)){
                     status = Booking.Status.valueOf(line.substring(statusText.length()));
+                    line = br.readLine();
+                }
+                else if(line.startsWith(penaltyText)){
+                    penalty = Booking.PenaltyType.valueOf(line.substring(penaltyText.length()));
                     line = br.readLine();
                 }
                 else if(line.startsWith(startDateText)){
@@ -315,7 +326,7 @@ public class FileIO {
                 else if(line.startsWith(endDateText)){
                     endDate = dateFormat.parse(line.substring(endDateText.length()));
 
-                    Booking booking = new Booking(car, customer, totalPrice, status, startDate, endDate);
+                    Booking booking = new Booking(car, customer, totalPrice, outstandingPayment, status, penalty, startDate, endDate);
                     bookingList.add(booking);
 
                     line2 = br.readLine();
@@ -341,7 +352,9 @@ public class FileIO {
                 fw.write(numberPlateText + booking.getCar().getNumberPlate() + "\n");
                 fw.write(userNameText + booking.getCustomer().getUsername() + "\n");
                 fw.write(totalPriceText + booking.getTotalPrice() + "\n");
+                fw.write(outstandingPaymentText + booking.getOutstandingPayment() + "\n");
                 fw.write(statusText + booking.getStatus() + "\n");
+                fw.write(penaltyText + booking.getPenalty() + "\n");
                 fw.write(startDateText + dateFormat.format(booking.getStartDate()) + "\n");
                 fw.write(endDateText + dateFormat.format(booking.getEndDate()) + "\n\n");
             }

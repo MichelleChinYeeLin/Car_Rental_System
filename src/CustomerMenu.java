@@ -18,9 +18,9 @@ public class CustomerMenu implements ActionListener {
     // search -> book?
 
     /* BOOKING */
-    private JPanel bookingFunctionsPanel;
+    private BookingFunctions bookingFunctionsPanel;
 //    private CarFunctions forSearchOnly;
-    private JButton makeBooking, deleteBooking, viewBooking;
+    private JButton ongoingBooking, completedBooking, viewBooking;
     // book -> search car -> book
     // view -> (return car -> payment)/receipt/feedback
     // cant quit during payment!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -95,24 +95,24 @@ public class CustomerMenu implements ActionListener {
 
         /* BOOKING */
         //Create buttons
-        makeBooking = new JButton("Make Booking");
-        deleteBooking = new JButton("Delete Booking");
+        ongoingBooking = new JButton("Ongoing");
+        completedBooking = new JButton("Completed");
         viewBooking = new JButton("All Bookings");
-        bookingButtons = new JButton[]{makeBooking, deleteBooking, viewBooking};
-        makeBooking.addActionListener(this);
-        deleteBooking.addActionListener(this);
+        bookingButtons = new JButton[]{ongoingBooking, completedBooking, viewBooking};
+        ongoingBooking.addActionListener(this);
+        completedBooking.addActionListener(this);
         viewBooking.addActionListener(this);
         GUI.subJButtonSetup(bookingButtons, new Dimension(140, 40));
 
         //Create booking panel
         bookingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bkgConstraints = new GridBagConstraints();
-        bookingFunctionsPanel = new JPanel(); // to change
+        bookingFunctionsPanel = new BookingFunctions(false);
 
         //Booking button panel
         JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
-        bookingButtonPanel.add(makeBooking);
-        bookingButtonPanel.add(deleteBooking);
+        bookingButtonPanel.add(ongoingBooking);
+        bookingButtonPanel.add(completedBooking);
         bookingButtonPanel.add(viewBooking);
 
         //Position elements in booking panel
@@ -202,6 +202,20 @@ public class CustomerMenu implements ActionListener {
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
                 CarFunctions.showAllCarPanel();
+            }
+            else if (e.getSource() == ongoingBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showOngoingBookingCustomerPanel();
+                bookingFunctionsPanel.viewOngoingBookingCustomer();
+            }
+            else if (e.getSource() == completedBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showCompletedBookingCustomerPanel();
+                bookingFunctionsPanel.viewCompletedBookingCustomer();
+            }
+            else if (e.getSource() == viewBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showAllBookingCustomerPanel();
             }
         } catch (Exception exception){
             GUI.playSound("niganma.wav");

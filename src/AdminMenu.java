@@ -163,7 +163,7 @@ public class AdminMenu implements ActionListener {
         //Create booking panel
         bookingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bkgConstraints = new GridBagConstraints();
-        bookingFunctionsPanel = new BookingFunctions();
+        bookingFunctionsPanel = new BookingFunctions(true);
 
         //Booking button panel
         JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
@@ -356,6 +356,7 @@ public class AdminMenu implements ActionListener {
     }
 
     private void showAccRegistration(){
+        registrationFunctionsPanel.removeAll();
         ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
 
         if(accRegistrationList.size() == 0){

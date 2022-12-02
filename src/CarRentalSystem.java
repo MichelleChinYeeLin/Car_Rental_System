@@ -11,15 +11,15 @@ public class CarRentalSystem {
     public static Customer loginCustomer = null;
     public static Admin loginAdmin = null;
 
-    public static JFrame currentFrame;
+    public static JFrame currentFrame = null;
 
     public static void main (String[] args) {
         FileIO.readAllFiles();
         homePage = new HomePage();
         loginPage = new LoginPage();
         signUpPage = new SignUpPage();
-        customerMenu = new CustomerMenu();
-        adminMenu = new AdminMenu();
+        //customerMenu = new CustomerMenu();
+        //adminMenu = new AdminMenu();
 
         currentFrame = homePage.getFrame();
     }

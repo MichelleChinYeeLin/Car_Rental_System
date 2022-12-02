@@ -8,3 +8,13 @@ Email: heyuandeemail
 Address: 111
 Points: 0
 
+Username: testing
+Password: 123
+Name: test
+Phone Number: 123
+Gender: Male
+Age: 17
+Email: 123
+Address: 123
+Points: 0
+

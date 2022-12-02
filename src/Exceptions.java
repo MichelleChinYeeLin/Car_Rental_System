@@ -38,4 +38,6 @@ class NameNotFoundException extends Exception{}
 
 class InvalidStatusException extends Exception{}
 
+class InvalidPenaltyException extends Exception{}
+
 class BookingNotFoundException extends Exception{}

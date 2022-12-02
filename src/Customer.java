@@ -117,10 +117,8 @@ public class Customer extends User{
                         throw new WrongPasswordException();
                     }
                 }
-                else {
-                    throw new UserNotFoundException();
-                }
             }
+            throw new UserNotFoundException();
         } catch (WrongPasswordException wrongPasswordException) {
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (UserNotFoundException e) {

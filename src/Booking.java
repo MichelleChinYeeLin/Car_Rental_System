@@ -9,19 +9,67 @@ import java.util.concurrent.TimeUnit;
 
 public class Booking {
 
+    public enum Month{
+        ANY(0),
+        JANUARY(1),
+        FEBRUARY(2),
+        MARCH(3),
+        APRIL(4),
+        MAY(5),
+        JUNE(6),
+        JULY(7),
+        AUGUST(8),
+        SEPTEMBER(9),
+        OCTOBER(10),
+        NOVEMBER(11),
+        DECEMBER(12);
+
+        private final int value;
+        private Month(int value){
+            this.value = value;
+        }
+
+        public int getValue(){
+            return value;
+        }
+    }
+
+    public enum Status{
+        ANY,
+        BOOKED,
+        CONFIRMED,
+        IN_PROGRESS,
+        RETURNED,
+        COMPLETED;
+    }
+
+    public enum PenaltyType{
+        ANY,
+        NONE,
+        LATE,
+        MINOR_DAMAGE,
+        LATE_MINOR_DAMAGE,
+        MAJOR_DAMAGE,
+        LATE_MAJOR_DAMAGE;
+    }
+
     //private String bookingID;
     private Car car;
     private Customer customer;
     private double totalPrice;
+    private double outstandingPayment;
     private Status status;
+    private PenaltyType penalty;
     private Date startDate;
     private Date endDate;
 
-    public Booking (Car car, Customer customer, double totalPrice, Status status, Date startDate, Date endDate) {
+    public Booking (Car car, Customer customer, double totalPrice, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate) {
         this.car = car;
         this.customer = customer;
         this.totalPrice = totalPrice;
+        this.outstandingPayment = outstandingPayment;
         this.status = status;
+        this.penalty = penalty;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -32,7 +80,10 @@ public class Booking {
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.totalPrice = calcTotalPrice(car, customer, startDate, endDate);
+        this.totalPrice = calcTotalPrice(car, startDate, endDate);
+        this.totalPrice -= calcMemberDiscount();
+        this.outstandingPayment = totalPrice;
+        this.penalty = PenaltyType.NONE;
     }
 
     public Car getCar() {
@@ -59,12 +110,36 @@ public class Booking {
         this.totalPrice = totalPrice;
     }
 
+    public double getOutstandingPayment() {
+        return outstandingPayment;
+    }
+
+    public void setOutstandingPayment(double outstandingPayment) {
+        this.outstandingPayment = outstandingPayment;
+    }
+
     public Status getStatus() {
         return status;
     }
 
     public void setStatus(Status status) {
         this.status = status;
+
+        if (status == Status.RETURNED){
+            calcTotalPrice();
+        }
+    }
+
+    public PenaltyType getPenalty() {
+        return penalty;
+    }
+
+    public void setPenalty(PenaltyType penalty) {
+        this.penalty = penalty;
+
+        if (penalty != PenaltyType.NONE){
+            calcTotalPrice();
+        }
     }
 
     public Date getStartDate() {
@@ -83,21 +158,69 @@ public class Booking {
         this.endDate = endDate;
     }
 
-    public double calcTotalPrice(Car car, Customer customer, Date startDate, Date endDate){
+    public double calcTotalPrice(Car car, Date startDate, Date endDate){
         long milliSecDiff = Math.abs(endDate.getTime() - startDate.getTime());
         long duration = TimeUnit.DAYS.convert(milliSecDiff, TimeUnit.MILLISECONDS);
-
-        if (customer.getPoints() > 200){
-            return car.getPrice() * duration * 0.9;
-        }
-        else if (customer.getPoints() > 500){
-            return car.getPrice() * duration * 0.8;
-        }
 
         return car.getPrice() * duration;
     }
 
-    private static boolean validateCarDetails(String numberPlate, String customerName, Status status, Date startDate, Date endDate){
+    public void calcTotalPrice(){
+        totalPrice += calcPenaltyFee();
+    }
+
+    public double calcMemberDiscount(){
+        if (customer.getPoints() > 200){
+            return totalPrice * 0.1;
+        }
+        else if (customer.getPoints() > 500){
+            return totalPrice * 0.2;
+        }
+
+        return 0;
+    }
+
+    public double calcPenaltyFee(){
+        double penaltyFee = 0;
+
+        if (penalty == PenaltyType.LATE){
+            penaltyFee = totalPrice * 0.05;
+        }
+
+        else if (penalty == PenaltyType.MINOR_DAMAGE){
+            penaltyFee = totalPrice * 0.10;
+        }
+
+        else if (penalty == PenaltyType.LATE_MINOR_DAMAGE){
+            penaltyFee = totalPrice * 0.15;
+        }
+
+        else if (penalty == PenaltyType.MAJOR_DAMAGE){
+            penaltyFee = totalPrice * 0.20;
+        }
+
+        else if (penalty == PenaltyType.LATE_MAJOR_DAMAGE){
+            penaltyFee = totalPrice * 0.25;
+        }
+
+        return penaltyFee;
+    }
+
+    public static boolean makePayment(Booking booking, double payment){
+        if (booking.getOutstandingPayment() < payment){
+            return false;
+        }
+
+        booking.setOutstandingPayment(booking.getOutstandingPayment() - payment);
+
+        if (booking.getOutstandingPayment() == 0){
+            booking.setStatus(Status.COMPLETED);
+        }
+
+        return true;
+    }
+
+    private static boolean validateCarDetails(String numberPlate, String customerName, Status status, PenaltyType penalty, Date startDate, Date endDate){
         try{
             boolean numberPlateFound = false;
             boolean customerNameFound = false;
@@ -129,6 +252,10 @@ public class Booking {
                 throw new InvalidStatusException();
             }
 
+            if (penalty == PenaltyType.ANY){
+                throw new InvalidPenaltyException();
+            }
+
             if (startDate.after(endDate)){
                 throw new InvalidDateDurationException();
             }
@@ -149,6 +276,47 @@ public class Booking {
         }
         catch (InvalidStatusException invalidStatusException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \'ANY\'! ", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidPenaltyException invalidPenaltyException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \'ANY\'! ", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+
+        return false;
+    }
+
+    private static boolean validateCarDetails(String numberPlate, Date startDate, Date endDate){
+
+        try{
+            boolean numberPlateFound = false;
+
+            if(numberPlate.equals("")){
+                throw new EmptyInputException();
+            }
+
+            for (Car car : FileIO.carList){
+                if (car.getNumberPlate().equalsIgnoreCase(numberPlate)){
+                    numberPlateFound = true;
+                }
+            }
+
+            if (!numberPlateFound){
+                throw new NumberPlateNotFoundException();
+            }
+
+            if (startDate.after(endDate)){
+                throw new InvalidDateDurationException();
+            }
+
+            return true;
+        }
+        catch (EmptyInputException emptyInputException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (NumberPlateNotFoundException numberPlateNotFoundException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidDateDurationException invalidDateDurationException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
 
         return false;
@@ -171,9 +339,9 @@ public class Booking {
         }
     }
 
-    public static void editBookingDetails(int numberValue, String numberPlate, String customerName, Status status, Date startDate, Date endDate){
+    public static void editBookingDetails(int numberValue, String numberPlate, String customerName, Status status, PenaltyType penalty, Date startDate, Date endDate){
         Booking booking = FileIO.bookingList.get(numberValue - 1);
-        boolean isValid = validateCarDetails(numberPlate, customerName, status, startDate, endDate);
+        boolean isValid = validateCarDetails(numberPlate, customerName, status, penalty, startDate, endDate);
 
         if (isValid){
             for (Car car : FileIO.carList){
@@ -190,14 +358,40 @@ public class Booking {
                 }
             }
 
+            booking.setPenalty(penalty);
             booking.setStatus(status);
             booking.setStartDate(startDate);
             booking.setEndDate(endDate);
         }
     }
 
+    public static void editBookingDetails(Booking customerBooking, String numberPlate, Date startDate, Date endDate){
+        boolean isValid = validateCarDetails(numberPlate, startDate, endDate);
+
+        if (isValid){
+            for(Booking booking : FileIO.bookingList){
+                if (booking == customerBooking){
+                    for (Car car : FileIO.carList){
+                        if (car.getNumberPlate().equalsIgnoreCase(numberPlate)){
+                            booking.setCar(car);
+                            break;
+                        }
+                    }
+
+                    booking.setStartDate(startDate);
+                    booking.setEndDate(endDate);
+                }
+                break;
+            }
+        }
+    }
+
     public static void deleteBooking(int numberValue){
         FileIO.bookingList.remove(numberValue - 1);
+    }
+
+    public static void deleteBooking(Booking booking){
+        FileIO.bookingList.remove(booking);
     }
 
     public static ArrayList<Booking> searchBooking(String numberPlate, String customerName, double totalPrice, Status status, int startDay, Month startMonth, String startYear, int endDay, Month endMonth, String endYear){
@@ -342,36 +536,5 @@ public class Booking {
         return isValid;
     }
 
-    public enum Month{
-        ANY(0),
-        JANUARY(1),
-        FEBRUARY(2),
-        MARCH(3),
-        APRIL(4),
-        MAY(5),
-        JUNE(6),
-        JULY(7),
-        AUGUST(8),
-        SEPTEMBER(9),
-        OCTOBER(10),
-        NOVEMBER(11),
-        DECEMBER(12);
 
-        private final int value;
-        private Month(int value){
-            this.value = value;
-        }
-
-        public int getValue(){
-            return value;
-        }
-    }
-
-    public enum Status{
-        ANY,
-        BOOKED,
-        CONFIRMED,
-        IN_PROGRESS,
-        COMPLETED;
-    }
 }
