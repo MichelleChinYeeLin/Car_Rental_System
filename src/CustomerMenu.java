@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CustomerMenu implements ActionListener {
 
@@ -178,6 +180,12 @@ public class CustomerMenu implements ActionListener {
         try {
             if (e.getSource() == logout){
                 GUI.playSound("ji.wav");
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                Date date = new Date();
+
+                FileIO.recordList.add(0, dateFormat.format(date) + " " + CarRentalSystem.loginCustomer.getUsername() + " logout.");
+
                 CarRentalSystem.loginCustomer = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);

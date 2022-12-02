@@ -15,6 +15,7 @@ public class FileIO {
     private static final String carFileName = "cars.txt";
     private static final String bookingFileName = "bookings.txt";
     private static final String registrationFileName = "registration.txt";
+    private static final String recordFileName = "record.txt";
 
     //Admin and customer
     private static final String userNameText = "Username: ";
@@ -52,6 +53,7 @@ public class FileIO {
     public static ArrayList<Car> carList= new ArrayList<>();
     public static ArrayList<Booking> bookingList= new ArrayList<>();
     public static ArrayList<Customer> registrationList= new ArrayList<>();
+    public static ArrayList<String> recordList = new ArrayList<>();
 
     public static ArrayList<Admin> getAdminList() {
 
@@ -541,12 +543,53 @@ public class FileIO {
         }
     }
 
+    public static void readRecordFile(){
+        try{
+            FileReader fr = new FileReader(recordFileName);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = br.readLine();
+
+            while(line != null){
+                recordList.add(line);
+                line = br.readLine();
+            }
+
+            fr.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
+    public static void writeRecordFile(){
+        try{
+            FileWriter fw = new FileWriter(recordFileName);
+
+            for (String record : recordList){
+                fw.write(record + "\n");
+            }
+
+            fw.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
     public static void readAllFiles(){
         readAdminFile();
         readCustomerFile();
         readCarFile();
         readBookingFile();
         readRegistrationFile();
+        readRecordFile();
     }
 
     public static void writeAllFiles(){
@@ -555,6 +598,7 @@ public class FileIO {
         writeCarFile();
         writeBookingFile();
         writeRegistrationFile();
+        writeRecordFile();
     }
 
 }

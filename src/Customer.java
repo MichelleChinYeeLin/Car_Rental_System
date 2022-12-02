@@ -1,5 +1,7 @@
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Customer extends User{
 
@@ -107,17 +109,24 @@ public class Customer extends User{
 
     public boolean login(){
         try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date date = new Date();
+
             for (Customer c : FileIO.customerList) {
                 if (getUsername().equals(c.getUsername())){
                     if (getPassword().equals(c.getPassword())){
                         CarRentalSystem.loginCustomer = c;
+
+                        FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login successful.");
                         return true;
                     }
                     else {
+                        FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed.");
                         throw new WrongPasswordException();
                     }
                 }
             }
+            FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed. Customer not found.");
             throw new UserNotFoundException();
         } catch (WrongPasswordException wrongPasswordException) {
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
