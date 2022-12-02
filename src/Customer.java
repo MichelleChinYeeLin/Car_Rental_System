@@ -1,7 +1,9 @@
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.Date;
 
 public class Customer extends User {
 
@@ -208,18 +210,23 @@ public class Customer extends User {
 
     public boolean login() {
         try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date date = new Date();
+
             for (Customer c : FileIO.customerList) {
                 if (getUsername().equals(c.getUsername())) {
                     if (getPassword().equals(c.getPassword())) {
                         CarRentalSystem.loginCustomer = c;
+
+                        FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login successful.");
                         return true;
                     } else {
+                        FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed.");
                         throw new WrongPasswordException();
                     }
-                } else {
-                    throw new UserNotFoundException();
                 }
-            }
+            FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed. Customer not found.");
+            throw new UserNotFoundException();
         } catch (WrongPasswordException wrongPasswordException) {
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.loginPage.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -231,9 +238,27 @@ public class Customer extends User {
     }
 
     @Override
-    public void signUp() {
-        FileIO.registrationList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), 0));
-        FileIO.writeRegistrationFile();
+    public boolean signUp() {
+
+        ArrayList<Customer> customerList = FileIO.getCustomerList();
+        ArrayList<Customer> newAccList = FileIO.getRegistrationList();
+
+        for(Customer customer: customerList){
+            if(customer.getUsername().equals(getUsername())){
+                return false;
+            }
+        }
+
+        for(Customer newAcc: newAccList){
+            if(newAcc.getUsername().equals(getUsername())){
+                return false;
+            }
+        }
+
+        int newPoints = 0;
+        newAccList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), newPoints));
+        FileIO.setRegistrationList(newAccList);
+        return true;
     }
 
     public static boolean approveRegistration(int index) {

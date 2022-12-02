@@ -85,10 +85,12 @@ public class HomePage implements ActionListener {
             GUI.playSound("ji.wav");
             frame.setVisible(false);
             CarRentalSystem.loginPage.getFrame().setVisible(true);
+            CarRentalSystem.currentFrame = CarRentalSystem.loginPage.getFrame();
         } else if (e.getSource() == signUp) {
             GUI.playSound("ji.wav");
             frame.setVisible(false);
             CarRentalSystem.signUpPage.getFrame().setVisible(true);
+            CarRentalSystem.currentFrame = CarRentalSystem.signUpPage.getFrame();
         } else if (e.getSource() == quit) {
             FileIO.writeAllFiles();
             System.exit(0);

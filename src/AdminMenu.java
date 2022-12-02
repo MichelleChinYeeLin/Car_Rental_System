@@ -1,19 +1,19 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AdminMenu implements ActionListener {
 
     /* MAIN */
     private JFrame frame;
     private JPanel mainPanel;
-    private JLabel title;
     private JSpinner numberSpinner;
-    private JPanel carsPanel, registrationsPanel, accountsPanel, bookingsPanel, reportsPanel;
-    private JButton logout, accRegistrations, accounts, bookings, cars, reports;
+    private JPanel carsPanel, registrationsPanel, accountsPanel, bookingsPanel, reportsPanel, recordsPanel;
+    private JButton logout, accRegistrations, accounts, bookings, cars, reports, records;
     private JButton approveButton, denyButton;
     private JButton[] buttons, carButtons, accountButtons, bookingButtons, reportButtons;
     private JPanel[] panels;
@@ -31,7 +31,7 @@ public class AdminMenu implements ActionListener {
     // search -> edit/delete
 
     /* BOOKING */
-    private JPanel bookingFunctionsPanel;
+    private BookingFunctions bookingFunctionsPanel;
     private JButton searchBooking, allBooking;
     // search -> confirm/decline/generate receipt
 
@@ -39,6 +39,8 @@ public class AdminMenu implements ActionListener {
     private JPanel reportFunctionsPanel;
     private JButton genderReport, ageReport, paymentAnalysis, feedbackAnalysis;
 
+    /* RECORD */
+    private JPanel recordFunctionsPanel;
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
@@ -52,13 +54,15 @@ public class AdminMenu implements ActionListener {
         bookings = new JButton("Bookings");
         cars = new JButton("Cars");
         reports = new JButton("Reports");
+        records = new JButton("Records");
         logout = new JButton("Logout");
-        buttons = new JButton[]{accRegistrations, accounts, bookings, cars, reports, logout};
+        buttons = new JButton[]{accRegistrations, accounts, bookings, cars, reports, records, logout};
         accRegistrations.addActionListener(this);
         accounts.addActionListener(this);
         bookings.addActionListener(this);
         cars.addActionListener(this);
         reports.addActionListener(this);
+        records.addActionListener(this);
         logout.addActionListener(this);
         GUI.JButtonSetup(buttons);
 
@@ -113,7 +117,6 @@ public class AdminMenu implements ActionListener {
 
         /* REGISTRATION */
         registrationsPanel = new JPanel(new GridBagLayout());
-        //GridBagConstraints regConstraints = new GridBagConstraints();
         registrationFunctionsPanel = new JPanel(new GridBagLayout());
         registrationsPanel.add(registrationFunctionsPanel);
 
@@ -163,7 +166,7 @@ public class AdminMenu implements ActionListener {
         //Create booking panel
         bookingsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints bkgConstraints = new GridBagConstraints();
-        bookingFunctionsPanel = new BookingFunctions();
+        bookingFunctionsPanel = new BookingFunctions(true);
 
         //Booking button panel
         JPanel bookingButtonPanel = new JPanel(new GridBagLayout());
@@ -171,10 +174,12 @@ public class AdminMenu implements ActionListener {
         bookingButtonPanel.add(allBooking);
 
         //Position elements in booking panel
+        bkgConstraints.gridx = 0;
         bkgConstraints.gridy = 0;
         bookingsPanel.add(bookingButtonPanel, bkgConstraints);
         bkgConstraints.gridy = 1;
         bookingsPanel.add(bookingFunctionsPanel, bkgConstraints);
+
 
         /* REPORT */
         //Create buttons
@@ -205,14 +210,20 @@ public class AdminMenu implements ActionListener {
         repConstraints.gridy = 0;
         reportsPanel.add(reportButtonPanel, repConstraints);
         repConstraints.gridy = 1;
-        reportsPanel.add(bookingFunctionsPanel, repConstraints);
+        reportsPanel.add(reportFunctionsPanel, repConstraints);
 
+
+        /* RECORD */
+        recordsPanel = new JPanel(new GridBagLayout());
+        recordFunctionsPanel = new JPanel(new GridBagLayout());
+        recordFunctionsPanel.setPreferredSize(new Dimension(600,500));
+        recordsPanel.add(recordFunctionsPanel);
 
         /* MAIN */
         //Create panels
         panels = new JPanel[]{carsPanel, carFunctionsPanel, registrationsPanel, registrationFunctionsPanel,
                 accountsPanel, accountFunctionsPanel, bookingsPanel, bookingFunctionsPanel,
-                reportsPanel, reportFunctionsPanel};
+                reportsPanel, reportFunctionsPanel, recordsPanel, recordFunctionsPanel};
         GUI.JPanelSetup(panels);
 
         //Create main panel
@@ -224,6 +235,7 @@ public class AdminMenu implements ActionListener {
         mainPanel.add(accountsPanel);
         mainPanel.add(bookingsPanel);
         mainPanel.add(reportsPanel);
+        mainPanel.add(recordsPanel);
         mainPanel.validate();
 
         //Position main panel in the frame
@@ -244,9 +256,16 @@ public class AdminMenu implements ActionListener {
         try {
             if (e.getSource() == logout){
                 GUI.playSound("ji.wav");
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                Date date = new Date();
+
+                FileIO.recordList.add(0, dateFormat.format(date) + " " + CarRentalSystem.loginAdmin.getUsername() + " logout.");
+
                 CarRentalSystem.loginAdmin = null;
                 frame.setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
+                CarRentalSystem.currentFrame = CarRentalSystem.homePage.getFrame();
             }
             else if (e.getSource() == accRegistrations){
                 GUI.playSound("ji.wav");
@@ -260,6 +279,14 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == bookings){
                 GUI.playSound("ji.wav");
                 showAdminPanel(bookingsPanel, bookingFunctionsPanel);
+            }
+            else if (e.getSource() == searchBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showSearchBookingPanel();
+            }
+            else if (e.getSource() == allBooking){
+                GUI.playSound("ji.wav");
+                BookingFunctions.showAllBookingPanel();
             }
             else if (e.getSource() == cars){
                 GUI.playSound("ji.wav");
@@ -306,6 +333,10 @@ public class AdminMenu implements ActionListener {
                 GUI.playSound("ji.wav");
                 denyRegistration();
             }
+            else if (e.getSource() == records){
+                showRecordsPanel();
+                showAdminPanel(recordsPanel, recordFunctionsPanel);
+            }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
             System.out.println("HI something wrong");
@@ -347,6 +378,7 @@ public class AdminMenu implements ActionListener {
     }
 
     private void showAccRegistration(){
+        registrationFunctionsPanel.removeAll();
         ArrayList<Customer> accRegistrationList = FileIO.getRegistrationList();
 
         if(accRegistrationList.size() == 0){
@@ -420,5 +452,35 @@ public class AdminMenu implements ActionListener {
         }
 
         registrationFunctionsPanel.updateUI();
+    }
+
+    private void showRecordsPanel(){
+        JLabel recordLabel = new JLabel();
+        String labelText = "<html><body>";
+
+        for (String text : FileIO.recordList){
+            labelText += text + "<br/>";
+        }
+
+        labelText += "</body></html>";
+        recordLabel.setText(labelText);
+        GUI.JLabelSetup(recordLabel);
+        recordLabel.setHorizontalAlignment(JLabel.LEFT);
+
+        JPanel labelPanel = new JPanel(new GridBagLayout());
+        labelPanel.setBackground(Color.white);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
+
+        labelPanel.add(recordLabel, constraints);
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setPreferredSize(new Dimension(550, 450));
+        scrollPane.setViewportView(labelPanel);
+
+        recordFunctionsPanel.add(scrollPane);
     }
 }

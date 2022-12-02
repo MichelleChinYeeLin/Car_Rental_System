@@ -6,6 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import static java.lang.Math.ceil;
+import static java.lang.Math.max;
+
 public class CarFunctions extends JPanel implements ActionListener{
 
     private JPanel addCarAttributesPanel, editCarAttributesPanel, searchCarAttributesPanel;
@@ -15,7 +18,6 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel;
     private JLabel numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel, levelEditLabel, priceEditLabel, availabilityEditLabel;
     private JLabel numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel;
-    private JLabel carNotFoundLabel;
     private JTextField numberPlate, brand, model, color, price;
     private JTextField numberPlateEdit, brandEdit, modelEdit, colorEdit, priceEdit;
     private JTextField numberPlateSearch, brandSearch, modelSearch;
@@ -72,11 +74,10 @@ public class CarFunctions extends JPanel implements ActionListener{
         colorSearchLabel = new JLabel("Color:");
         levelSearchLabel = new JLabel("Level:");
         priceSearchLabel = new JLabel("Price:");
-        priceSearchIndicator = new JLabel("10");
+        priceSearchIndicator = new JLabel();
         availabilitySearchLabel = new JLabel("Availability:");
-        carNotFoundLabel = new JLabel("No cars found!");
         searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel,
-                                       priceSearchLabel, priceSearchIndicator, availabilitySearchLabel, carNotFoundLabel};
+                                       priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
         GUI.JLabelSetup(searchCarLabels);
 
         //Create input fields
@@ -123,15 +124,17 @@ public class CarFunctions extends JPanel implements ActionListener{
         //JSlider
         double maxPrice = 0.0;
         for (Car c : FileIO.carList) {
-            maxPrice = Math.max(maxPrice, c.getPrice());
+            maxPrice = max(maxPrice, c.getPrice());
         }
-        int maxPriceInInt = (int) Math.ceil(maxPrice);
-        priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, maxPriceInInt, 10);
+        int maxPriceInInt = (int) ceil(maxPrice);
+        priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, maxPriceInInt, maxPriceInInt);
         priceSearchSlider.setMajorTickSpacing(maxPriceInInt/5);
         priceSearchSlider.setMinorTickSpacing(maxPriceInInt/10);
         priceSearchSlider.setFont(GUI.getDefaultFont());
         priceSearchSlider.setPaintTicks(true);
         priceSearchSlider.setPaintLabels(true);
+
+        priceSearchIndicator.setText(String.valueOf(maxPriceInInt));
         priceSearchSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent changeEvent) {
@@ -142,7 +145,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         //JComponent array
         components = new JComponent[]{numberPlateEdit, brandEdit, modelEdit, colorEdit,
                 priceEdit, available, notAvailable};
-
 
         //ADD Car Attributes Panel & EDIT Car Attributes Panel
         GridBagConstraints carConstraints = new GridBagConstraints();
@@ -297,10 +299,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchConstraints.weightx = 1;
         searchCarPanel.add(searchCarAttributesPanel, searchConstraints);
 
-        carNotFoundLabel.setVisible(false);
-        carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
-        searchResultsPanel.add(carNotFoundLabel);
-
         searchConstraints.gridx = 0;
         searchConstraints.gridy = 1;
         searchConstraints.insets = new Insets(10,10,10,10);
@@ -364,6 +362,10 @@ public class CarFunctions extends JPanel implements ActionListener{
             }
             else if (e.getSource() == deleteButton){
                 GUI.playSound("DontSayFiveDe.wav");
+                if((int) numberSpinner.getValue() == 0){
+                    throw new CarNotFoundException();
+                }
+
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
                     int numberValue = (int) numberSpinner.getValue();
@@ -384,6 +386,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
+            exception.printStackTrace();
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong");
         }
     }
@@ -419,6 +422,8 @@ public class CarFunctions extends JPanel implements ActionListener{
     }
 
     private void searchCar(){
+        searchResultsPanel.removeAll();
+
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
         String model = modelSearch.getText();
@@ -430,6 +435,9 @@ public class CarFunctions extends JPanel implements ActionListener{
         ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color.toUpperCase(), level, price, availability);
 
         if (searchedList.size() == 0){
+            JLabel carNotFoundLabel = new JLabel("No cars found!");
+            carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
+            searchResultsPanel.add(carNotFoundLabel);
             carNotFoundLabel.setVisible(true);
 
             if (searchTableScroll != null){
@@ -437,9 +445,8 @@ public class CarFunctions extends JPanel implements ActionListener{
             }
         }
         else {
-            carNotFoundLabel.setVisible(false);
             String[] tableColumn = {"No.", "No. Plate", "Brand", "Model", "Color", "Level", "Price", "Availability"};
-            Object[][] tempTable = new Object[searchedList.size()][8];
+            Object[][] tempTable = new Object[searchedList.size()][tableColumn.length];
             int i = 0;
             for (Car car : searchedList){
                 i = insertCarTable(tempTable, i, car);
@@ -497,7 +504,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private void showCarDetails(){
         int numberValue = (int) numberSpinner.getValue();
         Car car = FileIO.carList.get(numberValue - 1);
-        AccountFunctions.resetFields(components);
+        GUI.resetFields(components);
         levelEdit.setValue(1);
 
         numberPlateEdit.setText(car.getNumberPlate());

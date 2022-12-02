@@ -15,6 +15,7 @@ public class FileIO {
     private static final String carFileName = "cars.txt";
     private static final String bookingFileName = "bookings.txt";
     private static final String registrationFileName = "registration.txt";
+    private static final String recordFileName = "record.txt";
 
     //Admin and customer
     private static final String userNameText = "Username: ";
@@ -38,7 +39,9 @@ public class FileIO {
 
     //Booking
     private static final String totalPriceText = "Total Price: ";
+    private static final String outstandingPaymentText = "Outstanding Payment: ";
     private static final String statusText = "Status: ";
+    private static final String penaltyText = "Penalty: ";
     private static final String startDateText = "Start Date: ";
     private static final String endDateText = "End Date: ";
 
@@ -50,6 +53,7 @@ public class FileIO {
     public static ArrayList<Car> carList= new ArrayList<>();
     public static ArrayList<Booking> bookingList= new ArrayList<>();
     public static ArrayList<Customer> registrationList= new ArrayList<>();
+    public static ArrayList<String> recordList = new ArrayList<>();
 
     public static ArrayList<Admin> getAdminList() {
 
@@ -267,8 +271,9 @@ public class FileIO {
 
             Car car = new Car();
             Customer customer = new Customer();
-            double totalPrice = 0.0;
-            String status = "";
+            double totalPrice = 0.0, outstandingPayment = 0.0;
+            Booking.Status status = Booking.Status.ANY;
+            Booking.PenaltyType penalty = Booking.PenaltyType.ANY;
             Date startDate = new Date();
             Date endDate = new Date();
             String line = br.readLine();
@@ -304,8 +309,16 @@ public class FileIO {
                     totalPrice = Double.parseDouble(line.substring(totalPriceText.length()));
                     line = br.readLine();
                 }
+                else if(line.startsWith(outstandingPaymentText)){
+                    outstandingPayment = Double.parseDouble(line.substring(outstandingPaymentText.length()));
+                    line = br.readLine();
+                }
                 else if(line.startsWith(statusText)){
-                    status = line.substring(statusText.length());
+                    status = Booking.Status.valueOf(line.substring(statusText.length()));
+                    line = br.readLine();
+                }
+                else if(line.startsWith(penaltyText)){
+                    penalty = Booking.PenaltyType.valueOf(line.substring(penaltyText.length()));
                     line = br.readLine();
                 }
                 else if(line.startsWith(startDateText)){
@@ -315,7 +328,7 @@ public class FileIO {
                 else if(line.startsWith(endDateText)){
                     endDate = dateFormat.parse(line.substring(endDateText.length()));
 
-                    Booking booking = new Booking(car, customer, totalPrice, status, startDate, endDate);
+                    Booking booking = new Booking(car, customer, totalPrice, outstandingPayment, status, penalty, startDate, endDate);
                     bookingList.add(booking);
 
                     line2 = br.readLine();
@@ -341,7 +354,9 @@ public class FileIO {
                 fw.write(numberPlateText + booking.getCar().getNumberPlate() + "\n");
                 fw.write(userNameText + booking.getCustomer().getUsername() + "\n");
                 fw.write(totalPriceText + booking.getTotalPrice() + "\n");
+                fw.write(outstandingPaymentText + booking.getOutstandingPayment() + "\n");
                 fw.write(statusText + booking.getStatus() + "\n");
+                fw.write(penaltyText + booking.getPenalty() + "\n");
                 fw.write(startDateText + dateFormat.format(booking.getStartDate()) + "\n");
                 fw.write(endDateText + dateFormat.format(booking.getEndDate()) + "\n\n");
             }
@@ -528,12 +543,53 @@ public class FileIO {
         }
     }
 
+    public static void readRecordFile(){
+        try{
+            FileReader fr = new FileReader(recordFileName);
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = br.readLine();
+
+            while(line != null){
+                recordList.add(line);
+                line = br.readLine();
+            }
+
+            fr.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
+    public static void writeRecordFile(){
+        try{
+            FileWriter fw = new FileWriter(recordFileName);
+
+            for (String record : recordList){
+                fw.write(record + "\n");
+            }
+
+            fw.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
     public static void readAllFiles(){
         readAdminFile();
         readCustomerFile();
         readCarFile();
         readBookingFile();
         readRegistrationFile();
+        readRecordFile();
     }
 
     public static void writeAllFiles(){
@@ -542,6 +598,7 @@ public class FileIO {
         writeCarFile();
         writeBookingFile();
         writeRegistrationFile();
+        writeRecordFile();
     }
 
 }

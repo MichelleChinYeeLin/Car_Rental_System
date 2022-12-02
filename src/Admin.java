@@ -1,5 +1,7 @@
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Admin extends User{
 
@@ -8,21 +10,36 @@ public class Admin extends User{
     }
 
     public boolean login(){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = new Date();
+
         for (Admin a : FileIO.adminList) {
             if (getUsername().equals(a.getUsername())) {
                 if (getPassword().equals(a.getPassword())) {
                     CarRentalSystem.loginAdmin = a;
+
+                    FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login successful.");
                     return true;
                 }
+                else {
+                    FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed.");
+                    return false;
+                }
+            }
+        }
+        FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed. Admin not found.");
+        return false;
             }
         }
         return false;
     }
 
     @Override
-    public void signUp(){
+    public boolean signUp(){
         FileIO.adminList.add(new Admin(getUsername(), getUsername()));
         FileIO.writeAdminFile();
+
+        return true;
     }
 
     public static void changePassword(String password, String passwordCheck){
