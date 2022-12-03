@@ -9,7 +9,7 @@ public class Admin extends User{
         super(username, password);
     }
 
-    public boolean login(){
+    public boolean login() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         Date date = new Date();
 
@@ -20,8 +20,7 @@ public class Admin extends User{
 
                     FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login successful.");
                     return true;
-                }
-                else {
+                } else {
                     FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed.");
                     return false;
                 }
@@ -29,17 +28,12 @@ public class Admin extends User{
         }
         FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed. Admin not found.");
         return false;
-            }
-        }
-        return false;
     }
 
     @Override
-    public boolean signUp(){
+    public void signUp(){
         FileIO.adminList.add(new Admin(getUsername(), getUsername()));
         FileIO.writeAdminFile();
-
-        return true;
     }
 
     public static void changePassword(String password, String passwordCheck){

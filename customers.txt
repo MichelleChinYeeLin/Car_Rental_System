@@ -9,7 +9,7 @@ Address: 111
 Points: 0
 
 Username: testing
-Password: 123
+Password: 1234
 Name: test
 Phone Number: 123
 Gender: Male

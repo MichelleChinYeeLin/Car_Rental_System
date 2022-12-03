@@ -421,7 +421,7 @@ public class CustomerMenu implements ActionListener {
     }
 
     private void showCustomerDetails(){
-        AccountFunctions.resetFields(components);
+        GUI.resetFields(components);
         GUI.disableFields(components);
 
         usernameEdit.setText(CarRentalSystem.loginCustomer.getUsername());

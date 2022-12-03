@@ -636,6 +636,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         String customerName = customerNameSearch.getText();
         double totalPrice = Double.parseDouble(totalPriceIndicator.getText());
         Booking.Status status = (Booking.Status) statusBoxSearch.getSelectedItem();
+        Booking.PenaltyType penaltyType = (Booking.PenaltyType) penaltyTypeSearch.getSelectedItem();
 
         int startDay = (int) startDateDaySearch.getValue();
         Booking.Month startMonth = (Booking.Month) startDateMonthSearch.getSelectedItem();
@@ -645,7 +646,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         Booking.Month endMonth = (Booking.Month) endDateMonthSearch.getSelectedItem();
         String endYear = (String) endDateYearSearch.getSelectedItem();
 
-        ArrayList<Booking> searchedList = Booking.searchBooking(numberPlate, customerName, totalPrice, status, startDay, startMonth, startYear, endDay, endMonth, endYear);
+        ArrayList<Booking> searchedList = Booking.searchBooking(numberPlate, customerName, totalPrice, status, penaltyType, startDay, startMonth, startYear, endDay, endMonth, endYear);
 
         if (searchedList.size() == 0){
             JLabel bookingNotFoundLabel = new JLabel("Booking not found!");
@@ -710,6 +711,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             searchBookingResultsPanel.setVisible(true);
         }
 
+        searchBookingResultsPanel.updateUI();
         searchBookingResultsPanel.validate();
         searchBookingPanel.validate();
     }

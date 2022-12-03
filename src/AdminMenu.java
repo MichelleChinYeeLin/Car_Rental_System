@@ -455,6 +455,7 @@ public class AdminMenu implements ActionListener {
     }
 
     private void showRecordsPanel(){
+        recordFunctionsPanel.removeAll();
         JLabel recordLabel = new JLabel();
         String labelText = "<html><body>";
 

@@ -394,7 +394,7 @@ public class Booking {
         FileIO.bookingList.remove(booking);
     }
 
-    public static ArrayList<Booking> searchBooking(String numberPlate, String customerName, double totalPrice, Status status, int startDay, Month startMonth, String startYear, int endDay, Month endMonth, String endYear){
+    public static ArrayList<Booking> searchBooking(String numberPlate, String customerName, double totalPrice, Status status, PenaltyType penalty, int startDay, Month startMonth, String startYear, int endDay, Month endMonth, String endYear){
         ArrayList<Booking> bookingList = FileIO.getBookingList();
         ArrayList<Booking> searchedBooking = new ArrayList<>();
 
@@ -416,6 +416,13 @@ public class Booking {
             if(status != Status.ANY){
 
                 if(booking.getStatus() != status){
+                    isMatch = false;
+                }
+            }
+
+            if (penalty != PenaltyType.ANY){
+
+                if(booking.getPenalty() != penalty){
                     isMatch = false;
                 }
             }

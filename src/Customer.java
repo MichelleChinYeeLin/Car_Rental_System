@@ -225,6 +225,8 @@ public class Customer extends User {
                         throw new WrongPasswordException();
                     }
                 }
+            }
+
             FileIO.recordList.add(0, dateFormat.format(date) + " " + getUsername() + " login failed. Customer not found.");
             throw new UserNotFoundException();
         } catch (WrongPasswordException wrongPasswordException) {
@@ -238,27 +240,9 @@ public class Customer extends User {
     }
 
     @Override
-    public boolean signUp() {
-
-        ArrayList<Customer> customerList = FileIO.getCustomerList();
-        ArrayList<Customer> newAccList = FileIO.getRegistrationList();
-
-        for(Customer customer: customerList){
-            if(customer.getUsername().equals(getUsername())){
-                return false;
-            }
-        }
-
-        for(Customer newAcc: newAccList){
-            if(newAcc.getUsername().equals(getUsername())){
-                return false;
-            }
-        }
-
-        int newPoints = 0;
-        newAccList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), newPoints));
-        FileIO.setRegistrationList(newAccList);
-        return true;
+    public void signUp() {
+        FileIO.registrationList.add(new Customer(getUsername(), getPassword(), getName(), getPhone(), getGender(), getAge(), getEmail(), getAddress(), 0));
+        FileIO.writeRegistrationFile();
     }
 
     public static boolean approveRegistration(int index) {
