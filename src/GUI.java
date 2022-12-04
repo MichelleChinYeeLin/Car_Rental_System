@@ -99,7 +99,7 @@ public class GUI {
         }
     }
 
-    public static void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
+    public static void resetFields(JComponent[] components){
         for (JComponent i : components) {
             i.setEnabled(true);
             if (i instanceof JTextField){

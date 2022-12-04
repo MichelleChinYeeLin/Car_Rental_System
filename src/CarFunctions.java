@@ -11,6 +11,7 @@ import static java.lang.Math.max;
 
 public class CarFunctions extends JPanel implements ActionListener{
 
+    private boolean isAdmin;
     private JPanel addCarAttributesPanel, editCarAttributesPanel, searchCarAttributesPanel;
     private static JPanel addCarPanel, editCarPanel, searchCarPanel, viewCarPanel;
     private JPanel searchResultsPanel;
@@ -33,7 +34,9 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JLabel[] carLabels, editCarLabels, searchCarLabels;
     private JComponent[] components;
 
-    public CarFunctions(){
+    public CarFunctions(boolean isAdmin){
+
+        this.isAdmin = isAdmin;
 
         //Create buttons
         confirmAdd = new JButton("ADD");

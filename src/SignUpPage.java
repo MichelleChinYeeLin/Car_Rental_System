@@ -197,10 +197,10 @@ public class SignUpPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == signUp){
-                String usernameInput = username.getText();
+                String usernameInput = username.getText().trim();
                 String passwordInput = String.valueOf(password.getPassword());
                 String passwordCheckInput = String.valueOf(passwordCheck.getPassword());
-                String nameInput = name.getText();
+                String nameInput = name.getText().trim();
                 String phoneNumInput = phoneNum.getText();
                 String emailInput = email.getText();
                 String addressInput = address.getText();

@@ -17,28 +17,24 @@ public class CustomerMenu implements ActionListener {
     /* CAR */
     private CarFunctions carFunctionsPanel;
     private JButton searchCar, allCar;
-    // search -> book?
 
     /* BOOKING */
     private BookingFunctions bookingFunctionsPanel;
-//    private CarFunctions forSearchOnly;
     private JButton ongoingBooking, completedBooking, viewBooking;
-    // book -> search car -> book
-    // view -> (return car -> payment)/receipt/feedback
-    // cant quit during payment!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /* ACCOUNT */
-    private JPanel accountFunctionsPanel; // show profile
-    private JButton changePassword, editAccount, deleteAccount, OKButton, cancelButton;
-    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
-            emailEditLabel, addressEditLabel, pointEditLabel;
-    private JTextField usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit;
-    private JPasswordField passwordEdit;
-    private JSpinner ageEdit, pointEdit;
-    private JRadioButton male, female;
-    private ButtonGroup genderGroup;
-    private JLabel[] accountLabels;
-    private JComponent[] components;
+    private AccountFunctions accountFunctionsPanel;
+    private JButton changePassword, editAccount, deleteAccount;
+//    private JButton changePassword, editAccount, deleteAccount, customerOKButton, cancelButton;
+//    private JLabel customerUsernameEditLabel, customerPasswordEditLabel, customernameEditLabel, customerPhoneEditLabel, customerGenderEditLabel, customerAgeEditLabel,
+//            customerEmailEditLabel, customerAddressEditLabel, customerPointEditLabel;
+//    private JTextField customerUsernameEdit, customerNameEdit, customerPhoneEdit, customerEmailEdit, customerAddressEdit;
+//    private JPasswordField customerPasswordEdit;
+//    private JSpinner customerAgeEdit, customerPointEdit;
+//    private JRadioButton customerMale, customerFemale;
+//    private ButtonGroup customerGenderGroup;
+//    private JLabel[] customerAccountLabels;
+//    private JComponent[] customerComponents;
 
     public CustomerMenu(){
         frame = new JFrame("Customer Menu");
@@ -90,8 +86,7 @@ public class CustomerMenu implements ActionListener {
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
-        carFunctionsPanel = new CarFunctions();
-        //TODO dont know why cant display
+        carFunctionsPanel = new CarFunctions(false);
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -139,117 +134,17 @@ public class CustomerMenu implements ActionListener {
         changePassword = new JButton("Change Password");
         editAccount = new JButton("Edit Account");
         deleteAccount = new JButton("Delete Account");
-        OKButton = new JButton("OK");
-        cancelButton = new JButton("CANCEL");
-        accountButtons = new JButton[]{changePassword, editAccount, deleteAccount, OKButton, cancelButton};
+        accountButtons = new JButton[]{changePassword, editAccount, deleteAccount};
         changePassword.addActionListener(this);
         editAccount.addActionListener(this);
         deleteAccount.addActionListener(this);
-        OKButton.addActionListener(this);
-        cancelButton.addActionListener(this);
         GUI.subJButtonSetup(accountButtons, new Dimension(140, 40));
         changePassword.setPreferredSize(new Dimension(160,40));
-
-        //Create labels
-        usernameEditLabel = new JLabel("Username:");
-        passwordEditLabel = new JLabel("Password:");
-        nameEditLabel = new JLabel("Name:");
-        phoneEditLabel = new JLabel("Phone:");
-        genderEditLabel = new JLabel("Gender:");
-        ageEditLabel = new JLabel("Age:");
-        emailEditLabel = new JLabel("Email:");
-        addressEditLabel = new JLabel("Address:");
-        pointEditLabel = new JLabel("Point:");
-        accountLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
-                emailEditLabel, addressEditLabel, pointEditLabel};
-        GUI.JLabelSetup(accountLabels);
-
-        //Create input fields
-        //JTextField
-        usernameEdit = new JTextField(20);
-        nameEdit = new JTextField(20);
-        phoneEdit = new JTextField(20);
-        emailEdit = new JTextField(20);
-        addressEdit = new JTextField(20);
-
-        //JPasswordField
-        passwordEdit = new JPasswordField(20);
-
-        //JSpinner
-        ageEdit = new JSpinner(new SpinnerNumberModel(17, 17,122,1));
-        ageEdit.setPreferredSize(new Dimension(100,25));
-        pointEdit = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
-        pointEdit.setPreferredSize(new Dimension(100,25));
-
-        //JRadioButtons
-        male = new JRadioButton("male");
-        male.setFocusable(false);
-        female = new JRadioButton("female");
-        female.setFocusable(false);
-        genderGroup = new ButtonGroup();
-        genderGroup.add(male);
-        genderGroup.add(female);
-
-        //JComponent array
-        components = new JComponent[]{usernameEdit, nameEdit, phoneEdit, emailEdit, addressEdit, passwordEdit, ageEdit, pointEdit, male, female};
-
-        //Create control unit
-        JPanel selectionPanel = new JPanel();
-        selectionPanel.setBackground(Color.white);
-        selectionPanel.add(OKButton);
-        selectionPanel.add(cancelButton);
 
         //Create account panel
         accountPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-
-        accountFunctionsPanel = new JPanel(new GridBagLayout());
-        accConstraints.insets = new Insets(8,5,8,5);
-        accConstraints.weightx = 1;
-        accConstraints.weighty = 1;
-        accConstraints.gridx = 0;
-        accConstraints.ipady = 0;
-        accConstraints.gridwidth = 2;
-        for(int i = 0; i < accountLabels.length; i++){
-            accConstraints.gridy = i + 1;
-            accountFunctionsPanel.add(accountLabels[i], accConstraints);
-        }
-
-        //Setup fields
-        accConstraints.gridx = 2;
-        accConstraints.gridy = 1;
-        accountFunctionsPanel.add(usernameEdit, accConstraints);
-
-        accConstraints.gridy = 2;
-        accountFunctionsPanel.add(passwordEdit, accConstraints);
-
-        accConstraints.gridy = 3;
-        accountFunctionsPanel.add(nameEdit, accConstraints);
-
-        accConstraints.gridy = 4;
-        accountFunctionsPanel.add(phoneEdit, accConstraints);
-
-        accConstraints.gridy = 5;
-        JPanel genderPanel = new JPanel();
-        genderPanel.setBackground(Color.white);
-        genderPanel.add(male);
-        genderPanel.add(female);
-        accountFunctionsPanel.add(genderPanel, accConstraints);
-
-        accConstraints.gridy = 6;
-        accountFunctionsPanel.add(ageEdit, accConstraints);
-
-        accConstraints.gridy = 7;
-        accountFunctionsPanel.add(emailEdit, accConstraints);
-
-        accConstraints.gridy = 8;
-        accountFunctionsPanel.add(addressEdit, accConstraints);
-
-        accConstraints.gridy = 9;
-        accountFunctionsPanel.add(pointEdit, accConstraints);
-
-        accConstraints.gridy = 10;
-        accountFunctionsPanel.add(selectionPanel, accConstraints);
+        accountFunctionsPanel = new AccountFunctions(false);
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
@@ -318,7 +213,7 @@ public class CustomerMenu implements ActionListener {
             else if (e.getSource() == account){
                 GUI.playSound("ji.wav");
                 showCustomerPanel(accountPanel, accountFunctionsPanel);
-                showCustomerDetails();
+                AccountFunctions.showCustomerDetails();
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
@@ -330,67 +225,15 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == changePassword){
                 GUI.playSound("ji.wav");
-                GUI.disableFields(components);
-                if (Customer.checkIdentity("You can now change your password!")){
-                    passwordEdit.setEditable(true);
-                }
+                AccountFunctions.customerChangePassword();
             }
             else if (e.getSource() == editAccount){
                 GUI.playSound("ji.wav");
-                passwordEdit.setEditable(false);
-                nameEdit.setEditable(true);
-                phoneEdit.setEditable(true);
-                emailEdit.setEditable(true);
-                addressEdit.setEditable(true);
-                ageEdit.setEnabled(true);
-                male.setEnabled(true);
-                female.setEnabled(true);
+                AccountFunctions.customerEditAccount();
             }
-            else if (e.getSource() == deleteAccount){
-                GUI.disableFields(components);
+            else if (e.getSource() == deleteAccount) {
                 GUI.playSound("ji.wav");
-                if (Customer.checkIdentity("Verification success!")){ //TODO && don't have ongoing booking!
-                    String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
-                    if (input != null && input.equals("DELETE")){
-                        GUI.playSound("DontSayFiveDe.wav");
-                        Customer.deleteAccount();
-                        JOptionPane.showMessageDialog(frame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
-                        CarRentalSystem.loginCustomer = null;
-                        frame.setVisible(false);
-                        CarRentalSystem.homePage.getFrame().setVisible(true);
-                    }
-                    else {
-                        GUI.playSound("ElectricVoice.wav");
-                        JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
-                    }
-                }
-            }
-            else if (e.getSource() == OKButton){
-                GUI.playSound("ji.wav");
-                if (passwordEdit.isEditable()){
-                    String password = String.valueOf(passwordEdit.getPassword());
-                    if (Customer.changePassword(password)){
-                        passwordEdit.setEditable(false);
-                    }
-                }
-                else {
-                    String name = nameEdit.getText();
-                    String phone = phoneEdit.getText();
-                    String email = emailEdit.getText();
-                    String address = addressEdit.getText();
-                    int age = (int) ageEdit.getValue();
-                    String gender;
-                    if (male.isSelected()) gender = "male";
-                    else gender = "female";
-
-                    if (Customer.editAccountDetails(name, phone, email, address, gender, age)){
-                        GUI.disableFields(components);
-                    }
-                }
-            }
-            else if (e.getSource() == cancelButton){
-                GUI.playSound("ji.wav");
-                GUI.disableFields(components);
+                AccountFunctions.customerDeleteAccount();
             }
             else if (e.getSource() == ongoingBooking){
                 GUI.playSound("ji.wav");
@@ -418,25 +261,5 @@ public class CustomerMenu implements ActionListener {
         }
         bigPanel.setVisible(true);
         smallPanel.setVisible(true);
-    }
-
-    private void showCustomerDetails(){
-        GUI.resetFields(components);
-        GUI.disableFields(components);
-
-        usernameEdit.setText(CarRentalSystem.loginCustomer.getUsername());
-        nameEdit.setText(CarRentalSystem.loginCustomer.getName());
-        phoneEdit.setText(CarRentalSystem.loginCustomer.getPhone());
-        emailEdit.setText(CarRentalSystem.loginCustomer.getEmail());
-        addressEdit.setText(CarRentalSystem.loginCustomer.getAddress());
-        passwordEdit.setText(CarRentalSystem.loginCustomer.getPassword());
-        ageEdit.setValue(CarRentalSystem.loginCustomer.getAge());
-        pointEdit.setValue(CarRentalSystem.loginCustomer.getPoints());
-        if (CarRentalSystem.loginCustomer.getGender().equals("male")){
-            male.setSelected(true);
-        }
-        else {
-            female.setSelected(true);
-        }
     }
 }

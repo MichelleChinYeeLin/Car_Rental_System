@@ -52,8 +52,8 @@ public class Admin extends User{
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } finally {
-            AccountFunctions.getPassword1().setText("");
-            AccountFunctions.getPassword2().setText("");
+            AccountFunctions.getAdminPassword1().setText("");
+            AccountFunctions.getAdminPassword2().setText("");
         }
     }
 
@@ -75,7 +75,7 @@ public class Admin extends User{
         } catch (UsernameTakenException usernameTakenException){
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } finally {
-            AccountFunctions.getUsername2().setText("");
+            AccountFunctions.getAdminUsername2().setText("");
         }
         return flag;
     }
@@ -127,13 +127,13 @@ public class Admin extends User{
         } catch (InvalidAgeException invalidAgeException) {
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid age entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            AccountFunctions.getFromAge().setValue(17);
-            AccountFunctions.getToAge().setValue(17);
+            AccountFunctions.getAdminFromAge().setValue(17);
+            AccountFunctions.getAdminToAge().setValue(17);
         } catch (InvalidPointException invalidPointException) {
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid point entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-            AccountFunctions.getFromPoint().setValue(0);
-            AccountFunctions.getToPoint().setValue(0);
+            AccountFunctions.getAdminFromPoint().setValue(0);
+            AccountFunctions.getAdminToPoint().setValue(0);
         }
 
         return searchedCustomerList;

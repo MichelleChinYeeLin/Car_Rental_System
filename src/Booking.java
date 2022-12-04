@@ -1,5 +1,3 @@
-import sun.java2d.pipe.SpanShapeRenderer;
-
 import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

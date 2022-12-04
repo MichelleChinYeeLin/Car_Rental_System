@@ -100,7 +100,7 @@ public class AdminMenu implements ActionListener {
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
-        carFunctionsPanel = new CarFunctions();
+        carFunctionsPanel = new CarFunctions(true);
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -138,7 +138,7 @@ public class AdminMenu implements ActionListener {
         //Create account panel
         accountsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-        accountFunctionsPanel = new AccountFunctions();
+        accountFunctionsPanel = new AccountFunctions(true);
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
@@ -219,6 +219,7 @@ public class AdminMenu implements ActionListener {
         recordFunctionsPanel.setPreferredSize(new Dimension(600,500));
         recordsPanel.add(recordFunctionsPanel);
 
+
         /* MAIN */
         //Create panels
         panels = new JPanel[]{carsPanel, carFunctionsPanel, registrationsPanel, registrationFunctionsPanel,
@@ -298,7 +299,7 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == editPassword){
                 GUI.playSound("ji.wav");
-                AccountFunctions.getUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
+                AccountFunctions.getAdminUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
                 AccountFunctions.showEditPasswordPanel();
             }
             else if (e.getSource() == addAdmin){
