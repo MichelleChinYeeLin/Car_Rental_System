@@ -25,16 +25,6 @@ public class CustomerMenu implements ActionListener {
     /* ACCOUNT */
     private AccountFunctions accountFunctionsPanel;
     private JButton changePassword, editAccount, deleteAccount;
-//    private JButton changePassword, editAccount, deleteAccount, customerOKButton, cancelButton;
-//    private JLabel customerUsernameEditLabel, customerPasswordEditLabel, customernameEditLabel, customerPhoneEditLabel, customerGenderEditLabel, customerAgeEditLabel,
-//            customerEmailEditLabel, customerAddressEditLabel, customerPointEditLabel;
-//    private JTextField customerUsernameEdit, customerNameEdit, customerPhoneEdit, customerEmailEdit, customerAddressEdit;
-//    private JPasswordField customerPasswordEdit;
-//    private JSpinner customerAgeEdit, customerPointEdit;
-//    private JRadioButton customerMale, customerFemale;
-//    private ButtonGroup customerGenderGroup;
-//    private JLabel[] customerAccountLabels;
-//    private JComponent[] customerComponents;
 
     public CustomerMenu(){
         frame = new JFrame("Customer Menu");
@@ -217,11 +207,11 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showSearchCarPanel();
+                CarFunctions.showCustomerSearchCarPanel();
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showAllCarPanel();
+                CarFunctions.showCustomerAllCarPanel();
             }
             else if (e.getSource() == changePassword){
                 GUI.playSound("ji.wav");

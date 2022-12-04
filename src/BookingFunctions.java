@@ -73,7 +73,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             //Create labels
             carNumberPlateSearchLabel = new JLabel("No. Plate:");
             customerNameSearchLabel = new JLabel("Customer:");
-            totalPriceSearchLabel = new JLabel("Total Price:");
+            totalPriceSearchLabel = new JLabel("Price:");
             statusSearchLabel = new JLabel("Status:");
             startDateSearchLabel = new JLabel("Start Date:");
             endDateSearchLabel = new JLabel("End Date:");
@@ -223,9 +223,10 @@ public class BookingFunctions extends JPanel implements ActionListener {
             //Edit Booking Panel
             editBookingPanel = new JPanel(new GridBagLayout());
             editBookingAttributesPanel = new JPanel(new GridBagLayout());
+            editBookingAttributesPanel.setBackground(Color.white);
             carNumberPlateEditLabel = new JLabel("Car Number Plate:");
             customerNameEditLabel = new JLabel("Customer Username:");
-            totalPriceEditLabel = new JLabel("Total Price:");
+            totalPriceEditLabel = new JLabel("Price:");
             statusEditLabel = new JLabel("Status:");
             penaltyTypeEditLabel = new JLabel("Penalty Type:");
             startDateEditLabel = new JLabel("Start Date:");
@@ -258,16 +259,19 @@ public class BookingFunctions extends JPanel implements ActionListener {
             endDateYearEdit.setFont(GUI.getDefaultFont());
 
             JPanel startDateEditPanel = new JPanel();
+            startDateEditPanel.setBackground(Color.white);
             startDateEditPanel.add(startDateDayEdit);
             startDateEditPanel.add(startDateMonthEdit);
             startDateEditPanel.add(startDateYearEdit);
 
             JPanel endDateEditPanel = new JPanel();
+            endDateEditPanel.setBackground(Color.white);
             endDateEditPanel.add(endDateDayEdit);
             endDateEditPanel.add(endDateMonthEdit);
             endDateEditPanel.add(endDateYearEdit);
 
             GridBagConstraints editAttributesConstraints = new GridBagConstraints();
+            editAttributesConstraints.insets = new Insets(2,2,2,2);
             editAttributesConstraints.gridx = 0;
             for(int i = 0; i < editBookingLabels.length; i++){
                 editAttributesConstraints.gridy = i;
@@ -340,6 +344,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             //Edit Panel
             customerEditBookingPanel = new JPanel(new GridBagLayout());
             customerEditBookingAttributesPanel = new JPanel(new GridBagLayout());
+            customerEditBookingAttributesPanel.setBackground(Color.white);
 
             editBookingPanel = new JPanel(new GridBagLayout());
             editBookingAttributesPanel = new JPanel(new GridBagLayout());
@@ -364,16 +369,19 @@ public class BookingFunctions extends JPanel implements ActionListener {
             endDateYearEdit.setFont(GUI.getDefaultFont());
 
             JPanel startDateEditPanel = new JPanel();
+            startDateEditPanel.setBackground(Color.white);
             startDateEditPanel.add(startDateDayEdit);
             startDateEditPanel.add(startDateMonthEdit);
             startDateEditPanel.add(startDateYearEdit);
 
             JPanel endDateEditPanel = new JPanel();
+            endDateEditPanel.setBackground(Color.white);
             endDateEditPanel.add(endDateDayEdit);
             endDateEditPanel.add(endDateMonthEdit);
             endDateEditPanel.add(endDateYearEdit);
 
             GridBagConstraints editAttributesConstraints = new GridBagConstraints();
+            editAttributesConstraints.insets = new Insets(20,2,20,2);
             editAttributesConstraints.gridx = 0;
             for(int i = 0; i < editBookingLabels.length; i++){
                 editAttributesConstraints.gridy = i;
@@ -444,7 +452,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     int numberValue = (int) numberSpinnerEdit.getValue();
 
                     Booking.deleteBooking(numberValue);
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car has been deleted!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Booking has been deleted!");
                     searchBooking();
                 } else {
                     JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
@@ -486,7 +494,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     int numberValue = (int) numberSpinnerEdit.getValue();
 
                     Booking.deleteBooking(customerBookingList.get(numberValue - 1));
-                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Car has been deleted!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Booking has been deleted!");
                     searchBooking();
                 } else {
                     JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");

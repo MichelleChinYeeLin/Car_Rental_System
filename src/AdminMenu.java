@@ -320,11 +320,11 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showSearchCarPanel();
+                CarFunctions.showAdminSearchCarPanel();
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showAllCarPanel();
+                CarFunctions.showAdminAllCarPanel();
             }
             else if (e.getSource() == approveButton){
                 GUI.playSound("ji.wav");

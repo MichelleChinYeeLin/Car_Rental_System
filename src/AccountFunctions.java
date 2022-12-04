@@ -17,8 +17,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JLabel adminUsernameLabel1, adminPasswordLabel1, adminPasswordLabel2, adminUsernameLabel2;
     private JLabel adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel, adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2,
             adminEmailSearchLabel, adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2;
-    private JLabel adminUsernameEditLabel, adminPasswordEditLabel, adminNameEditLabel, adminPhoneEditLabel, adminGenderEditLabel, adminAgeEditLabel,
-            adminEmailEditLabel, adminAddressEditLabel, adminPointEditLabel;
+    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+            emailEditLabel, addressEditLabel, pointEditLabel;
     private static JTextField adminUsername1, adminUsername2;
     private JTextField adminUsernameSearch, adminNameSearch, adminPhoneSearch, adminEmailSearch, adminAddressSearch;
     private JTextField adminUsernameEdit, adminNameEdit, adminPhoneEdit, adminEmailEdit, adminAddressEdit;
@@ -39,14 +39,12 @@ public class AccountFunctions extends JPanel implements ActionListener {
     // Customer functions
     private static JPanel customerPanel;
     private JButton customerOKButton, cancelButton;
-    private JLabel customerUsernameEditLabel, customerPasswordEditLabel, customerNameEditLabel, customerPhoneEditLabel, customerGenderEditLabel, customerAgeEditLabel,
-            customerEmailEditLabel, customerAddressEditLabel, customerPointEditLabel;
     private static JTextField customerUsernameEdit, customerNameEdit, customerPhoneEdit, customerEmailEdit, customerAddressEdit;
     private static JPasswordField customerPasswordEdit;
     private static JSpinner customerAgeEdit, customerPointEdit;
     private static JRadioButton customerMale, customerFemale;
     private ButtonGroup customerGenderGroup;
-    private JLabel[] customerAccountLabels;
+    private JButton[] customerAccountButtons;
     private static JComponent[] customerComponents;
 
     public AccountFunctions(boolean isAdmin){
@@ -95,17 +93,17 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminSearchLabels = new JLabel[]{adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel, adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2,
                     adminEmailSearchLabel, adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2};
             GUI.JLabelSetup(adminSearchLabels);
-            adminUsernameEditLabel = new JLabel("Username:");
-            adminPasswordEditLabel = new JLabel("Password:");
-            adminNameEditLabel = new JLabel("Name:");
-            adminPhoneEditLabel = new JLabel("Phone:");
-            adminGenderEditLabel = new JLabel("Gender:");
-            adminAgeEditLabel = new JLabel("Age:");
-            adminEmailEditLabel = new JLabel("Email:");
-            adminAddressEditLabel = new JLabel("Address:");
-            adminPointEditLabel = new JLabel("Point:");
-            adminEditLabels = new JLabel[]{adminUsernameEditLabel, adminPasswordEditLabel, adminNameEditLabel, adminPhoneEditLabel, adminGenderEditLabel, adminAgeEditLabel,
-                    adminEmailEditLabel, adminAddressEditLabel, adminPointEditLabel};
+            usernameEditLabel = new JLabel("Username:");
+            passwordEditLabel = new JLabel("Password:");
+            nameEditLabel = new JLabel("Name:");
+            phoneEditLabel = new JLabel("Phone:");
+            genderEditLabel = new JLabel("Gender:");
+            ageEditLabel = new JLabel("Age:");
+            emailEditLabel = new JLabel("Email:");
+            addressEditLabel = new JLabel("Address:");
+            pointEditLabel = new JLabel("Point:");
+            adminEditLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+                    emailEditLabel, addressEditLabel, pointEditLabel};
             GUI.JLabelSetup(adminEditLabels);
 
             //Create input fields
@@ -176,7 +174,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     adminMale, adminFemale, adminAgeEdit, adminPointEdit};
 
             //Edit password & Add admin & Edit account panel
-            GridBagConstraints adminAccConstraints = new GridBagConstraints();
+            GridBagConstraints accConstraints = new GridBagConstraints();
             adminEditPasswordPanel = new JPanel(new GridBagLayout());
             addAdminPanel = new JPanel(new GridBagLayout());
             adminEditAccountPanel = new JPanel(new GridBagLayout());
@@ -197,63 +195,63 @@ public class AccountFunctions extends JPanel implements ActionListener {
             editAccountSelectionPanel.add(backToSearch);
 
             //Setup labels
-            adminAccConstraints.insets = new Insets(8,5,8,5);
-            adminAccConstraints.weightx = 1;
-            adminAccConstraints.weighty = 1;
-            adminAccConstraints.gridx = 0;
-            adminAccConstraints.ipady = 0;
-            adminAccConstraints.gridwidth = 2;
+            accConstraints.insets = new Insets(8,5,8,5);
+            accConstraints.weightx = 1;
+            accConstraints.weighty = 1;
+            accConstraints.gridx = 0;
+            accConstraints.ipady = 0;
+            accConstraints.gridwidth = 2;
             for(int i = 0; i < adminLabels.length - 1; i++){
-                adminAccConstraints.gridy = i + 1;
-                adminEditPasswordPanel.add(adminLabels[i], adminAccConstraints);
-                if (i == 0) addAdminPanel.add(adminUsernameLabel2, adminAccConstraints);
+                accConstraints.gridy = i + 1;
+                adminEditPasswordPanel.add(adminLabels[i], accConstraints);
+                if (i == 0) addAdminPanel.add(adminUsernameLabel2, accConstraints);
             }
             for(int i = 0; i < adminEditLabels.length; i++){
-                adminAccConstraints.gridy = i + 1;
-                adminEditAccountPanel.add(adminEditLabels[i], adminAccConstraints);
+                accConstraints.gridy = i + 1;
+                adminEditAccountPanel.add(adminEditLabels[i], accConstraints);
             }
 
             //Setup fields
-            adminAccConstraints.gridx = 2;
-            adminAccConstraints.gridy = 1;
-            adminEditPasswordPanel.add(adminUsername1, adminAccConstraints);
-            addAdminPanel.add(adminUsername2, adminAccConstraints);
-            adminEditAccountPanel.add(adminUsernameEdit, adminAccConstraints);
+            accConstraints.gridx = 2;
+            accConstraints.gridy = 1;
+            adminEditPasswordPanel.add(adminUsername1, accConstraints);
+            addAdminPanel.add(adminUsername2, accConstraints);
+            adminEditAccountPanel.add(adminUsernameEdit, accConstraints);
 
-            adminAccConstraints.gridy = 2;
-            adminEditPasswordPanel.add(adminPassword1, adminAccConstraints);
-            addAdminPanel.add(addAdminSelectionPanel, adminAccConstraints);
-            adminEditAccountPanel.add(adminPasswordEdit, adminAccConstraints);
+            accConstraints.gridy = 2;
+            adminEditPasswordPanel.add(adminPassword1, accConstraints);
+            addAdminPanel.add(addAdminSelectionPanel, accConstraints);
+            adminEditAccountPanel.add(adminPasswordEdit, accConstraints);
 
-            adminAccConstraints.gridy = 3;
-            adminEditPasswordPanel.add(adminPassword2, adminAccConstraints);
-            adminEditAccountPanel.add(adminNameEdit, adminAccConstraints);
+            accConstraints.gridy = 3;
+            adminEditPasswordPanel.add(adminPassword2, accConstraints);
+            adminEditAccountPanel.add(adminNameEdit, accConstraints);
 
-            adminAccConstraints.gridy = 4;
-            adminEditPasswordPanel.add(editPasswordSelectionPanel, adminAccConstraints);
-            adminEditAccountPanel.add(adminPhoneEdit, adminAccConstraints);
+            accConstraints.gridy = 4;
+            adminEditPasswordPanel.add(editPasswordSelectionPanel, accConstraints);
+            adminEditAccountPanel.add(adminPhoneEdit, accConstraints);
 
-            adminAccConstraints.gridy = 5;
+            accConstraints.gridy = 5;
             JPanel genderPanel = new JPanel();
             genderPanel.setBackground(Color.white);
             genderPanel.add(adminMale);
             genderPanel.add(adminFemale);
-            adminEditAccountPanel.add(genderPanel, adminAccConstraints);
+            adminEditAccountPanel.add(genderPanel, accConstraints);
 
-            adminAccConstraints.gridy = 6;
-            adminEditAccountPanel.add(adminAgeEdit, adminAccConstraints);
+            accConstraints.gridy = 6;
+            adminEditAccountPanel.add(adminAgeEdit, accConstraints);
 
-            adminAccConstraints.gridy = 7;
-            adminEditAccountPanel.add(adminEmailEdit, adminAccConstraints);
+            accConstraints.gridy = 7;
+            adminEditAccountPanel.add(adminEmailEdit, accConstraints);
 
-            adminAccConstraints.gridy = 8;
-            adminEditAccountPanel.add(adminAddressEdit, adminAccConstraints);
+            accConstraints.gridy = 8;
+            adminEditAccountPanel.add(adminAddressEdit, accConstraints);
 
-            adminAccConstraints.gridy = 9;
-            adminEditAccountPanel.add(adminPointEdit, adminAccConstraints);
+            accConstraints.gridy = 9;
+            adminEditAccountPanel.add(adminPointEdit, accConstraints);
 
-            adminAccConstraints.gridy = 10;
-            adminEditAccountPanel.add(editAccountSelectionPanel, adminAccConstraints);
+            accConstraints.gridy = 10;
+            adminEditAccountPanel.add(editAccountSelectionPanel, accConstraints);
 
 
             //Search account panel
@@ -339,16 +337,16 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
 
             //Add two panels above -> search account attributes panel
-            adminAccConstraints.gridy = 0;
-            searchAccountAttributesPanel.add(commonAttributes, adminAccConstraints);
-            adminAccConstraints.gridy = 1;
-            searchAccountAttributesPanel.add(customerOnlyAttributes, adminAccConstraints);
+            accConstraints.gridy = 0;
+            searchAccountAttributesPanel.add(commonAttributes, accConstraints);
+            accConstraints.gridy = 1;
+            searchAccountAttributesPanel.add(customerOnlyAttributes, accConstraints);
 
             //Add search account attributes panel & searched result -> search account panel
-            adminAccConstraints.gridy = 0;
-            adminSearchAccountPanel.add(searchAccountAttributesPanel, adminAccConstraints);
-            adminAccConstraints.gridy = 1;
-            adminSearchAccountPanel.add(adminSearchResultPanel, adminAccConstraints);
+            accConstraints.gridy = 0;
+            adminSearchAccountPanel.add(searchAccountAttributesPanel, accConstraints);
+            accConstraints.gridy = 1;
+            adminSearchAccountPanel.add(adminSearchResultPanel, accConstraints);
 
 
             //View account panel
@@ -368,20 +366,22 @@ public class AccountFunctions extends JPanel implements ActionListener {
             //Create buttons
             customerOKButton = new JButton("OK");
             cancelButton = new JButton("CANCEL");
+            customerAccountButtons = new JButton[]{customerOKButton, cancelButton};
+            GUI.subJButtonSetup(customerAccountButtons, new Dimension(100, 40));
 
             //Create labels
-            customerUsernameEditLabel = new JLabel("Username:");
-            customerPasswordEditLabel = new JLabel("Password:");
-            customerNameEditLabel = new JLabel("Name:");
-            customerPhoneEditLabel = new JLabel("Phone:");
-            customerGenderEditLabel = new JLabel("Gender:");
-            customerAgeEditLabel = new JLabel("Age:");
-            customerEmailEditLabel = new JLabel("Email:");
-            customerAddressEditLabel = new JLabel("Address:");
-            customerPointEditLabel = new JLabel("Point:");
-            customerAccountLabels = new JLabel[]{customerUsernameEditLabel, customerPasswordEditLabel, customerNameEditLabel, customerPhoneEditLabel, customerGenderEditLabel, customerAgeEditLabel,
-                    customerEmailEditLabel, customerAddressEditLabel, customerPointEditLabel};
-            GUI.JLabelSetup(customerAccountLabels);
+            usernameEditLabel = new JLabel("Username:");
+            passwordEditLabel = new JLabel("Password:");
+            nameEditLabel = new JLabel("Name:");
+            phoneEditLabel = new JLabel("Phone:");
+            genderEditLabel = new JLabel("Gender:");
+            ageEditLabel = new JLabel("Age:");
+            emailEditLabel = new JLabel("Email:");
+            addressEditLabel = new JLabel("Address:");
+            pointEditLabel = new JLabel("Point:");
+            adminLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+                    emailEditLabel, addressEditLabel, pointEditLabel};
+            GUI.JLabelSetup(adminLabels);
 
             //Create input fields
             //JTextField
@@ -421,53 +421,53 @@ public class AccountFunctions extends JPanel implements ActionListener {
             customerPanel = new JPanel(new GridBagLayout());
             customerPanel.setBackground(Color.white);
 
-            GridBagConstraints customerAccConstraints = new GridBagConstraints();
-            customerAccConstraints.insets = new Insets(8,5,8,5);
-            customerAccConstraints.weightx = 1;
-            customerAccConstraints.weighty = 1;
-            customerAccConstraints.gridx = 0;
-            customerAccConstraints.ipady = 0;
-            customerAccConstraints.gridwidth = 2;
-            for(int i = 0; i < customerAccountLabels.length; i++){
-                customerAccConstraints.gridy = i + 1;
-                customerPanel.add(customerAccountLabels[i], customerAccConstraints);
+            GridBagConstraints accConstraints = new GridBagConstraints();
+            accConstraints.insets = new Insets(8,5,8,5);
+            accConstraints.weightx = 1;
+            accConstraints.weighty = 1;
+            accConstraints.gridx = 0;
+            accConstraints.ipady = 0;
+            accConstraints.gridwidth = 2;
+            for(int i = 0; i < adminLabels.length; i++){
+                accConstraints.gridy = i + 1;
+                customerPanel.add(adminLabels[i], accConstraints);
             }
 
             //Setup fields
-            customerAccConstraints.gridx = 2;
-            customerAccConstraints.gridy = 1;
-            customerPanel.add(customerUsernameEdit, customerAccConstraints);
+            accConstraints.gridx = 2;
+            accConstraints.gridy = 1;
+            customerPanel.add(customerUsernameEdit, accConstraints);
 
-            customerAccConstraints.gridy = 2;
-            customerPanel.add(customerPasswordEdit, customerAccConstraints);
+            accConstraints.gridy = 2;
+            customerPanel.add(customerPasswordEdit, accConstraints);
 
-            customerAccConstraints.gridy = 3;
-            customerPanel.add(customerNameEdit, customerAccConstraints);
+            accConstraints.gridy = 3;
+            customerPanel.add(customerNameEdit, accConstraints);
 
-            customerAccConstraints.gridy = 4;
-            customerPanel.add(customerPhoneEdit, customerAccConstraints);
+            accConstraints.gridy = 4;
+            customerPanel.add(customerPhoneEdit, accConstraints);
 
-            customerAccConstraints.gridy = 5;
+            accConstraints.gridy = 5;
             JPanel genderPanel = new JPanel();
             genderPanel.setBackground(Color.white);
             genderPanel.add(customerMale);
             genderPanel.add(customerFemale);
-            customerPanel.add(genderPanel, customerAccConstraints);
+            customerPanel.add(genderPanel, accConstraints);
 
-            customerAccConstraints.gridy = 6;
-            customerPanel.add(customerAgeEdit, customerAccConstraints);
+            accConstraints.gridy = 6;
+            customerPanel.add(customerAgeEdit, accConstraints);
 
-            customerAccConstraints.gridy = 7;
-            customerPanel.add(customerEmailEdit, customerAccConstraints);
+            accConstraints.gridy = 7;
+            customerPanel.add(customerEmailEdit, accConstraints);
 
-            customerAccConstraints.gridy = 8;
-            customerPanel.add(customerAddressEdit, customerAccConstraints);
+            accConstraints.gridy = 8;
+            customerPanel.add(customerAddressEdit, accConstraints);
 
-            customerAccConstraints.gridy = 9;
-            customerPanel.add(customerPointEdit, customerAccConstraints);
+            accConstraints.gridy = 9;
+            customerPanel.add(customerPointEdit, accConstraints);
 
-            customerAccConstraints.gridy = 10;
-            customerPanel.add(selectionPanel, customerAccConstraints);
+            accConstraints.gridy = 10;
+            customerPanel.add(selectionPanel, accConstraints);
 
             add(customerPanel);
         }
