@@ -37,7 +37,7 @@ public class AdminMenu implements ActionListener {
 
     /* REPORT */
     private JPanel reportFunctionsPanel;
-    private JButton genderReport, ageReport, paymentAnalysis, feedbackAnalysis;
+    private JButton userReport, carReport, paymentReport, feedbackReport;
 
     /* RECORD */
     private JPanel recordFunctionsPanel;
@@ -183,28 +183,28 @@ public class AdminMenu implements ActionListener {
 
         /* REPORT */
         //Create buttons
-        genderReport = new JButton("Gender");
-        ageReport = new JButton("Age");
-        paymentAnalysis = new JButton("Payment");
-        feedbackAnalysis = new JButton("Feedback");
-        reportButtons = new JButton[]{genderReport, ageReport, paymentAnalysis, feedbackAnalysis};
-        genderReport.addActionListener(this);
-        ageReport.addActionListener(this);
-        paymentAnalysis.addActionListener(this);
-        feedbackAnalysis.addActionListener(this);
+        userReport = new JButton("User");
+        carReport = new JButton("Car");
+        paymentReport = new JButton("Payment");
+        feedbackReport = new JButton("Feedback");
+        reportButtons = new JButton[]{userReport, carReport, paymentReport, feedbackReport};
+        userReport.addActionListener(this);
+        carReport.addActionListener(this);
+        paymentReport.addActionListener(this);
+        feedbackReport.addActionListener(this);
         GUI.subJButtonSetup(reportButtons, new Dimension(110, 40));
 
         //Create report panel
         reportsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints repConstraints = new GridBagConstraints();
-        reportFunctionsPanel = new JPanel(); // to change
+        reportFunctionsPanel = new ReportFunctions(); // to change
 
         //Report button panel
         JPanel reportButtonPanel = new JPanel(new GridBagLayout());
-        reportButtonPanel.add(genderReport);
-        reportButtonPanel.add(ageReport);
-        reportButtonPanel.add(paymentAnalysis);
-        reportButtonPanel.add(feedbackAnalysis);
+        reportButtonPanel.add(userReport);
+        reportButtonPanel.add(carReport);
+        reportButtonPanel.add(paymentReport);
+        reportButtonPanel.add(feedbackReport);
 
         //Position elements in booking panel
         repConstraints.gridy = 0;
@@ -334,6 +334,18 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == records){
                 showRecordsPanel();
                 showAdminPanel(recordsPanel, recordFunctionsPanel);
+            }
+            else if (e.getSource() == userReport){
+                ReportFunctions.showUserPanel();
+            }
+            else if (e.getSource() == carReport){
+                ReportFunctions.showCarPanel();
+            }
+            else if (e.getSource() == paymentReport){
+                ReportFunctions.showPaymentPanel();
+            }
+            else if (e.getSource() == feedbackReport){
+                ReportFunctions.showFeedbackPanel();
             }
         } catch (Exception exception){
             GUI.playSound("niganma.wav");

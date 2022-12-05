@@ -37,6 +37,7 @@ public class Booking {
     public enum Status{
         ANY,
         BOOKED,
+        BOOKED_PAID,
         CONFIRMED,
         IN_PROGRESS,
         RETURNED,
@@ -206,21 +207,25 @@ public class Booking {
         return penaltyFee;
     }
 
-    public static boolean makePayment(Booking booking, double payment){
-        if (booking.getOutstandingPayment() < payment){
-            return false;
+    public static void makePayment(Booking customerBooking){
+
+        for (Booking booking : FileIO.bookingList){
+            if (booking == customerBooking){
+                booking.setOutstandingPayment(0);
+
+                if (booking.getStatus() == Status.BOOKED){
+                    booking.setStatus(Status.BOOKED_PAID);
+                }
+                else if (booking.getStatus() == Status.RETURNED){
+                    booking.setStatus(Status.COMPLETED);
+                }
+
+                break;
+            }
         }
-
-        booking.setOutstandingPayment(booking.getOutstandingPayment() - payment);
-
-        if (booking.getOutstandingPayment() == 0){
-            booking.setStatus(Status.COMPLETED);
-        }
-
-        return true;
     }
 
-    private static boolean validateCarDetails(String numberPlate, String customerName, Status status, PenaltyType penalty, Date startDate, Date endDate){
+    private static boolean validateCarDetails(String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
         try{
             boolean numberPlateFound = false;
             boolean customerNameFound = false;
@@ -246,6 +251,10 @@ public class Booking {
 
             if (!customerNameFound){
                 throw new NameNotFoundException();
+            }
+
+            if (outstandingPayment < 0){
+                throw new InvalidPriceException();
             }
 
             if (status == Status.ANY){
@@ -274,11 +283,14 @@ public class Booking {
         catch (InvalidDateDurationException invalidDateDurationException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
+        catch (InvalidPriceException invalidPriceException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Price must not be less than 0!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
         catch (InvalidStatusException invalidStatusException){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \'ANY\'! ", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \'ANY\'!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPenaltyException invalidPenaltyException){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \'ANY\'! ", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \'ANY\'!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
 
         return false;
@@ -339,9 +351,9 @@ public class Booking {
         }
     }
 
-    public static void editBookingDetails(int numberValue, String numberPlate, String customerName, Status status, PenaltyType penalty, Date startDate, Date endDate){
+    public static void editBookingDetails(int numberValue, String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
         Booking booking = FileIO.bookingList.get(numberValue - 1);
-        boolean isValid = validateCarDetails(numberPlate, customerName, status, penalty, startDate, endDate);
+        boolean isValid = validateCarDetails(numberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
 
         if (isValid){
             for (Car car : FileIO.carList){
@@ -358,6 +370,7 @@ public class Booking {
                 }
             }
 
+            booking.setOutstandingPayment(outstandingPayment);
             booking.setPenalty(penalty);
             booking.setStatus(status);
             booking.setStartDate(startDate);

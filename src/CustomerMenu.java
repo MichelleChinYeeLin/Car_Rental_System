@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,8 +10,8 @@ public class CustomerMenu implements ActionListener {
 
     /* MAIN */
     private JFrame frame;
-    private JPanel carsPanel, bookingsPanel, accountPanel;
-    private JButton logout, cars, booking, account;
+    private JPanel carsPanel, bookingsPanel, accountPanel, feedbackPanel;
+    private JButton logout, cars, booking, account, feedback;
     private JButton[] buttons, carButtons, bookingButtons, accountButtons;
     private JPanel[] panels;
 
@@ -31,6 +32,12 @@ public class CustomerMenu implements ActionListener {
     private JPanel accountFunctionsPanel; // show profile
     private JButton editAccount, deleteAccount;
 
+    /* FEEDBACK */
+    private JPanel feedbackFunctionsPanel;
+    private JSlider feedbackRating;
+    private JTextArea feedbackComment;
+    private JButton submitFeedback;
+
     public CustomerMenu(){
         frame = new JFrame("Customer Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,11 +48,13 @@ public class CustomerMenu implements ActionListener {
         cars = new JButton("Cars");
         booking = new JButton("Bookings");
         account = new JButton("Account");
+        feedback = new JButton("Feedback");
         logout = new JButton("Logout");
-        buttons = new JButton[]{cars, booking, account, logout};
+        buttons = new JButton[]{cars, booking, account, feedback, logout};
         cars.addActionListener(this);
         booking.addActionListener(this);
         account.addActionListener(this);
+        feedback.addActionListener(this);
         logout.addActionListener(this);
         GUI.JButtonSetup(buttons);
 
@@ -150,9 +159,57 @@ public class CustomerMenu implements ActionListener {
         accountPanel.add(accountFunctionsPanel, accConstraints);
 
 
+        /* FEEDBACK */
+        feedbackPanel = new JPanel();
+        feedbackFunctionsPanel = new JPanel(new GridBagLayout());
+
+        JLabel ratingLabel = new JLabel("Rating:");
+        JLabel commentLabel = new JLabel("Comment:");
+        GUI.JLabelSetup(new JLabel[]{ratingLabel, commentLabel});
+
+        submitFeedback = new JButton("SUBMIT");
+        submitFeedback.addActionListener(this);
+        GUI.JButtonSetup(submitFeedback);
+
+        feedbackRating = new JSlider(JSlider.HORIZONTAL, 1, 10, 10);
+        feedbackRating.setMajorTickSpacing(1);
+        feedbackRating.setFont(GUI.getDefaultFont());
+        feedbackRating.setPaintTicks(true);
+        feedbackRating.setPaintLabels(true);
+        feedbackComment = new JTextArea();
+        feedbackComment.setPreferredSize(new Dimension(300, 200));
+        Border border = BorderFactory.createLineBorder(Color.black);
+        feedbackComment.setBorder(border);
+
+        GridBagConstraints feedbackConstraints = new GridBagConstraints();
+        feedbackConstraints.fill = GridBagConstraints.HORIZONTAL;
+        feedbackConstraints.gridx = 0;
+        feedbackConstraints.gridy = 0;
+        feedbackConstraints.insets = new Insets(10,10,10,10);
+        feedbackFunctionsPanel.add(ratingLabel, feedbackConstraints);
+
+        feedbackConstraints.gridy = 1;
+        feedbackFunctionsPanel.add(commentLabel, feedbackConstraints);
+
+        feedbackConstraints.gridy = 0;
+        feedbackConstraints.gridx = 1;
+        feedbackFunctionsPanel.add(feedbackRating, feedbackConstraints);
+
+        feedbackConstraints.gridy = 2;
+        feedbackConstraints.gridx = 0;
+        feedbackConstraints.gridwidth = 2;
+        feedbackConstraints.insets = new Insets(0,0,0,0);
+        feedbackFunctionsPanel.add(feedbackComment, feedbackConstraints);
+
+        feedbackConstraints.gridy = 3;
+        feedbackConstraints.insets = new Insets(10,10,10,10);
+        feedbackFunctionsPanel.add(submitFeedback, feedbackConstraints);
+
+        feedbackPanel.add(feedbackFunctionsPanel);
+
         /* MAIN */
         //Create panels
-        panels = new JPanel[]{carsPanel, carFunctionsPanel, bookingsPanel, bookingFunctionsPanel, accountPanel, accountFunctionsPanel};
+        panels = new JPanel[]{carsPanel, carFunctionsPanel, bookingsPanel, bookingFunctionsPanel, accountPanel, accountFunctionsPanel, feedbackPanel, feedbackFunctionsPanel};
         GUI.JPanelSetup(panels);
 
         //Create main panel
@@ -161,6 +218,7 @@ public class CustomerMenu implements ActionListener {
         mainPanel.add(carsPanel);
         mainPanel.add(bookingsPanel);
         mainPanel.add(accountPanel);
+        mainPanel.add(feedbackPanel);
 
         //Position main panel in the frame
         constraints.insets = new Insets(5,0,5,5);
@@ -203,6 +261,10 @@ public class CustomerMenu implements ActionListener {
                 GUI.playSound("ji.wav");
                 showCustomerPanel(accountPanel, accountFunctionsPanel);
             }
+            else if (e.getSource() == feedback){
+                GUI.playSound("ji.wav");
+                showCustomerPanel(feedbackPanel, feedbackFunctionsPanel);
+            }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
                 CarFunctions.showSearchCarPanel();
@@ -225,6 +287,10 @@ public class CustomerMenu implements ActionListener {
                 GUI.playSound("ji.wav");
                 BookingFunctions.showAllBookingCustomerPanel();
             }
+            else if (e.getSource() == submitFeedback){
+                GUI.playSound("ji.wav");
+                submitCustomerFeedback();
+            }
         } catch (Exception exception){
             GUI.playSound("niganma.wav");
             JOptionPane.showMessageDialog(frame, "Invalid move!");
@@ -237,5 +303,15 @@ public class CustomerMenu implements ActionListener {
         }
         bigPanel.setVisible(true);
         smallPanel.setVisible(true);
+    }
+
+    private void submitCustomerFeedback(){
+        int rating = feedbackRating.getValue();
+        String comment = feedbackComment.getText();
+
+        Feedback feedback = new Feedback(CarRentalSystem.loginCustomer, rating, comment);
+        FileIO.feedbackList.add(feedback);
+
+        JOptionPane.showMessageDialog(frame, "Feedback submitted successfully!", "Feedback Submitted", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -16,6 +16,7 @@ public class FileIO {
     private static final String bookingFileName = "bookings.txt";
     private static final String registrationFileName = "registration.txt";
     private static final String recordFileName = "record.txt";
+    private static final String feedbackFileName = "feedback.txt";
 
     //Admin and customer
     private static final String userNameText = "Username: ";
@@ -45,6 +46,10 @@ public class FileIO {
     private static final String startDateText = "Start Date: ";
     private static final String endDateText = "End Date: ";
 
+    //Feedback
+    private static final String ratingText = "Rating: ";
+    private static final String commentText = "Comment: ";
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     //ArrayLists
@@ -54,6 +59,7 @@ public class FileIO {
     public static ArrayList<Booking> bookingList= new ArrayList<>();
     public static ArrayList<Customer> registrationList= new ArrayList<>();
     public static ArrayList<String> recordList = new ArrayList<>();
+    public static ArrayList<Feedback> feedbackList = new ArrayList<>();
 
     public static ArrayList<Admin> getAdminList() {
 
@@ -555,6 +561,7 @@ public class FileIO {
                 line = br.readLine();
             }
 
+            br.close();
             fr.close();
         }
         catch(IOException ioException){
@@ -583,6 +590,74 @@ public class FileIO {
         }
     }
 
+    public static void readFeedbackFile(){
+        try{
+            FileReader fr = new FileReader(feedbackFileName);
+            BufferedReader br = new BufferedReader(fr);
+
+            String userName = "", comment = "";
+            int rating = 0;
+            Customer thisCustomer = new Customer();
+
+            String line = br.readLine();
+
+            while(line != null){
+                if (line.startsWith(userNameText)){
+                    userName = line.substring(userNameText.length());
+                    line = br.readLine();
+
+                    for (Customer customer : customerList){
+                        if (customer.getUsername().equals(userName)){
+                            thisCustomer = customer;
+                            break;
+                        }
+                    }
+                }
+                else if (line.startsWith(ratingText)){
+                    rating = Integer.parseInt(line.substring(ratingText.length()));
+                    line = br.readLine();
+                }
+                else if (line.startsWith(commentText)){
+                    comment = line.substring(commentText.length());
+
+                    Feedback feedback = new Feedback(thisCustomer, rating, comment);
+                    feedbackList.add(feedback);
+                    line = br.readLine();
+                    line = br.readLine();
+                }
+            }
+
+            br.close();
+            fr.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
+    public static void writeFeedbackFile(){
+        try{
+            FileWriter fw = new FileWriter(feedbackFileName);
+
+            for (Feedback feedback : feedbackList){
+                fw.write(userNameText + feedback.getCustomer().getUsername() + "\n");
+                fw.write(ratingText + feedback.getRating() + "\n");
+                fw.write(commentText + feedback.getComment() + "\n\n");
+            }
+
+            fw.close();
+        }
+        catch(IOException ioException){
+            System.out.println("Unable to open file. Please try again.");
+        }
+        catch(Exception e){
+            System.out.println("An unexpected error has occurred. Please try again.");
+        }
+    }
+
     public static void readAllFiles(){
         readAdminFile();
         readCustomerFile();
@@ -590,6 +665,7 @@ public class FileIO {
         readBookingFile();
         readRegistrationFile();
         readRecordFile();
+        readFeedbackFile();
     }
 
     public static void writeAllFiles(){
@@ -599,6 +675,7 @@ public class FileIO {
         writeBookingFile();
         writeRegistrationFile();
         writeRecordFile();
+        writeFeedbackFile();
     }
 
 }

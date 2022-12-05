@@ -26,8 +26,8 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private static JPanel searchBookingPanel, searchBookingAttributesPanel, searchBookingResultsPanel, editBookingPanel, editBookingAttributesPanel, viewBookingPanel, adminReceiptPanel;
     private JPanel startDatePanel, endDatePanel, totalPricePanel;
     private JLabel carNumberPlateSearchLabel, customerNameSearchLabel, totalPriceSearchLabel, statusSearchLabel, startDateSearchLabel, endDateSearchLabel, penaltyTypeSearchLabel, totalPriceIndicator;
-    private JLabel carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, startDateEditLabel, endDateEditLabel, penaltyTypeEditLabel;
-    private JTextField carNumberPlateSearch, customerNameSearch, carNumberPlateEdit, customerNameEdit, totalPriceEdit;
+    private JLabel carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, outstandingPaymentEditLabel, statusEditLabel, startDateEditLabel, endDateEditLabel, penaltyTypeEditLabel;
+    private JTextField carNumberPlateSearch, customerNameSearch, carNumberPlateEdit, customerNameEdit, totalPriceEdit, outstandingPaymentEdit;
     private JSlider totalPriceSlider;
     private JSpinner startDateDaySearch, endDateDaySearch, numberSpinnerEdit, numberSpinnerReceipt, startDateDayEdit, endDateDayEdit;
     private JComboBox<String> startDateYearSearch, endDateYearSearch, startDateYearEdit, endDateYearEdit;
@@ -40,9 +40,10 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private static JTable allBookingTable;
 
     //Customer Booking
-    private static JPanel ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerEditBookingAttributesPanel, customerReceiptPanel;
+    private static JPanel ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerEditBookingAttributesPanel, customerReceiptPanel, customerBookingPaymentPanel;
     private static JTable ongoingBookingTable, completedBookingTable, customerAllBookingTable;
-    private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton;
+    private JTextField cardNumber, cvv;
+    private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton, payButton, confirmPaymentButton, cancelPaymentButton;
     private ArrayList<Booking> customerBookingList = new ArrayList<>();
     public BookingFunctions(boolean isAdmin){
 
@@ -223,19 +224,22 @@ public class BookingFunctions extends JPanel implements ActionListener {
             //Edit Booking Panel
             editBookingPanel = new JPanel(new GridBagLayout());
             editBookingAttributesPanel = new JPanel(new GridBagLayout());
+            editBookingAttributesPanel.setBackground(Color.white);
             carNumberPlateEditLabel = new JLabel("Car Number Plate:");
             customerNameEditLabel = new JLabel("Customer Username:");
             totalPriceEditLabel = new JLabel("Total Price:");
+            outstandingPaymentEditLabel = new JLabel("Outstanding Payment:");
             statusEditLabel = new JLabel("Status:");
             penaltyTypeEditLabel = new JLabel("Penalty Type:");
             startDateEditLabel = new JLabel("Start Date:");
             endDateEditLabel = new JLabel("End Date:");
-            JLabel editBookingLabels[] = {carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, statusEditLabel, penaltyTypeEditLabel, startDateEditLabel, endDateEditLabel};
+            JLabel editBookingLabels[] = {carNumberPlateEditLabel, customerNameEditLabel, totalPriceEditLabel, outstandingPaymentEditLabel, statusEditLabel, penaltyTypeEditLabel, startDateEditLabel, endDateEditLabel};
             GUI.JLabelSetup(editBookingLabels);
 
             carNumberPlateEdit = new JTextField(20);
             customerNameEdit = new JTextField(20);
             totalPriceEdit = new JTextField(20);
+            outstandingPaymentEdit = new JTextField(20);
             totalPriceEdit.setEnabled(false);
 
             statusBoxEdit = new JComboBox<>(statusType);
@@ -285,15 +289,18 @@ public class BookingFunctions extends JPanel implements ActionListener {
             editBookingAttributesPanel.add(totalPriceEdit, editAttributesConstraints);
 
             editAttributesConstraints.gridy = 3;
-            editBookingAttributesPanel.add(statusBoxEdit, editAttributesConstraints);
+            editBookingAttributesPanel.add(outstandingPaymentEdit, editAttributesConstraints);
 
             editAttributesConstraints.gridy = 4;
-            editBookingAttributesPanel.add(penaltyTypeEdit, editAttributesConstraints);
+            editBookingAttributesPanel.add(statusBoxEdit, editAttributesConstraints);
 
             editAttributesConstraints.gridy = 5;
-            editBookingAttributesPanel.add(startDateEditPanel, editAttributesConstraints);
+            editBookingAttributesPanel.add(penaltyTypeEdit, editAttributesConstraints);
 
             editAttributesConstraints.gridy = 6;
+            editBookingAttributesPanel.add(startDateEditPanel, editAttributesConstraints);
+
+            editAttributesConstraints.gridy = 7;
             editBookingAttributesPanel.add(endDateEditPanel, editAttributesConstraints);
 
             JPanel editBookingSelectionPanel = new JPanel(new FlowLayout());
@@ -409,8 +416,9 @@ public class BookingFunctions extends JPanel implements ActionListener {
             customerEditBookingPanel.add(editBookingSelectionPanel, editConstraints);
 
             customerReceiptPanel = new JPanel(new GridBagLayout());
+            customerBookingPaymentPanel = new JPanel(new GridBagLayout());
 
-            customerPanels = new JPanel[]{ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerReceiptPanel};
+            customerPanels = new JPanel[]{ongoingBookingPanel, completedBookingPanel, customerViewBookingPanel, customerEditBookingPanel, customerReceiptPanel, customerBookingPaymentPanel};
             GUI.JPanelSetup(customerPanels);
             setPreferredSize(new Dimension(600,500));
             add(ongoingBookingPanel);
@@ -418,6 +426,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             add(customerViewBookingPanel);
             add(customerEditBookingPanel);
             add(customerReceiptPanel);
+            add(customerBookingPaymentPanel);
         }
     }
 
@@ -505,6 +514,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == backCustomerButton){
                 showBookingCustomerPanel(ongoingBookingPanel);
+                viewOngoingBookingCustomer();
             }
             else if (e.getSource() == receiptCustomerButton){
                 int numberValue = (int) numberSpinnerReceipt.getValue();
@@ -513,6 +523,22 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == printButton){
                 printReceipt();
+            }
+            else if (e.getSource() == payButton){
+                if ((int) numberSpinnerEdit.getValue() == 0) {
+                    throw new BookingNotFoundException();
+                }
+
+                showPaymentPanel();
+            }
+            else if (e.getSource() == confirmPaymentButton){
+                confirmCustomerPayment();
+                showBookingCustomerPanel(ongoingBookingPanel);
+                viewOngoingBookingCustomer();
+            }
+            else if (e.getSource() == cancelPaymentButton){
+                showBookingCustomerPanel(ongoingBookingPanel);
+                viewOngoingBookingCustomer();
             }
         }
         catch (BookingNotFoundException bookingNotFoundException){
@@ -556,6 +582,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
         customerNameEdit.setText(booking.getCustomer().getUsername());
         totalPriceEdit.setText(String.valueOf(booking.getTotalPrice()));
+        outstandingPaymentEdit.setText(String.valueOf(booking.getOutstandingPayment()));
         statusBoxEdit.setSelectedItem(booking.getStatus());
         penaltyTypeEdit.setSelectedItem(booking.getPenalty());
 
@@ -603,6 +630,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         int numberValue = (int) numberSpinnerEdit.getValue();
         String carNumberPlate = carNumberPlateEdit.getText();
         String customerName = customerNameEdit.getText();
+        double outstandingPayment = Double.parseDouble(outstandingPaymentEdit.getText());
         Booking.Status status = (Booking.Status) statusBoxEdit.getSelectedItem();
         Booking.PenaltyType penalty = (Booking.PenaltyType) penaltyTypeEdit.getSelectedItem();
 
@@ -622,7 +650,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Date startDate = Booking.convertToDate(startDateDay, startDateMonth, startDateYear);
             Date endDate = Booking.convertToDate(endDateDay, endDateMonth, endDateYear);
 
-            Booking.editBookingDetails(numberValue, carNumberPlate, customerName, status, penalty, startDate, endDate);
+            Booking.editBookingDetails(numberValue, carNumberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
@@ -658,7 +686,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
         }
         else{
-            String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+            String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
             Object[][] tempTable = new Object[searchedList.size()][tableColumn.length];
             int i = 0;
             for (Booking booking : searchedList){
@@ -715,7 +743,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     private static void viewAllBooking(){
-        String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        String[] tableColumn = {"No.", "Car No. Plate", "Customer Username", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
         Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         int i = 0;
         for (Booking booking: FileIO.bookingList){
@@ -741,10 +769,11 @@ public class BookingFunctions extends JPanel implements ActionListener {
         tempTable[i][1] = booking.getCar().getNumberPlate();
         tempTable[i][2] = booking.getCustomer().getUsername();
         tempTable[i][3] = booking.getTotalPrice();
-        tempTable[i][4] = booking.getStatus();
-        tempTable[i][5] = booking.getPenalty();
-        tempTable[i][6] = dateFormat.format(booking.getStartDate());
-        tempTable[i][7] = dateFormat.format(booking.getEndDate());
+        tempTable[i][4] = booking.getOutstandingPayment();
+        tempTable[i][5] = booking.getStatus();
+        tempTable[i][6] = booking.getPenalty();
+        tempTable[i][7] = dateFormat.format(booking.getStartDate());
+        tempTable[i][8] = dateFormat.format(booking.getEndDate());
         i++;
         return i;
     }
@@ -771,7 +800,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     private static void viewAllBookingCustomer(){
-        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
         Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
@@ -806,7 +835,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     public void viewOngoingBookingCustomer(){
         customerBookingList = new ArrayList<>();
         ongoingBookingPanel.removeAll();
-        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
         Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
@@ -837,7 +866,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             bottomConstraints.fill = GridBagConstraints.BOTH;
             bottomConstraints.anchor = GridBagConstraints.WEST;
             bottomConstraints.gridx = 0;
-            bottomConstraints.insets = new Insets(5,5,5,20);
+            bottomConstraints.insets = new Insets(5,5,5,5);
             JLabel numberLabel = new JLabel("Row Number: ");
             GUI.JLabelSetup(numberLabel);
             bottomPanel.add(numberLabel, bottomConstraints);
@@ -850,9 +879,11 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
             editCustomerButton = new JButton("EDIT");
             deleteCustomerButton = new JButton("DELETE");
+            payButton = new JButton("PAY");
             editCustomerButton.addActionListener(this);
             deleteCustomerButton.addActionListener(this);
-            JButton[] buttons = new JButton[]{editCustomerButton, deleteCustomerButton};
+            payButton.addActionListener(this);
+            JButton[] buttons = new JButton[]{editCustomerButton, deleteCustomerButton, payButton};
             GUI.subJButtonSetup(buttons, new Dimension(100,30));
 
             bottomConstraints.gridx = 3;
@@ -860,6 +891,9 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
             bottomConstraints.gridx = 4;
             bottomPanel.add(deleteCustomerButton, bottomConstraints);
+
+            bottomConstraints.gridx = 5;
+            bottomPanel.add(payButton, bottomConstraints);
 
             bottomConstraints.gridx = 0;
             bottomConstraints.gridwidth = 5;
@@ -879,7 +913,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     public void viewCompletedBookingCustomer(){
         customerBookingList = new ArrayList<>();
         completedBookingPanel.removeAll();
-        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Status", "Penalty Type", "Start Date", "End Date"};
+        String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
         Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
@@ -972,15 +1006,93 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
     }
 
+    public void showPaymentPanel(){
+        int numberValue = (int) numberSpinnerEdit.getValue();
+        Booking booking = customerBookingList.get(numberValue - 1);
+
+        if (booking.getOutstandingPayment() == 0){
+            JOptionPane.showMessageDialog(this, "No outstanding payment for this booking!", "No Outstanding Payment", JOptionPane.WARNING_MESSAGE);
+            showOngoingBookingCustomerPanel();
+            viewOngoingBookingCustomer();
+            return;
+        }
+
+        JLabel totalPriceLabel = new JLabel();
+        totalPriceLabel.setText("Total Price: " + booking.getTotalPrice());
+        JLabel outstandingPaymentLabel = new JLabel();
+        outstandingPaymentLabel.setText("Outstanding Payment: " + booking.getOutstandingPayment());
+
+        JLabel cardNumberLabel = new JLabel("Card Number: ");
+        JLabel cvvLabel = new JLabel("CVC/ CVV: ");
+        GUI.JLabelSetup(new JLabel[]{totalPriceLabel, outstandingPaymentLabel, cardNumberLabel, cvvLabel});
+
+        cardNumber = new JTextField(20);
+        cvv = new JTextField(20);
+
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 2;
+        constraints.insets = new Insets(10, 10, 10, 10);
+        customerBookingPaymentPanel.add(totalPriceLabel, constraints);
+
+        constraints.gridy = 1;
+        customerBookingPaymentPanel.add(outstandingPaymentLabel, constraints);
+
+        constraints.gridwidth = 1;
+        constraints.gridy = 2;
+        customerBookingPaymentPanel.add(cardNumberLabel, constraints);
+
+        constraints.gridx = 1;
+        customerBookingPaymentPanel.add(cardNumber, constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        customerBookingPaymentPanel.add(cvvLabel, constraints);
+
+        constraints.gridx = 1;
+        customerBookingPaymentPanel.add(cvv, constraints);
+
+        confirmPaymentButton = new JButton("CONFIRM");
+        cancelPaymentButton = new JButton("CANCEL");
+        confirmPaymentButton.addActionListener(this);
+        cancelPaymentButton.addActionListener(this);
+        GUI.JButtonSetup(new JButton[]{confirmPaymentButton, cancelPaymentButton});
+
+        constraints.gridy = 4;
+        constraints.gridx = 0;
+        customerBookingPaymentPanel.add(confirmPaymentButton, constraints);
+
+        constraints.gridx = 1;
+        customerBookingPaymentPanel.add(cancelPaymentButton, constraints);
+
+        showBookingCustomerPanel(customerBookingPaymentPanel);
+    }
+
+    private void confirmCustomerPayment(){
+
+        if (cardNumber.equals("") || cvv.equals("")){
+            JOptionPane.showMessageDialog(this, "Payment details incomplete!", "Payment Failed", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int numberValue = (int) numberSpinnerEdit.getValue();
+        Booking booking = customerBookingList.get(numberValue - 1);
+
+        Booking.makePayment(booking);
+        JOptionPane.showMessageDialog(this, "Payment successful!", "Payment Succeeded", JOptionPane.WARNING_MESSAGE);
+    }
+
     private static int insertBookingTableCustomer(Object[][] tempTable, int i, Booking booking) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         tempTable[i][0] = i + 1;
         tempTable[i][1] = booking.getCar().getNumberPlate();
         tempTable[i][2] = booking.getTotalPrice();
-        tempTable[i][3] = booking.getStatus();
-        tempTable[i][4] = booking.getPenalty();
-        tempTable[i][5] = dateFormat.format(booking.getStartDate());
-        tempTable[i][6] = dateFormat.format(booking.getEndDate());
+        tempTable[i][3] = booking.getOutstandingPayment();
+        tempTable[i][4] = booking.getStatus();
+        tempTable[i][5] = booking.getPenalty();
+        tempTable[i][6] = dateFormat.format(booking.getStartDate());
+        tempTable[i][7] = dateFormat.format(booking.getEndDate());
         i++;
         return i;
     }

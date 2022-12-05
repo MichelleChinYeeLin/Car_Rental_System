@@ -3,14 +3,14 @@ import java.util.ArrayList;
 
 public class Car {
 
-    public enum Color { //TODO: ENUM
+    public enum Color {
         BLACK,
         WHITE,
         SILVER,
         RED,
         BLUE,
         YELLOW,
-        NONE
+        NONE;
     }
 
     private String numberPlate;
@@ -60,6 +60,7 @@ public class Car {
     public String getColor() {
         return String.valueOf(color);
     }
+    public Color getColorType(){return color;}
 
     public void setColor(String color) {
         this.color = Color.valueOf(color);

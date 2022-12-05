@@ -66,6 +66,11 @@ public class GUI {
         label.setHorizontalAlignment(JLabel.LEFT);
     }
 
+    public static void JLabelTitleSetup(JLabel label){
+        label.setFont(new Font(Font.SERIF, Font.BOLD, 20));
+        label.setHorizontalAlignment(JLabel.CENTER);
+    }
+
     public static void JPanelSetup(JPanel[] panels){
         for (JPanel panel : panels) {
             panel.setVisible(false);
