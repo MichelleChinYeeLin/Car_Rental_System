@@ -1051,7 +1051,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     public void showPaymentPanel(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = customerBookingList.get(numberValue - 1);
+        Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
 
         if (booking.getOutstandingPayment() == 0){
             JOptionPane.showMessageDialog(this, "No outstanding payment for this booking!", "No Outstanding Payment", JOptionPane.WARNING_MESSAGE);
@@ -1120,7 +1120,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
 
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = customerBookingList.get(numberValue - 1);
+        Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
 
         Booking.makePayment(booking);
         JOptionPane.showMessageDialog(this, "Payment successful!", "Payment Succeeded", JOptionPane.WARNING_MESSAGE);

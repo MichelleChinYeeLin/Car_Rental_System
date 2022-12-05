@@ -1,3 +1,9 @@
+05-12-2022 22:37:47 testing logout.
+05-12-2022 22:37:07 testing login successful.
+05-12-2022 22:36:45 testing login failed.
+05-12-2022 22:36:37 shuaigee login failed. Customer not found.
+05-12-2022 22:36:29 admin logout.
+05-12-2022 22:35:48 admin login successful.
 05-12-2022 22:08:38 shuaigee logout.
 05-12-2022 22:08:15 shuaigee login successful.
 05-12-2022 22:08:05 admin logout.
