@@ -43,3 +43,9 @@ class InvalidStatusException extends Exception{}
 class InvalidPenaltyException extends Exception{}
 
 class BookingNotFoundException extends Exception{}
+
+class InvalidBookingException extends Exception{}
+
+class BookingNotCompletedException extends Exception{}
+
+class ExceedBookingQuantityException extends Exception{}

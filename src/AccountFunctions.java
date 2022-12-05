@@ -10,15 +10,18 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
     private boolean isAdmin;
 
-    // Admin functions
+    // Edit account
+    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+            emailEditLabel, addressEditLabel, pointEditLabel;
+    private JLabel[] editLabels;
+
+    // Admin
     private static JPanel adminEditPasswordPanel, addAdminPanel, adminSearchAccountPanel, adminViewAccountPanel, adminEditAccountPanel;
     private JPanel customerOnlyAttributes, searchAccountAttributesPanel, adminSearchResultPanel;
     private JButton adminConfirmEdit, adminCancelEdit, adminConfirmAdd, adminCancelAdd, adminSearch, editButton, adminResetPassword, adminOKButton, backToSearch, deleteButton;
     private JLabel adminUsernameLabel1, adminPasswordLabel1, adminPasswordLabel2, adminUsernameLabel2;
     private JLabel adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel, adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2,
             adminEmailSearchLabel, adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2;
-    private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
-            emailEditLabel, addressEditLabel, pointEditLabel;
     private static JTextField adminUsername1, adminUsername2;
     private JTextField adminUsernameSearch, adminNameSearch, adminPhoneSearch, adminEmailSearch, adminAddressSearch;
     private JTextField adminUsernameEdit, adminNameEdit, adminPhoneEdit, adminEmailEdit, adminAddressEdit;
@@ -32,16 +35,17 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JTable searchTable;
     private static JTable allAdminTable, allCustomerTable;
     private static JPanel[] adminPanels;
-    private JLabel[] adminLabels, adminSearchLabels, adminEditLabels;
+    private JLabel[] adminLabels, adminSearchLabels;
     private JButton[] adminAccountButtons;
     private JComponent[] adminComponents;
 
-    // Customer functions
+    // Customer
     private static JPanel customerPanel;
+    private static JLabel customerPointAndLevel;
     private JButton customerOKButton, cancelButton;
     private static JTextField customerUsernameEdit, customerNameEdit, customerPhoneEdit, customerEmailEdit, customerAddressEdit;
     private static JPasswordField customerPasswordEdit;
-    private static JSpinner customerAgeEdit, customerPointEdit;
+    private static JSpinner customerAgeEdit;
     private static JRadioButton customerMale, customerFemale;
     private ButtonGroup customerGenderGroup;
     private JButton[] customerAccountButtons;
@@ -50,6 +54,21 @@ public class AccountFunctions extends JPanel implements ActionListener {
     public AccountFunctions(boolean isAdmin){
 
         this.isAdmin = isAdmin;
+
+        /* Edit account */
+        usernameEditLabel = new JLabel("Username:");
+        passwordEditLabel = new JLabel("Password:");
+        nameEditLabel = new JLabel("Name:");
+        phoneEditLabel = new JLabel("Phone:");
+        genderEditLabel = new JLabel("Gender:");
+        ageEditLabel = new JLabel("Age:");
+        emailEditLabel = new JLabel("Email:");
+        addressEditLabel = new JLabel("Address:");
+        pointEditLabel = new JLabel("Point:");
+        editLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
+                emailEditLabel, addressEditLabel, pointEditLabel};
+        GUI.JLabelSetup(editLabels);
+
 
         if (isAdmin){
             //Create buttons
@@ -80,6 +99,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminUsernameLabel2 = new JLabel("New Username:");
             adminLabels = new JLabel[]{adminUsernameLabel1, adminPasswordLabel1, adminPasswordLabel2, adminUsernameLabel2};
             GUI.JLabelSetup(adminLabels);
+
             adminUsernameSearchLabel = new JLabel("Username:");
             adminNameSearchLabel = new JLabel("Name:");
             adminPhoneSearchLabel = new JLabel("Phone:");
@@ -93,18 +113,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminSearchLabels = new JLabel[]{adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel, adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2,
                     adminEmailSearchLabel, adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2};
             GUI.JLabelSetup(adminSearchLabels);
-            usernameEditLabel = new JLabel("Username:");
-            passwordEditLabel = new JLabel("Password:");
-            nameEditLabel = new JLabel("Name:");
-            phoneEditLabel = new JLabel("Phone:");
-            genderEditLabel = new JLabel("Gender:");
-            ageEditLabel = new JLabel("Age:");
-            emailEditLabel = new JLabel("Email:");
-            addressEditLabel = new JLabel("Address:");
-            pointEditLabel = new JLabel("Point:");
-            adminEditLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
-                    emailEditLabel, addressEditLabel, pointEditLabel};
-            GUI.JLabelSetup(adminEditLabels);
 
             //Create input fields
             //JTextField
@@ -206,9 +214,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 adminEditPasswordPanel.add(adminLabels[i], accConstraints);
                 if (i == 0) addAdminPanel.add(adminUsernameLabel2, accConstraints);
             }
-            for(int i = 0; i < adminEditLabels.length; i++){
+            for(int i = 0; i < editLabels.length; i++){
                 accConstraints.gridy = i + 1;
-                adminEditAccountPanel.add(adminEditLabels[i], accConstraints);
+                adminEditAccountPanel.add(editLabels[i], accConstraints);
             }
 
             //Setup fields
@@ -370,18 +378,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
             GUI.subJButtonSetup(customerAccountButtons, new Dimension(100, 40));
 
             //Create labels
-            usernameEditLabel = new JLabel("Username:");
-            passwordEditLabel = new JLabel("Password:");
-            nameEditLabel = new JLabel("Name:");
-            phoneEditLabel = new JLabel("Phone:");
-            genderEditLabel = new JLabel("Gender:");
-            ageEditLabel = new JLabel("Age:");
-            emailEditLabel = new JLabel("Email:");
-            addressEditLabel = new JLabel("Address:");
-            pointEditLabel = new JLabel("Point:");
-            adminLabels = new JLabel[]{usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
-                    emailEditLabel, addressEditLabel, pointEditLabel};
-            GUI.JLabelSetup(adminLabels);
+            customerPointAndLevel = new JLabel("");
+            GUI.JLabelSetup(customerPointAndLevel);
 
             //Create input fields
             //JTextField
@@ -397,8 +395,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
             //JSpinner
             customerAgeEdit = new JSpinner(new SpinnerNumberModel(17, 17,122,1));
             customerAgeEdit.setPreferredSize(new Dimension(100,25));
-            customerPointEdit = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
-            customerPointEdit.setPreferredSize(new Dimension(100,25));
 
             //JRadioButtons
             customerMale = new JRadioButton("male");
@@ -410,7 +406,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
             customerGenderGroup.add(customerFemale);
 
             //JComponent array
-            customerComponents = new JComponent[]{customerUsernameEdit, customerNameEdit, customerPhoneEdit, customerEmailEdit, customerAddressEdit, customerPasswordEdit, customerAgeEdit, customerPointEdit, customerMale, customerFemale};
+            customerComponents = new JComponent[]{customerUsernameEdit, customerNameEdit, customerPhoneEdit,customerEmailEdit,
+                    customerAddressEdit, customerPasswordEdit, customerAgeEdit, customerPointAndLevel, customerMale, customerFemale};
 
             //Create control unit
             JPanel selectionPanel = new JPanel();
@@ -428,9 +425,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             accConstraints.gridx = 0;
             accConstraints.ipady = 0;
             accConstraints.gridwidth = 2;
-            for(int i = 0; i < adminLabels.length; i++){
+            for(int i = 0; i < editLabels.length; i++){
                 accConstraints.gridy = i + 1;
-                customerPanel.add(adminLabels[i], accConstraints);
+                customerPanel.add(editLabels[i], accConstraints);
             }
 
             //Setup fields
@@ -464,7 +461,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             customerPanel.add(customerAddressEdit, accConstraints);
 
             accConstraints.gridy = 9;
-            customerPanel.add(customerPointEdit, accConstraints);
+            customerPanel.add(customerPointAndLevel, accConstraints);
 
             accConstraints.gridy = 10;
             customerPanel.add(selectionPanel, accConstraints);
@@ -515,7 +512,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     Admin newAdmin = new Admin(newUsername, newUsername);
                     newAdmin.signUp();
                     GUI.playSound("DontSayFiveDe.wav");
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "New admin account is successfully created!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "New admin account is successfully created!");
                 }
             }
             else if (e.getSource() == adminCancelAdd){
@@ -541,7 +538,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
                 else {
                     GUI.playSound("ElectricVoice.wav");
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Reset canceled!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Reset canceled!");
                 }
             }
             else if (e.getSource() == adminOKButton){
@@ -551,13 +548,16 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
                 else {
                     GUI.playSound("ElectricVoice.wav");
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Edit canceled!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == backToSearch){
                 showAccountPanel(adminSearchAccountPanel);
             }
             else if (e.getSource() == deleteButton){
+                if((int) numberSpinner.getValue() == 0){
+                    throw new UserNotFoundException();
+                }
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
                     int numberValue = (int) numberSpinner.getValue();
@@ -565,7 +565,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
                     if (Admin.deleteAccount(numberValue, accountType)){
                         GUI.playSound("DontSayFiveDe.wav");
-                        JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been deleted!");
+                        JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "User account has been deleted!");
                     }
                     else {
                         throw new LastAdminException();
@@ -573,7 +573,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
                 else {
                     GUI.playSound("ElectricVoice.wav");
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
             else if (e.getSource() == customerOKButton){
@@ -605,13 +605,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
         } catch (UserNotFoundException userNotFoundException){
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (LastAdminException lastAdminException){
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!");
         }
     }
 
@@ -818,9 +818,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
         } catch (InvalidUserException invalidUserException) {
             GUI.playSound("ElectricVoice.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -886,6 +886,10 @@ public class AccountFunctions extends JPanel implements ActionListener {
         GUI.resetFields(customerComponents);
         GUI.disableFields(customerComponents);
 
+        int points = CarRentalSystem.loginCustomer.getPoints();
+        int memberLevel = CarRentalSystem.loginCustomer.getMemberLevel();
+        String memberDetails = points + " : (" + "Level: " + memberLevel + ")";
+
         customerUsernameEdit.setText(CarRentalSystem.loginCustomer.getUsername());
         customerNameEdit.setText(CarRentalSystem.loginCustomer.getName());
         customerPhoneEdit.setText(CarRentalSystem.loginCustomer.getPhone());
@@ -893,7 +897,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
         customerAddressEdit.setText(CarRentalSystem.loginCustomer.getAddress());
         customerPasswordEdit.setText(CarRentalSystem.loginCustomer.getPassword());
         customerAgeEdit.setValue(CarRentalSystem.loginCustomer.getAge());
-        customerPointEdit.setValue(CarRentalSystem.loginCustomer.getPoints());
+        customerPointAndLevel.setText(memberDetails);
         if (CarRentalSystem.loginCustomer.getGender().equals("male")){
             customerMale.setSelected(true);
         }
@@ -922,7 +926,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
     public static void customerDeleteAccount(){
         GUI.disableFields(customerComponents);
-        if (Customer.checkIdentity("Verification success!")){ //TODO && don't have ongoing booking!
+        int size = CarRentalSystem.loginCustomer.getMyBookings().size();
+        if (Customer.checkIdentity("Verification success!") && CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.COMPLETED){
             String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
             if (input != null && input.equals("DELETE")){
                 GUI.playSound("DontSayFiveDe.wav");
@@ -934,7 +939,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             }
             else {
                 GUI.playSound("ElectricVoice.wav");
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Deletion canceled!");
+                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
             }
         }
     }

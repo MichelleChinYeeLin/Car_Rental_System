@@ -17,9 +17,7 @@ public class Customer extends User {
     private static int chance;
     public static final String phonePattern = "\\d{10,11}"; // 10 - 11 numbers
     public static final String emailPattern = "\\w{6,30}@gmail.com";  // at least 6 words and only one "@gmail.com"
-
-//    private ArrayList<Booking> myBookings = new ArrayList<>();
-
+    private ArrayList<Booking> myBookings = new ArrayList<>();
 
     public Customer() {
         super("", "");
@@ -123,13 +121,25 @@ public class Customer extends User {
         this.points = points;
     }
 
-//    public ArrayList<Booking> getMyBookings() {
-//        return myBookings;
-//    }
-//
-//    public void setMyBookings(ArrayList<Booking> myBookings) {
-//        this.myBookings = myBookings;
-//    }
+    public ArrayList<Booking> getMyBookings() {
+        return myBookings;
+    }
+
+    public void setMyBookings(ArrayList<Booking> myBookings) {
+        this.myBookings = myBookings;
+    }
+
+    public int getMemberLevel() {
+        int memberLevel;
+
+        if (points > 500) memberLevel = 3;
+        else if (points > 200) memberLevel = 2;
+        else if (points < -500) memberLevel = 0;
+        else if (points < 0) memberLevel = -1;
+        else memberLevel = 1;
+
+        return memberLevel;
+    }
 
     public static boolean validateCustomerDetails(boolean isExist, String username, String name, int age, String password, String passwordCheck, String phone, String email) {
         boolean flag = false;
@@ -293,7 +303,7 @@ public class Customer extends User {
                 throw new EmptyInputException();
             }
             else if (input.equals(CarRentalSystem.loginCustomer.getPassword())) {
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), message);
+                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, message);
                 if (chance < 2) chance = 2;
             }
             else {
@@ -305,11 +315,11 @@ public class Customer extends User {
             GUI.playSound("ElectricVoice.wav");
         } catch (WrongPasswordException wrongPasswordException) {
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Wrong Password!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             chance--;
         } finally {
             if (chance == 0) {
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "We are sorry. Please contact admin to reset your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "We are sorry. Please contact admin to reset your password!", "Identity Verification Failed!", JOptionPane.WARNING_MESSAGE);
                 CarRentalSystem.loginCustomer = null;
                 CarRentalSystem.customerMenu.getFrame().setVisible(false);
                 CarRentalSystem.homePage.getFrame().setVisible(true);
@@ -327,7 +337,7 @@ public class Customer extends User {
             if (passwordCheck != null && passwordCheck.equals(password)) {
                 CarRentalSystem.loginCustomer.setPassword(password);
                 FileIO.writeCustomerFile();
-                JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Your password has been successfully changed!");
+                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password has been successfully changed!");
                 flag = true;
             } else {
                 throw new MismatchPasswordException();
@@ -335,10 +345,10 @@ public class Customer extends User {
 
         } catch (EmptyInputException emptyInputException) {
             GUI.playSound("ElectricVoice.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (MismatchPasswordException mismatchPasswordException) {
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.customerMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return flag;
     }
@@ -354,7 +364,7 @@ public class Customer extends User {
             CarRentalSystem.loginCustomer.setEmail(email);
             CarRentalSystem.loginCustomer.setAddress(address);
             FileIO.writeCustomerFile();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your account has been modified!");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your account has been modified!");
         }
         return flag;
     }

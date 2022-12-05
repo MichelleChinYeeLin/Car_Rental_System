@@ -43,14 +43,14 @@ public class Admin extends User{
 
             CarRentalSystem.loginAdmin.setPassword(password);
             FileIO.writeAdminFile();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password has been successfully changed!");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password has been successfully changed!");
 
         } catch (EmptyInputException e) {
             GUI.playSound("ElectricVoice.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (MismatchPasswordException mismatchPasswordException){
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password does not match!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } finally {
             AccountFunctions.getAdminPassword1().setText("");
             AccountFunctions.getAdminPassword2().setText("");
@@ -71,9 +71,9 @@ public class Admin extends User{
 
         } catch (EmptyInputException emptyInputException){
             GUI.playSound("ElectricVoice.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (UsernameTakenException usernameTakenException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Username is already taken! Please input a different username.", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } finally {
             AccountFunctions.getAdminUsername2().setText("");
         }
@@ -126,12 +126,12 @@ public class Admin extends User{
 
         } catch (InvalidAgeException invalidAgeException) {
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid age entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid age entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             AccountFunctions.getAdminFromAge().setValue(17);
             AccountFunctions.getAdminToAge().setValue(17);
         } catch (InvalidPointException invalidPointException) {
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid point entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid point entered!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
             AccountFunctions.getAdminFromPoint().setValue(0);
             AccountFunctions.getAdminToPoint().setValue(0);
         }
@@ -151,7 +151,7 @@ public class Admin extends User{
             customer.setAddress(address);
             customer.setPoints(point);
             FileIO.writeCustomerFile();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "User account has been modified!");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "User account has been modified!");
         }
     }
 

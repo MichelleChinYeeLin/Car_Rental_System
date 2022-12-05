@@ -108,6 +108,9 @@ public class GUI {
             if (i instanceof JRadioButton){
                 ((JRadioButton) i).setSelected(false);
             }
+            if (i instanceof JLabel){
+                ((JLabel) i).setText("");
+            }
         }
     }
 }

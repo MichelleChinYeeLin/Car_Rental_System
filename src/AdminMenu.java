@@ -33,7 +33,6 @@ public class AdminMenu implements ActionListener {
     /* BOOKING */
     private BookingFunctions bookingFunctionsPanel;
     private JButton searchBooking, allBooking;
-    // search -> confirm/decline/generate receipt
 
     /* REPORT */
     private JPanel reportFunctionsPanel;
@@ -324,7 +323,7 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showAdminAllCarPanel();
+                CarFunctions.showAllCarPanel(true);
             }
             else if (e.getSource() == approveButton){
                 GUI.playSound("ji.wav");
@@ -335,12 +334,12 @@ public class AdminMenu implements ActionListener {
                 denyRegistration();
             }
             else if (e.getSource() == records){
+                GUI.playSound("ji.wav");
                 showRecordsPanel();
                 showAdminPanel(recordsPanel, recordFunctionsPanel);
             }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
-            System.out.println("HI something wrong");
         }
     }
 
@@ -354,7 +353,7 @@ public class AdminMenu implements ActionListener {
 
     private void approveRegistration(){
 
-        int index = (int)numberSpinner.getValue();
+        int index = (int) numberSpinner.getValue();
         boolean isSuccess = Customer.approveRegistration(index - 1);
 
         if(isSuccess){
@@ -367,7 +366,7 @@ public class AdminMenu implements ActionListener {
 
     private void denyRegistration(){
 
-        int index = (int)numberSpinner.getValue();
+        int index = (int) numberSpinner.getValue();
         boolean isSuccess = Customer.denyRegistration(index - 1);
 
         if(isSuccess){

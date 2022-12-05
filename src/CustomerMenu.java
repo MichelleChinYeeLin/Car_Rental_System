@@ -211,7 +211,7 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showCustomerAllCarPanel();
+                CarFunctions.showAllCarPanel(false);
             }
             else if (e.getSource() == changePassword){
                 GUI.playSound("ji.wav");
