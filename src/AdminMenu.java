@@ -339,19 +339,24 @@ public class AdminMenu implements ActionListener {
                 showAdminPanel(recordsPanel, recordFunctionsPanel);
             }
             else if (e.getSource() == userReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showUserPanel();
             }
             else if (e.getSource() == carReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showCarPanel();
             }
             else if (e.getSource() == paymentReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showPaymentPanel();
             }
             else if (e.getSource() == feedbackReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showFeedbackPanel();
             }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 

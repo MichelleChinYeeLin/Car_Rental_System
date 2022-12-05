@@ -1,5 +1,3 @@
-import sun.awt.image.GifImageDecoder;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -46,20 +44,25 @@ public class ReportFunctions extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == printUserButton){
+                GUI.playSound("ji.wav");
                 generateReport("user_report", userPrintText);
             }
             else if (e.getSource() == printCarButton){
+                GUI.playSound("ji.wav");
                 generateReport("car_report", carPrintText);
             }
             else if (e.getSource() == printPaymentButton){
+                GUI.playSound("ji.wav");
                 generateReport("payment_report", paymentPrintText);
             }
             else if (e.getSource() == printFeedbackButton){
+                GUI.playSound("ji.wav");
                 generateReport("feedback_report", feedbackPrintText);
             }
         }
         catch (Exception exception){
-
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 

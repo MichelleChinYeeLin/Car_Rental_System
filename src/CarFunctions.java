@@ -488,36 +488,41 @@ public class CarFunctions extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == confirmAdd) {
+                GUI.playSound("ji.wav");
                 addCar();
             }
             else if (e.getSource() == cancelAdd) {
+                GUI.playSound("ji.wav");
                 clearAddCarField();
             }
             else if (e.getSource() == adminSearchButton){
+                GUI.playSound("ji.wav");
                 searchCar(true);
             }
             else if (e.getSource() == editButton){
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
+                GUI.playSound("ji.wav");
                 showAdminCarPanel(editCarPanel);
                 showCarDetails();
             }
             else if (e.getSource() == OKButton){
-                GUI.playSound("DontSayFiveDe.wav");
+                GUI.playSound("ji.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editCarDetails();
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == deleteButton){
-                GUI.playSound("DontSayFiveDe.wav");
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
+                GUI.playSound("DontSayFiveDe.wav");
 
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
@@ -527,13 +532,16 @@ public class CarFunctions extends JPanel implements ActionListener{
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been deleted!");
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
             else if (e.getSource() == adminBackToSearch){
+                GUI.playSound("ji.wav");
                 showAdminCarPanel(searchCarPanel);
             }
             else if (e.getSource() == customerSearchButton){
+                GUI.playSound("ji.wav");
                 searchCar(false);
             }
             else if (e.getSource() == customerBookButton){
@@ -541,6 +549,8 @@ public class CarFunctions extends JPanel implements ActionListener{
                 if(numberValue == 0){
                     throw new CarNotFoundException();
                 }
+                GUI.playSound("ji.wav");
+
                 Car toBook = FileIO.carList.get(numberValue -1);
                 if (validateQualification(toBook)){
                     showCustomerCarPanel(createBookingPanel);
@@ -572,6 +582,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 }
             }
             else if (e.getSource() == customerBackToSearch){
+                GUI.playSound("ji.wav");
                 showCustomerCarPanel(searchCarPanel);
             }
         }
@@ -580,11 +591,12 @@ public class CarFunctions extends JPanel implements ActionListener{
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
             exception.printStackTrace();
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -823,21 +835,27 @@ public class CarFunctions extends JPanel implements ActionListener{
             flag =  true;
         }
         catch (CarNotFoundException carNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car is not available!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidUserException invalidUserException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You had been banned for booking any car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidBookingException invalidBookingException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book Level-1 car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPointException invalidPointException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't book Level-" + toBook.getLevel() + " car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (ExceedBookingQuantityException exceedBookingQuantityException) {
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book one car at one time!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (BookingNotCompletedException bookingNotCompletedException) {
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your previous booking haven't completed!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return flag;

@@ -273,6 +273,7 @@ public class Customer extends User {
                 return false;
             }
         } catch (Exception exception) {
+            GUI.playSound("ReflectYourself.wav");
             return false;
         }
     }
@@ -291,6 +292,7 @@ public class Customer extends User {
                 return false;
             }
         } catch (Exception exception) {
+            GUI.playSound("ReflectYourself.wav");
             return false;
         }
     }

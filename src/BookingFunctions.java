@@ -442,12 +442,14 @@ public class BookingFunctions extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == searchButton) {
+                GUI.playSound("ji.wav");
                 searchBooking();
             }
             else if (e.getSource() == editAdminButton) {
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
+                GUI.playSound("ji.wav");
                 showBookingPanel(editBookingPanel);
                 showBookingDetailsAdmin();
             }
@@ -455,6 +457,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
+                GUI.playSound("DontSayFiveDe.wav");
 
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")) {
@@ -464,10 +467,12 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been deleted!");
                     searchBooking();
                 } else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
             else if (e.getSource() == OKAdminButton){
+                GUI.playSound("ji.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editBookingDetailsAdmin();
@@ -475,13 +480,16 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     searchBooking();
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == backToSearchButton){
+                GUI.playSound("ji.wav");
                 showBookingPanel(searchBookingPanel);
             }
             else if (e.getSource() == receiptAdminButton){
+                GUI.playSound("ji.wav");
                 int numberValue = (int) numberSpinnerEdit.getValue();
                 Booking booking = FileIO.bookingList.get(numberValue - 1);
                 generateReceipt(booking);
@@ -490,6 +498,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
+                GUI.playSound("ji.wav");
                 showBookingPanel(customerEditBookingPanel);
                 showBookingDetailsCustomer();
             }
@@ -497,20 +506,22 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
+                GUI.playSound("ji.wav");
 
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")) {
                     int numberValue = (int) numberSpinnerEdit.getValue();
-
-//                    Booking.deleteBooking(customerBookingList.get(numberValue - 1));
                     Booking.deleteBooking(CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1));
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been deleted!");
+                    GUI.playSound("DontSayFiveDe.wav");
                     searchBooking();
                 } else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
             else if (e.getSource() == OKCustomerButton){
+                GUI.playSound("ji.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editBookingDetailsCustomer();
@@ -518,46 +529,51 @@ public class BookingFunctions extends JPanel implements ActionListener {
                     viewOngoingBookingCustomer();
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == backCustomerButton){
+                GUI.playSound("ji.wav");
                 showBookingCustomerPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
             else if (e.getSource() == receiptCustomerButton){
+                GUI.playSound("ji.wav");
                 int numberValue = (int) numberSpinnerReceipt.getValue();
-//                Booking booking = customerBookingList.get(numberValue - 1);
                 Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
                 generateReceipt(booking);
             }
             else if (e.getSource() == printButton){
+                GUI.playSound("ji.wav");
                 printReceipt();
             }
             else if (e.getSource() == payButton){
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
-
+                GUI.playSound("ji.wav");
                 showPaymentPanel();
             }
             else if (e.getSource() == confirmPaymentButton){
+                GUI.playSound("ji.wav");
                 confirmCustomerPayment();
                 showBookingCustomerPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
             else if (e.getSource() == cancelPaymentButton){
+                GUI.playSound("ji.wav");
                 showBookingCustomerPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
         }
         catch (BookingNotFoundException bookingNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid booking selected! Please try again.", "Invalid Booking", JOptionPane.WARNING_MESSAGE);
         }
-        catch (Exception exception)
-        {
+        catch (Exception exception) {
             exception.printStackTrace();
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -663,6 +679,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Booking.editBookingDetails(numberValue, carNumberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -845,7 +862,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     public void viewOngoingBookingCustomer(){
-//        customerBookingList = new ArrayList<>();
         ongoingBookingPanel.removeAll();
         int row = 0;
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
@@ -855,22 +871,12 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
 
         String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
-//        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         Object[][] tempTable = new Object[row][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
-//        for (Booking booking: FileIO.bookingList){
-//            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername()) &&
-//                booking.getStatus() != Booking.Status.COMPLETED){
-//                i = insertBookingTableCustomer(tempTable, i, booking);
-//                customerBookingList.add(booking);
-//                bookingFound = true;
-//            }
-//        }
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
             if (booking.getStatus() != Booking.Status.COMPLETED){
                 i = insertBookingTableCustomer(tempTable, i, booking);
-//                customerBookingList.add(booking);
                 bookingFound = true;
             }
         }
@@ -938,7 +944,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     public void viewCompletedBookingCustomer(){
-//        customerBookingList = new ArrayList<>();
         completedBookingPanel.removeAll();
         int row = 0;
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
@@ -948,22 +953,12 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
 
         String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
-//        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         Object[][] tempTable = new Object[row][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
-//        for (Booking booking: FileIO.bookingList){
-//            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername()) &&
-//                    booking.getStatus() == Booking.Status.COMPLETED){
-//                i = insertBookingTableCustomer(tempTable, i, booking);
-//                bookingFound = true;
-//                customerBookingList.add(booking);
-//            }
-//        }
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
             if (booking.getStatus() == Booking.Status.COMPLETED){
                 i = insertBookingTableCustomer(tempTable, i, booking);
-//                customerBookingList.add(booking);
                 bookingFound = true;
             }
         }
@@ -1022,7 +1017,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void editBookingDetailsCustomer(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-//        Booking booking = customerBookingList.get(numberValue - 1);
         Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
         String carNumberPlate = carNumberPlateEdit.getText();
 
@@ -1045,6 +1039,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Booking.editBookingDetails(booking, carNumberPlate, startDate, endDate);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -1115,6 +1110,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private void confirmCustomerPayment(){
 
         if (cardNumber.equals("") || cvv.equals("")){
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(this, "Payment details incomplete!", "Payment Failed", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -1257,11 +1253,13 @@ public class BookingFunctions extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(this, "Receipt printed successfully!", "Receipt Printed", JOptionPane.INFORMATION_MESSAGE);
         }
         catch (IOException ioException){
+            GUI.playSound("ReflectYourself.wav");
             System.out.println("Unable to open file. Please try again.");
             ioException.printStackTrace();
         }
         catch (Exception e){
-            System.out.println("An unexpected error has occurred. Please try again.");
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 }

@@ -307,7 +307,7 @@ public class CustomerMenu implements ActionListener {
             }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
-            JOptionPane.showMessageDialog(frame, "Invalid move!");
+            JOptionPane.showMessageDialog(frame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 

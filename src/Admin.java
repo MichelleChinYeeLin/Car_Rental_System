@@ -45,7 +45,7 @@ public class Admin extends User{
             FileIO.writeAdminFile();
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password has been successfully changed!");
 
-        } catch (EmptyInputException e) {
+        } catch (EmptyInputException emptyInputException) {
             GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (MismatchPasswordException mismatchPasswordException){

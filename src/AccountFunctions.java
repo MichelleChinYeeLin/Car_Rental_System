@@ -88,7 +88,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminOKButton.addActionListener(this);
             backToSearch = new JButton("BACK");
             backToSearch.addActionListener(this);
-            adminAccountButtons = new JButton[]{adminConfirmEdit, adminCancelEdit, adminConfirmAdd, adminCancelAdd, adminSearch, adminResetPassword, adminOKButton, backToSearch};
+            adminAccountButtons = new JButton[]{adminConfirmEdit, adminCancelEdit, adminConfirmAdd, adminCancelAdd,
+                    adminSearch, adminResetPassword, adminOKButton, backToSearch};
             GUI.subJButtonSetup(adminAccountButtons, new Dimension(100, 40));
             adminResetPassword.setPreferredSize(new Dimension(180,40));
 
@@ -110,8 +111,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminAddressSearchLabel = new JLabel("Address:");
             adminPointSearchLabel1 = new JLabel("Point:");
             adminPointSearchLabel2 = new JLabel("to");
-            adminSearchLabels = new JLabel[]{adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel, adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2,
-                    adminEmailSearchLabel, adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2};
+            adminSearchLabels = new JLabel[]{adminUsernameSearchLabel, adminNameSearchLabel, adminPhoneSearchLabel,
+                    adminGenderSearchLabel, adminAgeSearchLabel1, adminAgeSearchLabel2, adminEmailSearchLabel,
+                    adminAddressSearchLabel, adminPointSearchLabel1, adminPointSearchLabel2};
             GUI.JLabelSetup(adminSearchLabels);
 
             //Create input fields
@@ -406,8 +408,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             customerGenderGroup.add(customerFemale);
 
             //JComponent array
-            customerComponents = new JComponent[]{customerUsernameEdit, customerNameEdit, customerPhoneEdit,customerEmailEdit,
-                    customerAddressEdit, customerPasswordEdit, customerAgeEdit, customerPointAndLevel, customerMale, customerFemale};
+            customerComponents = new JComponent[]{customerUsernameEdit, customerNameEdit, customerPhoneEdit,
+                    customerEmailEdit, customerAddressEdit, customerPasswordEdit, customerAgeEdit,
+                    customerPointAndLevel, customerMale, customerFemale};
 
             //Create control unit
             JPanel selectionPanel = new JPanel();
@@ -502,6 +505,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 GUI.playSound("DontSayFiveDe.wav");
             }
             else if (e.getSource() == adminCancelEdit){
+                GUI.playSound("ji.wav");
                 adminPassword1.setText("");
                 adminPassword2.setText("");
             }
@@ -516,9 +520,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
             }
             else if (e.getSource() == adminCancelAdd){
+                GUI.playSound("ji.wav");
                 adminUsername2.setText("");
             }
             else if (e.getSource() == adminSearch){
+                GUI.playSound("ji.wav");
                 adminSearchResultPanel.removeAll();
                 searchAccount();
             }
@@ -526,12 +532,14 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 if((int) numberSpinner.getValue() == 0){
                     throw new UserNotFoundException();
                 }
+                GUI.playSound("ji.wav");
                 showAccountPanel(adminEditAccountPanel);
                 showAccountDetails();
             }
             else if (e.getSource() == adminResetPassword){
                 String input = JOptionPane.showInputDialog("Type \"RESET\" to reset the password!");
                 if (input != null && input.equals("RESET")){
+                    GUI.playSound("ji.wav");
                     int numberValue = (int) numberSpinner.getValue();
                     String accountType = (String) adminUserType.getSelectedItem();
                     Admin.resetPassword(numberValue, accountType);
@@ -552,6 +560,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
             }
             else if (e.getSource() == backToSearch){
+                GUI.playSound("ji.wav");
                 showAccountPanel(adminSearchAccountPanel);
             }
             else if (e.getSource() == deleteButton){
@@ -611,7 +620,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
             GUI.playSound("ReflectYourself.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -799,6 +808,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 throw new InvalidUserException();
             }
             else if (adminUserType.getSelectedItem().equals("Customer")){
+                GUI.playSound("ji.wav");
 
                 String nameInput = adminNameEdit.getText();
                 String phoneInput = adminPhoneEdit.getText();
@@ -820,7 +830,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (Exception exception){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
