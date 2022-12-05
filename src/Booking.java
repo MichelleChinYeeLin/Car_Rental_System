@@ -1,5 +1,3 @@
-import sun.java2d.pipe.SpanShapeRenderer;
-
 import javax.swing.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -171,11 +169,14 @@ public class Booking {
     }
 
     public double calcMemberDiscount(){
-        if (customer.getPoints() > 200){
+        if (customer.getPoints() > 500){
+            return totalPrice * 0.2;
+        }
+        else if (customer.getPoints() > 200){
             return totalPrice * 0.1;
         }
-        else if (customer.getPoints() > 500){
-            return totalPrice * 0.2;
+        else if (customer.getPoints() < 0) {
+            return -totalPrice * 0.1;
         }
 
         return 0;
@@ -287,10 +288,10 @@ public class Booking {
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Price must not be less than 0!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidStatusException invalidStatusException){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \'ANY\'!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \"ANY\"!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPenaltyException invalidPenaltyException){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \'ANY\'!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \"ANY\"!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
 
         return false;
@@ -334,7 +335,8 @@ public class Booking {
         return false;
     }
 
-    public static void addBooking(Car car, Customer customer, Date startDate, Date endDate){
+    public static boolean addBooking(Car car, Customer customer, Date startDate, Date endDate){
+        boolean flag = false;
         try{
             if (startDate.after(endDate)){
                 throw new InvalidDateDurationException();
@@ -342,13 +344,15 @@ public class Booking {
             Status status = Status.BOOKED;
             Booking booking = new Booking(car, customer, status, startDate, endDate);
             FileIO.bookingList.add(booking);
+            flag = true;
         }
         catch (InvalidDateDurationException invalidDateDurationException){
-            //TODO show message for customer
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(Exception exception){
-            //TODO show message for customer
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
+        return flag;
     }
 
     public static void editBookingDetails(int numberValue, String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
@@ -407,7 +411,7 @@ public class Booking {
         FileIO.bookingList.remove(booking);
     }
 
-    public static ArrayList<Booking> searchBooking(String numberPlate, String customerName, double totalPrice, Status status, int startDay, Month startMonth, String startYear, int endDay, Month endMonth, String endYear){
+    public static ArrayList<Booking> searchBooking(String numberPlate, String customerName, double totalPrice, Status status, PenaltyType penalty, int startDay, Month startMonth, String startYear, int endDay, Month endMonth, String endYear){
         ArrayList<Booking> bookingList = FileIO.getBookingList();
         ArrayList<Booking> searchedBooking = new ArrayList<>();
 
@@ -429,6 +433,13 @@ public class Booking {
             if(status != Status.ANY){
 
                 if(booking.getStatus() != status){
+                    isMatch = false;
+                }
+            }
+
+            if (penalty != PenaltyType.ANY){
+
+                if(booking.getPenalty() != penalty){
                     isMatch = false;
                 }
             }
@@ -526,7 +537,7 @@ public class Booking {
             return date;
         }
         catch (ParseException parseException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Date unable to parse.");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Date unable to parse.");
             return null;
         }
     }

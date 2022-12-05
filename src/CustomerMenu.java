@@ -18,19 +18,14 @@ public class CustomerMenu implements ActionListener {
     /* CAR */
     private CarFunctions carFunctionsPanel;
     private JButton searchCar, allCar;
-    // search -> book?
 
     /* BOOKING */
     private BookingFunctions bookingFunctionsPanel;
-//    private CarFunctions forSearchOnly;
     private JButton ongoingBooking, completedBooking, viewBooking;
-    // book -> search car -> book
-    // view -> (return car -> payment)/receipt/feedback
-    // cant quit during payment!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     /* ACCOUNT */
-    private JPanel accountFunctionsPanel; // show profile
-    private JButton editAccount, deleteAccount;
+    private AccountFunctions accountFunctionsPanel;
+    private JButton changePassword, editAccount, deleteAccount;
 
     /* FEEDBACK */
     private JPanel feedbackFunctionsPanel;
@@ -80,17 +75,17 @@ public class CustomerMenu implements ActionListener {
 
         /* CAR */
         //Create buttons
-        searchCar = new JButton("Search");
+        searchCar = new JButton("Search car");
         allCar = new JButton("All Cars");
         carButtons = new JButton[]{searchCar, allCar};
         searchCar.addActionListener(this);
         allCar.addActionListener(this);
-        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
+        GUI.subJButtonSetup(carButtons, new Dimension(120, 40));
 
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
-        carFunctionsPanel = new CarFunctions();
+        carFunctionsPanel = new CarFunctions(false);
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -135,20 +130,24 @@ public class CustomerMenu implements ActionListener {
 
         /* ACCOUNT */
         //Create buttons
+        changePassword = new JButton("Change Password");
         editAccount = new JButton("Edit Account");
         deleteAccount = new JButton("Delete Account");
-        accountButtons = new JButton[]{editAccount, deleteAccount};
+        accountButtons = new JButton[]{changePassword, editAccount, deleteAccount};
+        changePassword.addActionListener(this);
         editAccount.addActionListener(this);
         deleteAccount.addActionListener(this);
         GUI.subJButtonSetup(accountButtons, new Dimension(140, 40));
+        changePassword.setPreferredSize(new Dimension(160,40));
 
         //Create account panel
         accountPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-        accountFunctionsPanel = new JPanel(); // to change
+        accountFunctionsPanel = new AccountFunctions(false);
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
+        accountButtonPanel.add(changePassword);
         accountButtonPanel.add(editAccount);
         accountButtonPanel.add(deleteAccount);
 
@@ -214,11 +213,13 @@ public class CustomerMenu implements ActionListener {
 
         //Create main panel
         JPanel mainPanel = new JPanel();
+        mainPanel.setPreferredSize(new Dimension(600, 500));
         mainPanel.setBackground(Color.white);
         mainPanel.add(carsPanel);
         mainPanel.add(bookingsPanel);
         mainPanel.add(accountPanel);
         mainPanel.add(feedbackPanel);
+        mainPanel.validate();
 
         //Position main panel in the frame
         constraints.insets = new Insets(5,0,5,5);
@@ -260,6 +261,7 @@ public class CustomerMenu implements ActionListener {
             else if (e.getSource() == account){
                 GUI.playSound("ji.wav");
                 showCustomerPanel(accountPanel, accountFunctionsPanel);
+                AccountFunctions.showCustomerDetails();
             }
             else if (e.getSource() == feedback){
                 GUI.playSound("ji.wav");
@@ -267,11 +269,23 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showSearchCarPanel();
+                CarFunctions.showCustomerSearchCarPanel();
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showAllCarPanel();
+                CarFunctions.showAllCarPanel(false);
+            }
+            else if (e.getSource() == changePassword){
+                GUI.playSound("ji.wav");
+                AccountFunctions.customerChangePassword();
+            }
+            else if (e.getSource() == editAccount){
+                GUI.playSound("ji.wav");
+                AccountFunctions.customerEditAccount();
+            }
+            else if (e.getSource() == deleteAccount) {
+                GUI.playSound("ji.wav");
+                AccountFunctions.customerDeleteAccount();
             }
             else if (e.getSource() == ongoingBooking){
                 GUI.playSound("ji.wav");
@@ -292,7 +306,7 @@ public class CustomerMenu implements ActionListener {
                 submitCustomerFeedback();
             }
         } catch (Exception exception){
-            GUI.playSound("niganma.wav");
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(frame, "Invalid move!");
         }
     }

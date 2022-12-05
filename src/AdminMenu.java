@@ -33,7 +33,6 @@ public class AdminMenu implements ActionListener {
     /* BOOKING */
     private BookingFunctions bookingFunctionsPanel;
     private JButton searchBooking, allBooking;
-    // search -> confirm/decline/generate receipt
 
     /* REPORT */
     private JPanel reportFunctionsPanel;
@@ -100,7 +99,7 @@ public class AdminMenu implements ActionListener {
         //Create car panel
         carsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints carConstraints = new GridBagConstraints();
-        carFunctionsPanel = new CarFunctions();
+        carFunctionsPanel = new CarFunctions(true);
 
         //Car button panel
         JPanel carButtonPanel = new JPanel(new GridBagLayout());
@@ -138,7 +137,7 @@ public class AdminMenu implements ActionListener {
         //Create account panel
         accountsPanel = new JPanel(new GridBagLayout());
         GridBagConstraints accConstraints = new GridBagConstraints();
-        accountFunctionsPanel = new AccountFunctions();
+        accountFunctionsPanel = new AccountFunctions(true);
 
         //Account button panel
         JPanel accountButtonPanel = new JPanel(new GridBagLayout());
@@ -219,6 +218,7 @@ public class AdminMenu implements ActionListener {
         recordFunctionsPanel.setPreferredSize(new Dimension(600,500));
         recordsPanel.add(recordFunctionsPanel);
 
+
         /* MAIN */
         //Create panels
         panels = new JPanel[]{carsPanel, carFunctionsPanel, registrationsPanel, registrationFunctionsPanel,
@@ -298,7 +298,7 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == editPassword){
                 GUI.playSound("ji.wav");
-                AccountFunctions.getUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
+                AccountFunctions.getAdminUsername1().setText(CarRentalSystem.loginAdmin.getUsername());
                 AccountFunctions.showEditPasswordPanel();
             }
             else if (e.getSource() == addAdmin){
@@ -319,19 +319,22 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showSearchCarPanel();
+                CarFunctions.showAdminSearchCarPanel();
             }
             else if (e.getSource() == allCar){
                 GUI.playSound("ji.wav");
-                CarFunctions.showAllCarPanel();
+                CarFunctions.showAllCarPanel(true);
             }
             else if (e.getSource() == approveButton){
+                GUI.playSound("ji.wav");
                 approveRegistration();
             }
             else if (e.getSource() == denyButton){
+                GUI.playSound("ji.wav");
                 denyRegistration();
             }
             else if (e.getSource() == records){
+                GUI.playSound("ji.wav");
                 showRecordsPanel();
                 showAdminPanel(recordsPanel, recordFunctionsPanel);
             }
@@ -348,8 +351,7 @@ public class AdminMenu implements ActionListener {
                 ReportFunctions.showFeedbackPanel();
             }
         } catch (Exception exception){
-            GUI.playSound("niganma.wav");
-            System.out.println("HI something wrong");
+            GUI.playSound("NormalVoice.wav");
         }
     }
 
@@ -363,7 +365,7 @@ public class AdminMenu implements ActionListener {
 
     private void approveRegistration(){
 
-        int index = (int)numberSpinner.getValue();
+        int index = (int) numberSpinner.getValue();
         boolean isSuccess = Customer.approveRegistration(index - 1);
 
         if(isSuccess){
@@ -376,7 +378,7 @@ public class AdminMenu implements ActionListener {
 
     private void denyRegistration(){
 
-        int index = (int)numberSpinner.getValue();
+        int index = (int) numberSpinner.getValue();
         boolean isSuccess = Customer.denyRegistration(index - 1);
 
         if(isSuccess){
@@ -446,6 +448,9 @@ public class AdminMenu implements ActionListener {
             denyButton.addActionListener(this);
             bottomPanel.add(denyButton, bottomConstraints);
 
+            JButton[] registrationButtons = new JButton[]{approveButton, denyButton};
+            GUI.subJButtonSetup(registrationButtons, new Dimension(100,30));
+
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.gridx = 0;
             constraints.gridy = 0;
@@ -462,6 +467,7 @@ public class AdminMenu implements ActionListener {
     }
 
     private void showRecordsPanel(){
+        recordFunctionsPanel.removeAll();
         JLabel recordLabel = new JLabel();
         String labelText = "<html><body>";
 

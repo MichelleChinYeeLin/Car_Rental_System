@@ -1,73 +1,78 @@
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import static java.lang.Math.ceil;
-import static java.lang.Math.max;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class CarFunctions extends JPanel implements ActionListener{
 
-    private JPanel addCarAttributesPanel, editCarAttributesPanel, searchCarAttributesPanel;
-    private static JPanel addCarPanel, editCarPanel, searchCarPanel, viewCarPanel;
+    private boolean isAdmin;
+
+    // Search car
     private JPanel searchResultsPanel;
-    private JButton confirmAdd, cancelAdd, searchButton, OKButton, backToSearch, editButton, deleteButton;
-    private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel;
-    private JLabel numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel, levelEditLabel, priceEditLabel, availabilityEditLabel;
-    private JLabel numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel;
-    private JTextField numberPlate, brand, model, color, price;
-    private JTextField numberPlateEdit, brandEdit, modelEdit, colorEdit, priceEdit;
+    private JLabel numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel,
+            levelSearchLabel, priceSearchLabel, priceSearchIndicator, availabilitySearchLabel;
     private JTextField numberPlateSearch, brandSearch, modelSearch;
+    private JComboBox<Car.Color> colorSearchBox;
+    private JComboBox<String> levelSearchBox, availabilitySearchBox;
+    private JSlider priceSearchSlider;
+    private static JPanel searchCarPanel;
+    private JPanel searchCarAttributesPanel;
+
+    // Admin
+    private JPanel addCarAttributesPanel, editCarAttributesPanel;
+    private static JPanel addCarPanel, editCarPanel, viewCarPanel;
+    private JButton confirmAdd, cancelAdd, adminSearchButton, OKButton, adminBackToSearch, editButton, deleteButton;
+    private JLabel numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel;
+    private JLabel numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel, levelEditLabel,
+            priceEditLabel, availabilityEditLabel;
+    private JTextField numberPlate, brand, model, price;
+    private JTextField numberPlateEdit, brandEdit, modelEdit, colorEdit, priceEdit;
+    private JComboBox<Car.Color> color;
     private JSpinner level, levelEdit, numberSpinner;
     private JRadioButton available, notAvailable;
     private ButtonGroup availability;
-    private JSlider priceSearchSlider;
-    private JComboBox<String> colorSearchBox, levelSearchBox, availabilitySearchBox;
     private static JTable allCarTable;
     private JScrollPane searchTableScroll;
-    private JButton[] carButtons;
-    private static JPanel[] panels;
+    private JButton[] adminCarButtons;
+    private static JPanel[] adminPanels;
     private JLabel[] carLabels, editCarLabels, searchCarLabels;
     private JComponent[] components;
 
-    public CarFunctions(){
+    // Customer
+    private JPanel createBookingPanel, bookingAttributesPanel;
+    private JButton customerSearchButton, customerBackToSearch, customerBookButton, confirmBooking;
+    private JLabel carNumberPlateLabel, startDateLabel, endDateLabel, carDetails;
+    private JComboBox<String> startDateYear, endDateYear;
+    private JComboBox<Booking.Month> startDateMonth, endDateMonth;
+    private JSpinner startDateDay, endDateDay;
+    private JButton[] customerCarButtons;
+    private static JPanel[] customerPanels;
 
-        //Create buttons
-        confirmAdd = new JButton("ADD");
-        cancelAdd = new JButton("CANCEL");
-        searchButton = new JButton("SEARCH");
-        OKButton = new JButton("OK");
-        backToSearch = new JButton("BACK");
-        carButtons = new JButton[]{confirmAdd, cancelAdd, searchButton, OKButton, backToSearch};
-        confirmAdd.addActionListener(this);
-        cancelAdd.addActionListener(this);
-        searchButton.addActionListener(this);
-        OKButton.addActionListener(this);
-        backToSearch.addActionListener(this);
-        GUI.subJButtonSetup(carButtons, new Dimension(100, 40));
 
-        //Create labels
-        numberPlateLabel = new JLabel("Number Plate:");
-        brandLabel = new JLabel("Brand:");
-        modelLabel = new JLabel("Model:");
-        colorLabel = new JLabel("Color:");
-        levelLabel = new JLabel("Level:");
-        priceLabel = new JLabel("Price:");
-        carLabels = new JLabel[]{numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel};
-        GUI.JLabelSetup(carLabels);
-        numberPlateEditLabel = new JLabel("Number Plate:");
-        brandEditLabel = new JLabel("Brand:");
-        modelEditLabel = new JLabel("Model:");
-        colorEditLabel = new JLabel("Color:");
-        levelEditLabel = new JLabel("Level:");
-        priceEditLabel = new JLabel("Price:");
-        availabilityEditLabel = new JLabel("Availability:");
-        editCarLabels = new JLabel[]{numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel,
-                levelEditLabel, priceEditLabel, availabilityEditLabel};
-        GUI.JLabelSetup(editCarLabels);
+    public CarFunctions(boolean isAdmin){
+
+        this.isAdmin = isAdmin;
+
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        Booking.Month[] month = Booking.Month.values();
+        String[] year = {"ANY", String.valueOf(gregorianCalendar.get(Calendar.YEAR)), String.valueOf(gregorianCalendar.get(Calendar.YEAR) + 1)};
+        Car.Color[] colorType = Car.Color.values();
+//        String[] colorType = {"Any", "Black", "White", "Silver", "Red", "Blue", "Yellow"};
+        String[] levelType = {"Any", "1", "2", "3"};
+        String[] availabilityType = {"Any", "Available", "Unavailable"};
+
+        /* Search car */
+        double maxPrice = 0.0;
+        for (Car c : FileIO.carList) {
+            maxPrice = Math.max(maxPrice, c.getPrice());
+        }
+
+        // Create labels
+        int maxPriceInInt = (int) Math.ceil(maxPrice);
         numberPlateSearchLabel = new JLabel("No. Plate:");
         brandSearchLabel = new JLabel("Brand:");
         modelSearchLabel = new JLabel("Model:");
@@ -77,43 +82,16 @@ public class CarFunctions extends JPanel implements ActionListener{
         priceSearchIndicator = new JLabel();
         availabilitySearchLabel = new JLabel("Availability:");
         searchCarLabels = new JLabel[]{numberPlateSearchLabel, brandSearchLabel, modelSearchLabel, colorSearchLabel, levelSearchLabel,
-                                       priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
+                priceSearchLabel, priceSearchIndicator, availabilitySearchLabel};
         GUI.JLabelSetup(searchCarLabels);
 
-        //Create input fields
+        // Create input fields
         //JTextField
-        numberPlate = new JTextField(20);
-        brand = new JTextField(20);
-        model = new JTextField(20);
-        color = new JTextField(20);
-        price = new JTextField(20);
-        numberPlateEdit = new JTextField(20);
-        brandEdit = new JTextField(20);
-        modelEdit = new JTextField(20);
-        colorEdit = new JTextField(20);
-        priceEdit = new JTextField(20);
         numberPlateSearch = new JTextField(10);
         brandSearch = new JTextField(10);
         modelSearch = new JTextField(10);
 
-        //JSpinner
-        level = new JSpinner(new SpinnerNumberModel(1,1,3,1));
-        levelEdit = new JSpinner(new SpinnerNumberModel(1,1,3,1));
-
-        //JRadioButton
-        available = new JRadioButton("YES");
-        notAvailable = new JRadioButton("NO");
-        availability = new ButtonGroup();
-
-        available.setFocusable(false);
-        notAvailable.setFocusable(false);
-        availability.add(available);
-        availability.add(notAvailable);
-
         //JComboBox
-        String[] colorType = {"Any", "Black", "White", "Silver", "Red", "Blue", "Yellow"};
-        String[] levelType = {"Any", "1", "2", "3"};
-        String[] availabilityType = {"Any", "Available", "Unavailable"};
         colorSearchBox = new JComboBox<>(colorType);
         colorSearchBox.setFont(GUI.getDefaultFont());
         levelSearchBox = new JComboBox<>(levelType);
@@ -122,11 +100,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         availabilitySearchBox.setFont(GUI.getDefaultFont());
 
         //JSlider
-        double maxPrice = 0.0;
-        for (Car c : FileIO.carList) {
-            maxPrice = max(maxPrice, c.getPrice());
-        }
-        int maxPriceInInt = (int) ceil(maxPrice);
         priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, maxPriceInInt, maxPriceInInt);
         priceSearchSlider.setMajorTickSpacing(maxPriceInInt/5);
         priceSearchSlider.setMinorTickSpacing(maxPriceInInt/10);
@@ -135,104 +108,16 @@ public class CarFunctions extends JPanel implements ActionListener{
         priceSearchSlider.setPaintLabels(true);
 
         priceSearchIndicator.setText(String.valueOf(maxPriceInInt));
-        priceSearchSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                priceSearchIndicator.setText(String.valueOf(priceSearchSlider.getValue()));
-            }
-        });
+        priceSearchSlider.addChangeListener(changeEvent -> priceSearchIndicator.setText(String.valueOf(priceSearchSlider.getValue())));
 
-        //JComponent array
-        components = new JComponent[]{numberPlateEdit, brandEdit, modelEdit, colorEdit,
-                priceEdit, available, notAvailable};
-
-        //ADD Car Attributes Panel & EDIT Car Attributes Panel
-        GridBagConstraints carConstraints = new GridBagConstraints();
-        addCarAttributesPanel = new JPanel(new GridBagLayout());
-        addCarAttributesPanel.setBackground(Color.white);
-        editCarAttributesPanel = new JPanel(new GridBagLayout());
-        editCarAttributesPanel.setBackground(Color.white);
-        //Setup labels
-        carConstraints.insets = new Insets(10,5,10,5);
-        carConstraints.weightx = 1;
-        carConstraints.weighty = 1;
-        carConstraints.gridx = 0;
-        carConstraints.ipady = 0;
-        carConstraints.gridwidth = 2;
-        for(int i = 0; i < carLabels.length; i++){
-
-            if(carLabels[i].getText().equals("Level:")){
-                carConstraints.gridwidth = 1;
-            }
-            carConstraints.gridy = i + 1;
-            addCarAttributesPanel.add(carLabels[i], carConstraints);
-        }
-        for(int i = 0; i < editCarLabels.length; i++){
-
-            if(editCarLabels[i].getText().equals("Level:")){
-                carConstraints.gridwidth = 1;
-            }
-            carConstraints.gridy = i + 1;
-            editCarAttributesPanel.add(editCarLabels[i], carConstraints);
-        }
-        //Setup fields
-        carConstraints.gridx = 2;
-        carConstraints.gridy = 1;
-        addCarAttributesPanel.add(numberPlate, carConstraints);
-        editCarAttributesPanel.add(numberPlateEdit, carConstraints);
-        carConstraints.gridy = 2;
-        addCarAttributesPanel.add(brand, carConstraints);
-        editCarAttributesPanel.add(brandEdit, carConstraints);
-        carConstraints.gridy = 3;
-        addCarAttributesPanel.add(model, carConstraints);
-        editCarAttributesPanel.add(modelEdit, carConstraints);
-        carConstraints.gridy = 4;
-        addCarAttributesPanel.add(color, carConstraints);
-        editCarAttributesPanel.add(colorEdit, carConstraints);
-        carConstraints.gridy = 5;
-        addCarAttributesPanel.add(level, carConstraints);
-        editCarAttributesPanel.add(levelEdit, carConstraints);
-        carConstraints.gridy = 6;
-        addCarAttributesPanel.add(price, carConstraints);
-        editCarAttributesPanel.add(priceEdit, carConstraints);
-        carConstraints.gridy = 7;
-        JPanel availabilityPanel = new JPanel(new FlowLayout());
-        availabilityPanel.setBackground(Color.white);
-        availabilityPanel.add(available);
-        availabilityPanel.add(notAvailable);
-        editCarAttributesPanel.add(availabilityPanel, carConstraints);
-
-        //Add car panel
-        addCarPanel = new JPanel(new GridBagLayout());
-        JPanel addCarSelectionPanel = new JPanel(new FlowLayout());
-        addCarSelectionPanel.setBackground(Color.white);
-        addCarSelectionPanel.add(confirmAdd);
-        addCarSelectionPanel.add(cancelAdd);
-
-        carConstraints.gridy = 0;
-        addCarPanel.add(addCarAttributesPanel, carConstraints);
-        carConstraints.gridy = 1;
-        addCarPanel.add(addCarSelectionPanel, carConstraints);
-
-        //Edit car panel
-        editCarPanel = new JPanel(new GridBagLayout());
-        JPanel editCarSelectionPanel = new JPanel(new FlowLayout());
-        editCarSelectionPanel.setBackground(Color.white);
-        editCarSelectionPanel.add(OKButton);
-        editCarSelectionPanel.add(backToSearch);
-
-        carConstraints.gridy = 0;
-        editCarPanel.add(editCarAttributesPanel, carConstraints);
-        carConstraints.gridy = 1;
-        editCarPanel.add(editCarSelectionPanel, carConstraints);
+        searchResultsPanel = new JPanel(new BorderLayout());
+        searchResultsPanel.setBackground(Color.white);
+        searchResultsPanel.setPreferredSize(new Dimension(500, 300));
 
         //Search car panel
         searchCarPanel = new JPanel(new GridBagLayout());
         searchCarAttributesPanel = new JPanel(new GridBagLayout());
         searchCarAttributesPanel.setBackground(Color.white);
-        searchResultsPanel = new JPanel(new BorderLayout());
-        searchResultsPanel.setBackground(Color.white);
-        searchResultsPanel.setPreferredSize(new Dimension(500, 300));
 
         //Position components in the search field panel
         GridBagConstraints searchAttributeConstraints = new GridBagConstraints();
@@ -289,9 +174,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchAttributeConstraints.gridwidth = 1;
         searchCarAttributesPanel.add(priceSearchIndicator, searchAttributeConstraints);
 
-        searchAttributeConstraints.gridx = 5;
-        searchCarAttributesPanel.add(searchButton, searchAttributeConstraints);
-
         GridBagConstraints searchConstraints = new GridBagConstraints();
         searchConstraints.fill = GridBagConstraints.BOTH;
         searchConstraints.gridx = 0;
@@ -304,31 +186,302 @@ public class CarFunctions extends JPanel implements ActionListener{
         searchConstraints.insets = new Insets(10,10,10,10);
         searchCarPanel.add(searchResultsPanel, searchConstraints);
 
-        //View car panel
-        viewCarPanel = new JPanel(new GridBagLayout());
+        if (isAdmin){
+            //Create buttons
+            confirmAdd = new JButton("ADD");
+            cancelAdd = new JButton("CANCEL");
+            adminSearchButton = new JButton("SEARCH");
+            OKButton = new JButton("OK");
+            adminBackToSearch = new JButton("BACK");
+            adminCarButtons = new JButton[]{confirmAdd, cancelAdd, adminSearchButton, OKButton, adminBackToSearch};
+            confirmAdd.addActionListener(this);
+            cancelAdd.addActionListener(this);
+            adminSearchButton.addActionListener(this);
+            OKButton.addActionListener(this);
+            adminBackToSearch.addActionListener(this);
+            GUI.subJButtonSetup(adminCarButtons, new Dimension(100, 40));
 
-        //Create car functions panel
-        panels = new JPanel[]{addCarPanel, editCarPanel, searchCarPanel, viewCarPanel};
-        GUI.JPanelSetup(panels);
+            //Create labels
+            numberPlateLabel = new JLabel("Number Plate:");
+            brandLabel = new JLabel("Brand:");
+            modelLabel = new JLabel("Model:");
+            colorLabel = new JLabel("Color:");
+            levelLabel = new JLabel("Level:");
+            priceLabel = new JLabel("Price:");
+            carLabels = new JLabel[]{numberPlateLabel, brandLabel, modelLabel, colorLabel, levelLabel, priceLabel};
+            GUI.JLabelSetup(carLabels);
+
+            numberPlateEditLabel = new JLabel("Number Plate:");
+            brandEditLabel = new JLabel("Brand:");
+            modelEditLabel = new JLabel("Model:");
+            colorEditLabel = new JLabel("Color:");
+            levelEditLabel = new JLabel("Level:");
+            priceEditLabel = new JLabel("Price:");
+            availabilityEditLabel = new JLabel("Availability:");
+            editCarLabels = new JLabel[]{numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel,
+                    levelEditLabel, priceEditLabel, availabilityEditLabel};
+            GUI.JLabelSetup(editCarLabels);
+
+            //Create input fields
+            //JTextField
+            numberPlate = new JTextField(20);
+            brand = new JTextField(20);
+            model = new JTextField(20);
+            price = new JTextField(20);
+            numberPlateEdit = new JTextField(20);
+            brandEdit = new JTextField(20);
+            modelEdit = new JTextField(20);
+            colorEdit = new JTextField(20);
+            priceEdit = new JTextField(20);
+
+            //JSpinner
+            level = new JSpinner(new SpinnerNumberModel(1,1,3,1));
+            levelEdit = new JSpinner(new SpinnerNumberModel(1,1,3,1));
+
+            //JRadioButton
+            available = new JRadioButton("YES");
+            notAvailable = new JRadioButton("NO");
+            availability = new ButtonGroup();
+
+            available.setFocusable(false);
+            notAvailable.setFocusable(false);
+            availability.add(available);
+            availability.add(notAvailable);
+
+            //JComboBox
+            color = new JComboBox<>(colorType);
+            color.setFont(GUI.getDefaultFont());
+
+            //JComponent array
+            components = new JComponent[]{numberPlateEdit, brandEdit, modelEdit, colorEdit,
+                    priceEdit, available, notAvailable};
+
+            //ADD Car Attributes Panel & EDIT Car Attributes Panel
+            GridBagConstraints carConstraints = new GridBagConstraints();
+            addCarAttributesPanel = new JPanel(new GridBagLayout());
+            addCarAttributesPanel.setBackground(Color.white);
+            editCarAttributesPanel = new JPanel(new GridBagLayout());
+            editCarAttributesPanel.setBackground(Color.white);
+
+            //Setup labels
+            carConstraints.insets = new Insets(10,5,10,5);
+            carConstraints.weightx = 1;
+            carConstraints.weighty = 1;
+            carConstraints.gridx = 0;
+            carConstraints.ipady = 0;
+            carConstraints.gridwidth = 2;
+            for(int i = 0; i < carLabels.length; i++){
+
+                if(carLabels[i].getText().equals("Level:")){
+                    carConstraints.gridwidth = 1;
+                }
+                carConstraints.gridy = i + 1;
+                addCarAttributesPanel.add(carLabels[i], carConstraints);
+            }
+            for(int i = 0; i < editCarLabels.length; i++){
+
+                if(editCarLabels[i].getText().equals("Level:")){
+                    carConstraints.gridwidth = 1;
+                }
+                carConstraints.gridy = i + 1;
+                editCarAttributesPanel.add(editCarLabels[i], carConstraints);
+            }
+
+            //Setup fields
+            carConstraints.gridx = 2;
+            carConstraints.gridy = 1;
+            addCarAttributesPanel.add(numberPlate, carConstraints);
+            editCarAttributesPanel.add(numberPlateEdit, carConstraints);
+
+            carConstraints.gridy = 2;
+            addCarAttributesPanel.add(brand, carConstraints);
+            editCarAttributesPanel.add(brandEdit, carConstraints);
+
+            carConstraints.gridy = 3;
+            addCarAttributesPanel.add(model, carConstraints);
+            editCarAttributesPanel.add(modelEdit, carConstraints);
+
+            carConstraints.gridy = 4;
+            addCarAttributesPanel.add(color, carConstraints);
+            editCarAttributesPanel.add(colorEdit, carConstraints);
+
+            carConstraints.gridy = 5;
+            addCarAttributesPanel.add(level, carConstraints);
+            editCarAttributesPanel.add(levelEdit, carConstraints);
+
+            carConstraints.gridy = 6;
+            addCarAttributesPanel.add(price, carConstraints);
+            editCarAttributesPanel.add(priceEdit, carConstraints);
+
+            carConstraints.gridy = 7;
+            JPanel availabilityPanel = new JPanel(new FlowLayout());
+            availabilityPanel.setBackground(Color.white);
+            availabilityPanel.add(available);
+            availabilityPanel.add(notAvailable);
+            editCarAttributesPanel.add(availabilityPanel, carConstraints);
+
+            //Add car panel
+            addCarPanel = new JPanel(new GridBagLayout());
+            JPanel addCarSelectionPanel = new JPanel(new FlowLayout());
+            addCarSelectionPanel.setBackground(Color.white);
+            addCarSelectionPanel.add(confirmAdd);
+            addCarSelectionPanel.add(cancelAdd);
+
+            carConstraints.gridy = 0;
+            addCarPanel.add(addCarAttributesPanel, carConstraints);
+            carConstraints.gridy = 1;
+            addCarPanel.add(addCarSelectionPanel, carConstraints);
+
+            //Edit car panel
+            editCarPanel = new JPanel(new GridBagLayout());
+            JPanel editCarSelectionPanel = new JPanel(new FlowLayout());
+            editCarSelectionPanel.setBackground(Color.white);
+            editCarSelectionPanel.add(OKButton);
+            editCarSelectionPanel.add(adminBackToSearch);
+
+            carConstraints.gridy = 0;
+            editCarPanel.add(editCarAttributesPanel, carConstraints);
+            carConstraints.gridy = 1;
+            editCarPanel.add(editCarSelectionPanel, carConstraints);
+
+            //Search car panel
+            searchAttributeConstraints.gridx = 5;
+            searchCarAttributesPanel.add(adminSearchButton, searchAttributeConstraints);
+
+            //View car panel
+            viewCarPanel = new JPanel(new GridBagLayout());
+
+            //Create car functions panel
+            adminPanels = new JPanel[]{addCarPanel, editCarPanel, searchCarPanel, viewCarPanel};
+            GUI.JPanelSetup(adminPanels);
+            add(addCarPanel);
+            add(editCarPanel);
+            add(searchCarPanel);
+            add(viewCarPanel);
+        }
+
+        else {
+            //Create buttons
+            customerSearchButton = new JButton("SEARCH");
+            customerBackToSearch = new JButton("BACK");
+            confirmBooking = new JButton("CONFIRM");
+            customerSearchButton.addActionListener(this);
+            customerBackToSearch.addActionListener(this);
+            confirmBooking.addActionListener(this);
+            customerCarButtons = new JButton[]{customerSearchButton, customerBackToSearch, confirmBooking};
+            GUI.subJButtonSetup(customerCarButtons, new Dimension(100, 40));
+            confirmBooking.setPreferredSize(new Dimension(120, 40));
+
+            //Create labels
+            carNumberPlateLabel = new JLabel("Car Selected:");
+            startDateLabel = new JLabel("Start Date:");
+            endDateLabel = new JLabel("End Date:");
+            JLabel[] createBookingLabels = {carNumberPlateLabel, startDateLabel, endDateLabel};
+            GUI.JLabelSetup(createBookingLabels);
+
+            //Create input fields
+            //JComboBox
+            startDateMonth = new JComboBox<>(month);
+            endDateMonth = new JComboBox<>(month);
+            startDateMonth.setFont(GUI.getDefaultFont());
+            endDateMonth.setFont(GUI.getDefaultFont());
+            startDateYear = new JComboBox<>(year);
+            endDateYear = new JComboBox<>(year);
+            startDateYear.setFont(GUI.getDefaultFont());
+            endDateYear.setFont(GUI.getDefaultFont());
+
+            //JSpinner
+            startDateDay = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+            endDateDay = new JSpinner(new SpinnerNumberModel(0,0,31,1));
+
+            //Search car panel
+            searchAttributeConstraints.gridx = 5;
+            searchCarAttributesPanel.add(customerSearchButton, searchAttributeConstraints);
+
+            //Book car panel
+            createBookingPanel = new JPanel(new GridBagLayout());
+            bookingAttributesPanel = new JPanel(new GridBagLayout());
+            bookingAttributesPanel.setBackground(Color.white);
+
+            JPanel startDateEditPanel = new JPanel();
+            startDateEditPanel.setBackground(Color.white);
+            startDateEditPanel.add(startDateDay);
+            startDateEditPanel.add(startDateMonth);
+            startDateEditPanel.add(startDateYear);
+
+            JPanel endDateEditPanel = new JPanel();
+            endDateEditPanel.setBackground(Color.white);
+            endDateEditPanel.add(endDateDay);
+            endDateEditPanel.add(endDateMonth);
+            endDateEditPanel.add(endDateYear);
+
+            GridBagConstraints constraints = new GridBagConstraints();
+            constraints.insets = new Insets(20,2,20,2);
+            constraints.gridx = 0;
+            for(int i = 0; i < createBookingLabels.length; i++){
+                constraints.gridy = i;
+                bookingAttributesPanel.add(createBookingLabels[i], constraints);
+            }
+
+            carDetails = new JLabel("");
+            GUI.JLabelSetup(carDetails);
+
+            constraints.gridx = 1;
+            constraints.gridy = 0;
+            bookingAttributesPanel.add(carDetails, constraints);
+
+            constraints.gridy = 1;
+            bookingAttributesPanel.add(startDateEditPanel, constraints);
+
+            constraints.gridy = 2;
+            bookingAttributesPanel.add(endDateEditPanel, constraints);
+
+            JPanel editBookingSelectionPanel = new JPanel(new FlowLayout());
+            editBookingSelectionPanel.setBackground(Color.white);
+            editBookingSelectionPanel.add(confirmBooking);
+            editBookingSelectionPanel.add(customerBackToSearch);
+
+            GridBagConstraints bkgConstraints = new GridBagConstraints();
+            bkgConstraints.insets = new Insets(10,2,20,2);
+            bkgConstraints.gridx = 0;
+            bkgConstraints.gridy = 0;
+            createBookingPanel.add(bookingAttributesPanel, bkgConstraints);
+            bkgConstraints.gridy = 1;
+            createBookingPanel.add(editBookingSelectionPanel, bkgConstraints);
+
+            //View car panel
+            viewCarPanel = new JPanel(new GridBagLayout());
+
+            //Create car functions panel
+            customerPanels = new JPanel[]{searchCarPanel, viewCarPanel, createBookingPanel};
+            GUI.JPanelSetup(customerPanels);
+            add(searchCarPanel);
+            add(viewCarPanel);
+            add(createBookingPanel);
+
+        }
+
         setPreferredSize(new Dimension(600,500));
-        add(addCarPanel);
-        add(editCarPanel);
-        add(searchCarPanel);
-        add(viewCarPanel);
+
     }
 
     public static void showAddCarPanel() {
-        showCarPanel(addCarPanel);
+        showAdminCarPanel(addCarPanel);
     }
 
-    public static void showSearchCarPanel() {
-        showCarPanel(searchCarPanel);
+    public static void showAdminSearchCarPanel() {
+        showAdminCarPanel(searchCarPanel);
     }
 
-    public static void showAllCarPanel() {
+    public static void showCustomerSearchCarPanel() {
+        showCustomerCarPanel(searchCarPanel);
+    }
+
+    public static void showAllCarPanel(boolean isAdmin) {
         viewCarPanel.removeAll();
         viewAllCar();
-        showCarPanel(viewCarPanel);
+        if (isAdmin) showAdminCarPanel(viewCarPanel);
+        else showCustomerCarPanel(viewCarPanel);
     }
 
     @Override
@@ -340,26 +493,28 @@ public class CarFunctions extends JPanel implements ActionListener{
             else if (e.getSource() == cancelAdd) {
                 clearAddCarField();
             }
-            else if (e.getSource() == searchButton){
-                searchCar();
+            else if (e.getSource() == adminSearchButton){
+                searchCar(true);
             }
             else if (e.getSource() == editButton){
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
-                showCarPanel(editCarPanel);
+                showAdminCarPanel(editCarPanel);
                 showCarDetails();
             }
             else if (e.getSource() == OKButton){
+                GUI.playSound("DontSayFiveDe.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editCarDetails();
                 }
                 else {
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Edit canceled!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == deleteButton){
+                GUI.playSound("DontSayFiveDe.wav");
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
@@ -369,48 +524,100 @@ public class CarFunctions extends JPanel implements ActionListener{
                     int numberValue = (int) numberSpinner.getValue();
 
                     Car.deleteCar(numberValue);
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car has been deleted!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been deleted!");
                 }
                 else {
-                    JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Deletion canceled!");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
-            else if (e.getSource() == backToSearch){
-                showCarPanel(searchCarPanel);
+            else if (e.getSource() == adminBackToSearch){
+                showAdminCarPanel(searchCarPanel);
+            }
+            else if (e.getSource() == customerSearchButton){
+                searchCar(false);
+            }
+            else if (e.getSource() == customerBookButton){
+                int numberValue = (int) numberSpinner.getValue();
+                if(numberValue == 0){
+                    throw new CarNotFoundException();
+                }
+                Car toBook = FileIO.carList.get(numberValue -1);
+                if (validateQualification(toBook)){
+                    showCustomerCarPanel(createBookingPanel);
+                    carDetails.setText(toBook.getNumberPlate() + " | " + toBook.getBrand() + " | " + toBook.getModel());
+                }
+            }
+            else if (e.getSource() == confirmBooking){
+                int numberValue = (int) numberSpinner.getValue();
+                Car toBook = FileIO.carList.get(numberValue -1);
+                int startDay = (int) startDateDay.getValue();
+                Booking.Month startMonth = (Booking.Month) startDateMonth.getSelectedItem();
+                String startYear = (String) startDateYear.getSelectedItem();
+
+                int endDay = (int) endDateDay.getValue();
+                Booking.Month endMonth = (Booking.Month) endDateMonth.getSelectedItem();
+                String endYear = (String) endDateYear.getSelectedItem();
+
+                if(!Booking.isValidDate(startDay, startMonth, startYear) || !Booking.isValidDate(endDay, endMonth, endYear)){
+                    throw new InvalidDateDurationException();
+                }
+
+                Date startDate = Booking.convertToDate(startDay, startMonth, startYear);
+                Date endDate = Booking.convertToDate(endDay, endMonth, endYear);
+
+                if (Booking.addBooking(toBook, CarRentalSystem.loginCustomer, startDate, endDate)){
+                    GUI.playSound("DontSayFiveDe.wav");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking success!");
+                    showCustomerCarPanel(searchCarPanel);
+                }
+            }
+            else if (e.getSource() == customerBackToSearch){
+                showCustomerCarPanel(searchCarPanel);
             }
         }
         catch (CarNotFoundException carNotFoundException){
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("NormalVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidDateDurationException invalidDateDurationException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
             exception.printStackTrace();
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Something wrong");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong");
         }
     }
 
-    private void clearAddCarField(){
+    public void clearAddCarField(){
         numberPlate.setText("");
         brand.setText("");
         model.setText("");
-        color.setText("");
+        color.setSelectedIndex(0);
         price.setText("");
         level.setValue(1);
         available.setSelected(false);
         notAvailable.setSelected(false);
     }
 
-    private static void showCarPanel(JPanel panel){
-        for (JPanel i : panels) {
+    public static void showAdminCarPanel(JPanel panel){
+        for (JPanel i : adminPanels) {
             i.setVisible(false);
         }
         panel.setVisible(true);
     }
 
-    private void addCar(){
+    public static void showCustomerCarPanel(JPanel panel){
+        for (JPanel i : customerPanels) {
+            i.setVisible(false);
+        }
+        panel.setVisible(true);
+    }
+
+    public void addCar(){
         String numberPlateInput = numberPlate.getText();
         String brandInput = brand.getText().toUpperCase();
         String modelInput = model.getText().toUpperCase();
-        String colorInput = color.getText().toUpperCase();
+        Car.Color colorInput = (Car.Color) color.getSelectedItem();
         int levelInput = (int) level.getValue();
         String priceInput = price.getText();
 
@@ -418,23 +625,29 @@ public class CarFunctions extends JPanel implements ActionListener{
         clearAddCarField();
     }
 
-    private void searchCar(){
-        searchResultsPanel.removeAll();
+    public void searchCar(boolean isAdmin){
+        if (isAdmin) searchResultsPanel.removeAll();
+        else searchResultsPanel.removeAll();
 
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
         String model = modelSearch.getText();
-        String color = (String) colorSearchBox.getSelectedItem();
-        String level = (String) levelSearchBox.getSelectedItem();
+        String color = String.valueOf(colorSearchBox.getSelectedItem());
+        String level = String.valueOf(levelSearchBox.getSelectedItem());
         double price = Double.parseDouble(priceSearchIndicator.getText());
-        String availability = (String) availabilitySearchBox.getSelectedItem();
+        String availability = String.valueOf(availabilitySearchBox.getSelectedItem());
 
-        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color.toUpperCase(), level, price, availability);
+        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
 
         if (searchedList.size() == 0){
             JLabel carNotFoundLabel = new JLabel("No cars found!");
+            carNotFoundLabel.setFont(GUI.getDefaultFont());
             carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
-            searchResultsPanel.add(carNotFoundLabel);
+            if (isAdmin) {
+                searchResultsPanel.add(carNotFoundLabel);
+            } else {
+                searchResultsPanel.add(carNotFoundLabel);
+            }
             carNotFoundLabel.setVisible(true);
 
             if (searchTableScroll != null){
@@ -455,6 +668,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             searchTableScroll.setViewportView(searchTable);
             searchTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
             searchTableScroll.setVisible(true);
+
             searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
 
             JPanel bottomPanel = new JPanel(new GridBagLayout());
@@ -475,30 +689,36 @@ public class CarFunctions extends JPanel implements ActionListener{
             numberSpinner = new JSpinner(new SpinnerNumberModel(0, 0, maxNum, 1));
             bottomPanel.add(numberSpinner, bottomConstraints);
 
-            editButton = new JButton("EDIT");
-            deleteButton = new JButton("DELETE");
-            editButton.addActionListener(this);
-            deleteButton.addActionListener(this);
-            JButton[] buttons = new JButton[]{editButton, deleteButton};
-            GUI.subJButtonSetup(buttons, new Dimension(100,30));
+            if (isAdmin){
+                editButton = new JButton("EDIT");
+                deleteButton = new JButton("DELETE");
+                editButton.addActionListener(this);
+                deleteButton.addActionListener(this);
+                JButton[] buttons = new JButton[]{editButton, deleteButton};
+                GUI.subJButtonSetup(buttons, new Dimension(100,30));
 
-            bottomConstraints.gridx = 3;
-            bottomPanel.add(editButton, bottomConstraints);
+                bottomConstraints.gridx = 3;
+                bottomPanel.add(editButton, bottomConstraints);
 
-            bottomConstraints.gridx = 4;
-            bottomPanel.add(deleteButton, bottomConstraints);
+                bottomConstraints.gridx = 4;
+                bottomPanel.add(deleteButton, bottomConstraints);
+            } else {
+                customerBookButton = new JButton("BOOK");
+                customerBookButton.addActionListener(this);
+                JButton[] buttons = new JButton[]{customerBookButton};
+                GUI.subJButtonSetup(buttons, new Dimension(100,30));
 
+                bottomConstraints.gridx = 3;
+                bottomPanel.add(customerBookButton, bottomConstraints);
+            }
             searchResultsPanel.add(bottomPanel, BorderLayout.SOUTH);
 
             searchResultsPanel.setVisible(true);
             searchResultsPanel.validate();
-
         }
-
-        searchCarPanel.validate();
     }
 
-    private void showCarDetails(){
+    public void showCarDetails(){
         int numberValue = (int) numberSpinner.getValue();
         Car car = FileIO.carList.get(numberValue - 1);
         GUI.resetFields(components);
@@ -518,12 +738,12 @@ public class CarFunctions extends JPanel implements ActionListener{
         }
     }
 
-    private void editCarDetails(){
+    public void editCarDetails(){
         int numberValue = (int) numberSpinner.getValue();
         String numberPlateInput = numberPlateEdit.getText();
         String brandInput = brandEdit.getText().toUpperCase();
         String modelInput = modelEdit.getText().toUpperCase();
-        String colorInput = colorEdit.getText().toUpperCase();
+        Car.Color colorInput = (Car.Color) color.getSelectedItem();
         int levelInput = (int) levelEdit.getValue();
         String priceInput = priceEdit.getText();
         boolean availability;
@@ -532,7 +752,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         Car.editCarDetails(numberValue, numberPlateInput, brandInput, modelInput, colorInput, levelInput, priceInput, availability);
     }
 
-    private static void viewAllCar(){
+    public static void viewAllCar(){
         String[] tableColumn = {"No.", "No. Plate", "Brand", "Model", "Color", "Level", "Price", "Availability"};
         Object[][] tempTable = new Object[FileIO.carList.size()][8];
         int i = 0;
@@ -553,7 +773,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         viewCarPanel.validate();
     }
 
-    private static int insertCarTable(Object[][] tempTable, int i, Car car) {
+    public static int insertCarTable(Object[][] tempTable, int i, Car car) {
         tempTable[i][0] = i + 1;
         tempTable[i][1] = car.getNumberPlate();
         tempTable[i][2] = car.getBrand();
@@ -564,5 +784,62 @@ public class CarFunctions extends JPanel implements ActionListener{
         tempTable[i][7] = car.isAvailability();
         i++;
         return i;
+    }
+
+    public boolean validateQualification(Car toBook){
+        boolean flag = false;
+        int memberLevel = CarRentalSystem.loginCustomer.getMemberLevel();
+        int size = CarRentalSystem.loginCustomer.getMyBookings().size();
+
+        try {
+            if (!toBook.isAvailability()){
+                throw new CarNotFoundException();
+            }
+
+            // BANNED Customer
+            if (memberLevel == 0){
+                throw new InvalidUserException();
+            }
+
+            // BLACK-LISTED Customer
+            if (memberLevel == -1){
+                if (!(toBook.getLevel() == 1)){
+                    throw new InvalidBookingException();
+                }
+            }
+
+            if (memberLevel < toBook.getLevel()){
+                throw new InvalidPointException();
+            }
+
+            if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.BOOKED){
+                throw new ExceedBookingQuantityException();
+            }
+
+            if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() != Booking.Status.COMPLETED){
+                throw new BookingNotCompletedException();
+            }
+
+            flag =  true;
+        }
+        catch (CarNotFoundException carNotFoundException){
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car is not available!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidUserException invalidUserException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You had been banned for booking any car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidBookingException invalidBookingException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book Level-1 car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (InvalidPointException invalidPointException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't book Level-" + toBook.getLevel() + " car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (ExceedBookingQuantityException exceedBookingQuantityException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book one car at one time!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        catch (BookingNotCompletedException bookingNotCompletedException) {
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your previous booking haven't completed!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        }
+        return flag;
     }
 }

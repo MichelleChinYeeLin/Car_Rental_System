@@ -78,19 +78,33 @@ public class GUI {
         }
     }
 
+    public static void disableFields(JComponent[] components){
+        for (JComponent i : components) {
+            if (i instanceof JTextField){
+                ((JTextField) i).setEditable(false);
+            }
+            if (i instanceof JPasswordField){
+                ((JPasswordField) i).setEditable(false);
+            }
+            if (i instanceof JRadioButton || i instanceof JSpinner){
+                i.setEnabled(false);
+            }
+        }
+    }
+
     public static void playSound(String soundName) {
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile( ));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            //clip.start();
-        } catch(Exception ex) {
+            clip.start();
+        } catch(Exception exception) {
             System.out.println("Error with playing sound.");
-            ex.printStackTrace();
+            exception.printStackTrace();
         }
     }
 
-    public static void resetFields(JComponent[] components){ //TODO: POLYMORPHISM
+    public static void resetFields(JComponent[] components){
         for (JComponent i : components) {
             i.setEnabled(true);
             if (i instanceof JTextField){
@@ -98,6 +112,9 @@ public class GUI {
             }
             if (i instanceof JRadioButton){
                 ((JRadioButton) i).setSelected(false);
+            }
+            if (i instanceof JLabel){
+                ((JLabel) i).setText("");
             }
         }
     }

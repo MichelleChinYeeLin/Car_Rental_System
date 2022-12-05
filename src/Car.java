@@ -1,16 +1,18 @@
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Car {
 
     public enum Color {
+        ANY,
         BLACK,
         WHITE,
         SILVER,
         RED,
         BLUE,
         YELLOW,
-        NONE;
     }
 
     private String numberPlate;
@@ -20,12 +22,13 @@ public class Car {
     private int level;
     private double price;
     private boolean availability;
+    public static final String pricePattern = "\\d+(.\\d{1,2})?"; // at most 1 "." and two tailing numbers
 
     public Car(){
         this.numberPlate = "";
         this.brand = "";
         this.model = "";
-        this.color = Color.NONE;
+        this.color = Color.ANY;
         this.level = 0;
         this.price = 0.0;
         this.availability = false;
@@ -62,8 +65,8 @@ public class Car {
     }
     public Color getColorType(){return color;}
 
-    public void setColor(String color) {
-        this.color = Color.valueOf(color);
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public double getPrice() {
@@ -98,19 +101,10 @@ public class Car {
         this.availability = availability;
     }
 
-    public static boolean isExist(String colorInput){
-        for (Color c : Color.values()) {
-            if (!colorInput.equals(c.name())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static double validateCarDetails(boolean flag, String numberPlate, String brand, String model, String color, String price) {
-        double priceInDouble = 0;
+    private static double validateCarDetails(boolean flag, String numberPlate, String brand, String model, Color color, String price) {
+        double priceInDouble = -1;
         try {
-            if (numberPlate.equals("") || brand.equals("") || model.equals("") || color.equals("")) {
+            if (numberPlate.equals("") || brand.equals("") || model.equals("")) {
                 throw new EmptyInputException();
             }
 
@@ -120,33 +114,43 @@ public class Car {
                 }
             }
 
-            if (!isExist(color)) {
+            if (color == Color.ANY) {
                 throw new InvalidColorException();
             }
 
-            if (!price.matches("[0-9]+")) throw new InvalidPriceException();
+            Pattern pricePattern = Pattern.compile(Car.pricePattern);
+            Matcher priceMatcher = pricePattern.matcher(price);
+            if (!priceMatcher.matches()) throw new InvalidPriceException();
             priceInDouble = Double.parseDouble(price);
+
         } catch (EmptyInputException emptyInputException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ElectricVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberPlateTakenException numberPlateTakenException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Number plate already taken!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Number plate already taken!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidColorException invalidColorException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid color!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't select \"ANY\" color!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (InvalidPriceException invalidPriceException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Price must be numbers only!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (NumberFormatException numberFormatException) {
-            JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid price format!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return priceInDouble;
     }
 
-    public static void addCar(String numberPlate, String brand, String model, String color, int level, String price){
+    public static void addCar(String numberPlate, String brand, String model, Color color, int level, String price){
 
         double priceInDouble = validateCarDetails(false, numberPlate, brand, model, color, price);
-        Car newCar = new Car(numberPlate, brand, model, Color.valueOf(color), level, priceInDouble, true);
-        FileIO.carList.add(newCar);
-        FileIO.writeCarFile();
-        JOptionPane.showMessageDialog(CarRentalSystem.adminMenu.getFrame(), "Car added Successfully!");
+        if (!(priceInDouble == -1)){
+            Car newCar = new Car(numberPlate, brand, model, color, level, priceInDouble, true);
+            FileIO.carList.add(newCar);
+            FileIO.writeCarFile();
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car added Successfully!");
+        }
     }
 
     public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
@@ -201,7 +205,7 @@ public class Car {
         return searchedList;
     }
 
-    public static void editCarDetails(int numberValue, String numberPlate, String brand, String model, String color, int level, String price, boolean availability){
+    public static void editCarDetails(int numberValue, String numberPlate, String brand, String model, Color color, int level, String price, boolean availability){
 
         boolean flag = true;
         Car car = FileIO.carList.get(numberValue - 1);

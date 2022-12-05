@@ -123,8 +123,6 @@ public class FileIO {
     }
 
     public static void readAdminFile(){
-//        adminList = new ArrayList<>();
-
         try{
             FileReader fr = new FileReader(adminFileName);
             BufferedReader br = new BufferedReader(fr);
@@ -155,7 +153,6 @@ public class FileIO {
     }
 
     public static void writeAdminFile(){
-
         try{
             FileWriter fw = new FileWriter(adminFileName);
 
@@ -174,8 +171,6 @@ public class FileIO {
     }
 
     public static void readCustomerFile(){
-//        customerList = new ArrayList<>();
-
         try{
             FileReader fr = new FileReader(customerFileName);
             BufferedReader br = new BufferedReader(fr);
@@ -269,8 +264,6 @@ public class FileIO {
     }
 
     public static void readBookingFile(){
-//        bookingList = new ArrayList<>();
-
         try {
             FileReader fr = new FileReader(bookingFileName);
             BufferedReader br = new BufferedReader(fr);
@@ -336,6 +329,7 @@ public class FileIO {
 
                     Booking booking = new Booking(car, customer, totalPrice, outstandingPayment, status, penalty, startDate, endDate);
                     bookingList.add(booking);
+                    customer.getMyBookings().add(booking);
 
                     line2 = br.readLine();
                     line = br.readLine();
@@ -377,14 +371,12 @@ public class FileIO {
     }
 
     public static void readCarFile(){
-//        carList = new ArrayList<>();
-
         try{
             FileReader fr = new FileReader(carFileName);
             BufferedReader br = new BufferedReader(fr);
 
             String numberPlate = "", brand = "", model = "";
-            Car.Color color = Car.Color.NONE;
+            Car.Color color = Car.Color.ANY;
             int level = 0;
             double price = 0.0;
             boolean availability = false;
@@ -461,8 +453,6 @@ public class FileIO {
     }
 
     public static void readRegistrationFile(){
-//        registrationList = new ArrayList<>();
-
         try{
             FileReader fr = new FileReader(registrationFileName);
             BufferedReader br = new BufferedReader(fr);
