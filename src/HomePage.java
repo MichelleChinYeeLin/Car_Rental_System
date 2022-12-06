@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class HomePage implements ActionListener {
+public class HomePage implements Page {
 
     private JFrame frame;
     private JButton login, signUp, quit;

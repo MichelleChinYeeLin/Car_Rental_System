@@ -2,11 +2,10 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CustomerMenu implements ActionListener {
+public class CustomerMenu implements MainPage {
 
     /* MAIN */
     private JFrame frame;
@@ -252,20 +251,20 @@ public class CustomerMenu implements ActionListener {
             }
             else if (e.getSource() == cars){
                 GUI.playSound("ji.wav");
-                showCustomerPanel(carsPanel, carFunctionsPanel);
+                showPanel(carsPanel, carFunctionsPanel);
             }
             else if (e.getSource() == booking){
                 GUI.playSound("ji.wav");
-                showCustomerPanel(bookingsPanel, bookingFunctionsPanel);
+                showPanel(bookingsPanel, bookingFunctionsPanel);
             }
             else if (e.getSource() == account){
                 GUI.playSound("ji.wav");
-                showCustomerPanel(accountPanel, accountFunctionsPanel);
+                showPanel(accountPanel, accountFunctionsPanel);
                 AccountFunctions.showCustomerDetails();
             }
             else if (e.getSource() == feedback){
                 GUI.playSound("ji.wav");
-                showCustomerPanel(feedbackPanel, feedbackFunctionsPanel);
+                showPanel(feedbackPanel, feedbackFunctionsPanel);
             }
             else if (e.getSource() == searchCar){
                 GUI.playSound("ji.wav");
@@ -311,7 +310,7 @@ public class CustomerMenu implements ActionListener {
         }
     }
 
-    private void showCustomerPanel(JPanel bigPanel, JPanel smallPanel){
+    public void showPanel(JPanel bigPanel, JPanel smallPanel){
         for (JPanel i : panels) {
             i.setVisible(false);
         }

@@ -4,7 +4,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -19,7 +18,7 @@ import static java.lang.Math.ceil;
 
 public class BookingFunctions extends JPanel implements ActionListener {
 
-    private boolean isAdmin;
+    private static boolean isAdmin;
     private String receiptText;
 
     //Admin Booking
@@ -44,7 +43,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private static JTable ongoingBookingTable, completedBookingTable, customerAllBookingTable;
     private JTextField cardNumber, cvv;
     private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton, payButton, confirmPaymentButton, cancelPaymentButton;
-//    private ArrayList<Booking> customerBookingList = new ArrayList<>();
     public BookingFunctions(boolean isAdmin){
 
         this.isAdmin = isAdmin;
@@ -522,7 +520,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 }
             }
             else if (e.getSource() == backCustomerButton){
-                showBookingCustomerPanel(ongoingBookingPanel);
+                showBookingPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
             else if (e.getSource() == receiptCustomerButton){
@@ -543,11 +541,11 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == confirmPaymentButton){
                 confirmCustomerPayment();
-                showBookingCustomerPanel(ongoingBookingPanel);
+                showBookingPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
             else if (e.getSource() == cancelPaymentButton){
-                showBookingCustomerPanel(ongoingBookingPanel);
+                showBookingPanel(ongoingBookingPanel);
                 viewOngoingBookingCustomer();
             }
         }
@@ -570,13 +568,13 @@ public class BookingFunctions extends JPanel implements ActionListener {
         showBookingPanel(viewBookingPanel);
     }
     public static void showBookingPanel(JPanel panel){
-        if (CarRentalSystem.loginAdmin != null){
+        if (isAdmin){
             for (JPanel i : adminPanels) {
                 i.setVisible(false);
             }
         }
 
-        else if (CarRentalSystem.loginCustomer != null){
+        else {
             for (JPanel i : customerPanels) {
                 i.setVisible(false);
             }
@@ -793,22 +791,15 @@ public class BookingFunctions extends JPanel implements ActionListener {
     public static void showAllBookingCustomerPanel(){
         customerViewBookingPanel.removeAll();
         viewAllBookingCustomer();
-        showBookingCustomerPanel(customerViewBookingPanel);
+        showBookingPanel(customerViewBookingPanel);
     }
 
     public static void showOngoingBookingCustomerPanel(){
-        showBookingCustomerPanel(ongoingBookingPanel);
+        showBookingPanel(ongoingBookingPanel);
     }
 
     public static void showCompletedBookingCustomerPanel(){
-        showBookingCustomerPanel(completedBookingPanel);
-    }
-
-    public static void showBookingCustomerPanel(JPanel panel){ //TODO: Duplicate?
-        for (JPanel i : customerPanels) {
-            i.setVisible(false);
-        }
-        panel.setVisible(true);
+        showBookingPanel(completedBookingPanel);
     }
 
     private static void viewAllBookingCustomer(){
@@ -1109,7 +1100,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         constraints.gridx = 1;
         customerBookingPaymentPanel.add(cancelPaymentButton, constraints);
 
-        showBookingCustomerPanel(customerBookingPaymentPanel);
+        showBookingPanel(customerBookingPaymentPanel);
     }
 
     private void confirmCustomerPayment(){

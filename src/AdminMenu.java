@@ -1,12 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class AdminMenu implements ActionListener {
+public class AdminMenu implements MainPage {
 
     /* MAIN */
     private JFrame frame;
@@ -269,16 +268,16 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == accRegistrations){
                 GUI.playSound("ji.wav");
-                showAdminPanel(registrationsPanel, registrationFunctionsPanel);
+                showPanel(registrationsPanel, registrationFunctionsPanel);
                 showAccRegistration();
             }
             else if (e.getSource() == accounts){
                 GUI.playSound("ji.wav");
-                showAdminPanel(accountsPanel, accountFunctionsPanel);
+                showPanel(accountsPanel, accountFunctionsPanel);
             }
             else if (e.getSource() == bookings){
                 GUI.playSound("ji.wav");
-                showAdminPanel(bookingsPanel, bookingFunctionsPanel);
+                showPanel(bookingsPanel, bookingFunctionsPanel);
             }
             else if (e.getSource() == searchBooking){
                 GUI.playSound("ji.wav");
@@ -290,11 +289,11 @@ public class AdminMenu implements ActionListener {
             }
             else if (e.getSource() == cars){
                 GUI.playSound("ji.wav");
-                showAdminPanel(carsPanel, carFunctionsPanel);
+                showPanel(carsPanel, carFunctionsPanel);
             }
             else if (e.getSource() == reports){
                 GUI.playSound("ji.wav");
-                showAdminPanel(reportsPanel, reportFunctionsPanel);
+                showPanel(reportsPanel, reportFunctionsPanel);
             }
             else if (e.getSource() == editPassword){
                 GUI.playSound("ji.wav");
@@ -336,7 +335,7 @@ public class AdminMenu implements ActionListener {
             else if (e.getSource() == records){
                 GUI.playSound("ji.wav");
                 showRecordsPanel();
-                showAdminPanel(recordsPanel, recordFunctionsPanel);
+                showPanel(recordsPanel, recordFunctionsPanel);
             }
             else if (e.getSource() == userReport){
                 ReportFunctions.showUserPanel();
@@ -355,7 +354,7 @@ public class AdminMenu implements ActionListener {
         }
     }
 
-    private void showAdminPanel(JPanel bigPanel, JPanel smallPanel){
+    public void showPanel(JPanel bigPanel, JPanel smallPanel){
         for (JPanel i : panels) {
             i.setVisible(false);
         }

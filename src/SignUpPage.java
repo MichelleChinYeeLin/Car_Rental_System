@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SignUpPage implements ActionListener {
+public class SignUpPage implements Page {
 
     private JFrame frame;
     private JButton signUp, cancel;
