@@ -306,7 +306,7 @@ public class CustomerMenu implements MainPage {
             }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
-            JOptionPane.showMessageDialog(frame, "Invalid move!");
+            JOptionPane.showMessageDialog(frame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -324,6 +324,7 @@ public class CustomerMenu implements MainPage {
 
         Feedback feedback = new Feedback(CarRentalSystem.loginCustomer, rating, comment);
         FileIO.feedbackList.add(feedback);
+        CarRentalSystem.loginCustomer.getMyFeedbacks().add(feedback);
 
         JOptionPane.showMessageDialog(frame, "Feedback submitted successfully!", "Feedback Submitted", JOptionPane.INFORMATION_MESSAGE);
     }

@@ -2,7 +2,7 @@ Username: a
 Password: a
 Name: hy
 Phone Number: 0123456789
-Gender: male
+Gender: Female
 Age: 17
 Email: heyuandeemail@gmail.com
 Address: 111

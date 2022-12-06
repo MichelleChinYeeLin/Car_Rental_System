@@ -325,11 +325,9 @@ public class AdminMenu implements MainPage {
                 CarFunctions.showAllCarPanel(true);
             }
             else if (e.getSource() == approveButton){
-                GUI.playSound("ji.wav");
                 approveRegistration();
             }
             else if (e.getSource() == denyButton){
-                GUI.playSound("ji.wav");
                 denyRegistration();
             }
             else if (e.getSource() == records){
@@ -338,19 +336,24 @@ public class AdminMenu implements MainPage {
                 showPanel(recordsPanel, recordFunctionsPanel);
             }
             else if (e.getSource() == userReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showUserPanel();
             }
             else if (e.getSource() == carReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showCarPanel();
             }
             else if (e.getSource() == paymentReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showPaymentPanel();
             }
             else if (e.getSource() == feedbackReport){
+                GUI.playSound("ji.wav");
                 ReportFunctions.showFeedbackPanel();
             }
         } catch (Exception exception){
             GUI.playSound("NormalVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -368,10 +371,13 @@ public class AdminMenu implements MainPage {
         boolean isSuccess = Customer.approveRegistration(index - 1);
 
         if(isSuccess){
+            GUI.playSound("ji.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Account registration has been approved!");
             showAccRegistration();
         }
         else{
-            JOptionPane.showMessageDialog(this.getFrame(), "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("NormalVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -381,10 +387,13 @@ public class AdminMenu implements MainPage {
         boolean isSuccess = Customer.denyRegistration(index - 1);
 
         if(isSuccess){
+            GUI.playSound("ji.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Account registration has been denied!");
             showAccRegistration();
         }
         else{
-            JOptionPane.showMessageDialog(this.getFrame(), "Unexpected error occurred! Please try again later.", "Registration Deny Failed", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("ElectricVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Deny Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 

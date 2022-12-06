@@ -60,8 +60,8 @@ public class Car {
         this.model = model;
     }
 
-    public String getColor() {
-        return String.valueOf(color);
+    public Color getColor() {
+        return color;
     }
     public Color getColorType(){return color;}
 
@@ -101,15 +101,15 @@ public class Car {
         this.availability = availability;
     }
 
-    private static double validateCarDetails(boolean flag, String numberPlate, String brand, String model, Color color, String price) {
-        double priceInDouble = -1;
+    private static double validateCarDetails(boolean isExistingCar, String numberPlate, String brand, String model, Color color, String price) {
+        double priceInDouble = -1.0;
         try {
             if (numberPlate.equals("") || brand.equals("") || model.equals("")) {
                 throw new EmptyInputException();
             }
 
             for (Car car : FileIO.carList) {
-                if (car.numberPlate.equals(numberPlate) && !flag) {
+                if (car.numberPlate.equals(numberPlate) && !isExistingCar) {
                     throw new NumberPlateTakenException();
                 }
             }
@@ -145,7 +145,7 @@ public class Car {
     public static void addCar(String numberPlate, String brand, String model, Color color, int level, String price){
 
         double priceInDouble = validateCarDetails(false, numberPlate, brand, model, color, price);
-        if (!(priceInDouble == -1)){
+        if (!(priceInDouble == -1.0)){
             Car newCar = new Car(numberPlate, brand, model, color, level, priceInDouble, true);
             FileIO.carList.add(newCar);
             FileIO.writeCarFile();
@@ -153,7 +153,7 @@ public class Car {
         }
     }
 
-    public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, String color, String levelText, double price, String availabilityText) {
+    public static ArrayList<Car> searchCar(String numberPlate, String brand, String model, Color color, String levelText, double price, String availabilityText) {
         ArrayList<Car> carList = FileIO.getCarList();
         ArrayList<Car> searchedList = new ArrayList<>();
 
@@ -172,9 +172,9 @@ public class Car {
                 isMatch = false;
             }
 
-            if (!color.equals("ANY")) {
+            if (color != Color.ANY) {
 
-                if (!car.getColor().equals(color)) {
+                if (car.getColor() != color) {
                     isMatch = false;
                 }
             }
@@ -207,21 +207,24 @@ public class Car {
 
     public static void editCarDetails(int numberValue, String numberPlate, String brand, String model, Color color, int level, String price, boolean availability){
 
-        boolean flag = true;
+        boolean sameNumberPlate = true;
         Car car = FileIO.carList.get(numberValue - 1);
         if (!car.numberPlate.equals(numberPlate)){
-            flag = false;
+            sameNumberPlate = false;
         }
-        double priceInDouble = validateCarDetails(flag, numberPlate, brand, model, color, price);
+        double priceInDouble = validateCarDetails(sameNumberPlate, numberPlate, brand, model, color, price);
 
-        car.setNumberPlate(numberPlate);
-        car.setBrand(brand);
-        car.setModel(model);
-        car.setColor(color);
-        car.setLevel(level);
-        car.setPrice(priceInDouble);
-        car.setAvailability(availability);
-        FileIO.writeCarFile();
+        if (!(priceInDouble == -1.0)){
+            car.setNumberPlate(numberPlate);
+            car.setBrand(brand);
+            car.setModel(model);
+            car.setColor(color);
+            car.setLevel(level);
+            car.setPrice(priceInDouble);
+            car.setAvailability(availability);
+            FileIO.writeCarFile();
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been edited!");
+        }
     }
 
     public static void deleteCar(int numberValue){

@@ -21,6 +21,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JSlider priceSearchSlider;
     private static JPanel searchCarPanel;
     private JPanel searchCarAttributesPanel;
+    private ArrayList<Car> searchedList;
 
     // Admin
     private JPanel addCarAttributesPanel, editCarAttributesPanel;
@@ -30,8 +31,8 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JLabel numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel, levelEditLabel,
             priceEditLabel, availabilityEditLabel;
     private JTextField numberPlate, brand, model, price;
-    private JTextField numberPlateEdit, brandEdit, modelEdit, colorEdit, priceEdit;
-    private JComboBox<Car.Color> color;
+    private JTextField numberPlateEdit, brandEdit, modelEdit, priceEdit;
+    private JComboBox<Car.Color> color, colorEdit;
     private JSpinner level, levelEdit, numberSpinner;
     private JRadioButton available, notAvailable;
     private ButtonGroup availability;
@@ -51,7 +52,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JSpinner startDateDay, endDateDay;
     private JButton[] customerCarButtons;
     private static JPanel[] customerPanels;
-    private static ArrayList<Car> currentCarList;
+
 
     public CarFunctions(boolean isAdmin){
 
@@ -61,7 +62,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         Booking.Month[] month = Booking.Month.values();
         String[] year = {"ANY", String.valueOf(gregorianCalendar.get(Calendar.YEAR)), String.valueOf(gregorianCalendar.get(Calendar.YEAR) + 1)};
         Car.Color[] colorType = Car.Color.values();
-//        String[] colorType = {"Any", "Black", "White", "Silver", "Red", "Blue", "Yellow"};
         String[] levelType = {"Any", "1", "2", "3"};
         String[] availabilityType = {"Any", "Available", "Unavailable"};
 
@@ -231,7 +231,6 @@ public class CarFunctions extends JPanel implements ActionListener{
             numberPlateEdit = new JTextField(20);
             brandEdit = new JTextField(20);
             modelEdit = new JTextField(20);
-            colorEdit = new JTextField(20);
             priceEdit = new JTextField(20);
 
             //JSpinner
@@ -251,6 +250,8 @@ public class CarFunctions extends JPanel implements ActionListener{
             //JComboBox
             color = new JComboBox<>(colorType);
             color.setFont(GUI.getDefaultFont());
+            colorEdit = new JComboBox<>(colorType);
+            colorEdit.setFont(GUI.getDefaultFont());
 
             //JComponent array
             components = new JComponent[]{numberPlateEdit, brandEdit, modelEdit, colorEdit,
@@ -488,36 +489,41 @@ public class CarFunctions extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         try {
             if (e.getSource() == confirmAdd) {
+                GUI.playSound("ji.wav");
                 addCar();
             }
             else if (e.getSource() == cancelAdd) {
+                GUI.playSound("ji.wav");
                 clearAddCarField();
             }
             else if (e.getSource() == adminSearchButton){
+                GUI.playSound("ji.wav");
                 searchCar(true);
             }
             else if (e.getSource() == editButton){
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
+                GUI.playSound("ji.wav");
                 showAdminCarPanel(editCarPanel);
                 showCarDetails();
             }
             else if (e.getSource() == OKButton){
-                GUI.playSound("DontSayFiveDe.wav");
+                GUI.playSound("ji.wav");
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editCarDetails();
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Edit canceled!");
                 }
             }
             else if (e.getSource() == deleteButton){
-                GUI.playSound("DontSayFiveDe.wav");
                 if((int) numberSpinner.getValue() == 0){
                     throw new CarNotFoundException();
                 }
+                GUI.playSound("DontSayFiveDe.wav");
 
                 String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
                 if (input != null && input.equals("DELETE")){
@@ -527,13 +533,17 @@ public class CarFunctions extends JPanel implements ActionListener{
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been deleted!");
                 }
                 else {
+                    GUI.playSound("ElectricVoice.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
                 }
             }
             else if (e.getSource() == adminBackToSearch){
+                GUI.playSound("ji.wav");
                 showAdminCarPanel(searchCarPanel);
+                searchCar(true);
             }
             else if (e.getSource() == customerSearchButton){
+                GUI.playSound("ji.wav");
                 searchCar(false);
             }
             else if (e.getSource() == customerBookButton){
@@ -541,7 +551,9 @@ public class CarFunctions extends JPanel implements ActionListener{
                 if(numberValue == 0){
                     throw new CarNotFoundException();
                 }
-                Car toBook = currentCarList.get(numberValue -1);
+                GUI.playSound("ji.wav");
+
+                Car toBook = searchedList.get(numberValue -1);
                 if (validateQualification(toBook)){
                     showCustomerCarPanel(createBookingPanel);
                     carDetails.setText(toBook.getNumberPlate() + " | " + toBook.getBrand() + " | " + toBook.getModel());
@@ -572,6 +584,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 }
             }
             else if (e.getSource() == customerBackToSearch){
+                GUI.playSound("ji.wav");
                 showCustomerCarPanel(searchCarPanel);
             }
         }
@@ -580,11 +593,12 @@ public class CarFunctions extends JPanel implements ActionListener{
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
         }
         catch (Exception exception){
             exception.printStackTrace();
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -626,23 +640,28 @@ public class CarFunctions extends JPanel implements ActionListener{
     }
 
     public void searchCar(boolean isAdmin){
-        currentCarList = new ArrayList<>();
+        searchResultsPanel.removeAll();
+
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
         String model = modelSearch.getText();
-        String color = String.valueOf(colorSearchBox.getSelectedItem());
+        Car.Color color = (Car.Color) colorSearchBox.getSelectedItem();
         String level = String.valueOf(levelSearchBox.getSelectedItem());
         double price = Double.parseDouble(priceSearchIndicator.getText());
         String availability = String.valueOf(availabilitySearchBox.getSelectedItem());
 
-        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
-        currentCarList = searchedList;
+//        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
+        searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
 
         if (searchedList.size() == 0){
             JLabel carNotFoundLabel = new JLabel("No cars found!");
             carNotFoundLabel.setFont(GUI.getDefaultFont());
             carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
-            searchResultsPanel.add(carNotFoundLabel);
+            if (isAdmin) {
+                searchResultsPanel.add(carNotFoundLabel);
+            } else {
+                searchResultsPanel.add(carNotFoundLabel);
+            }
             carNotFoundLabel.setVisible(true);
 
             if (searchTableScroll != null){
@@ -665,8 +684,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             searchTableScroll.setVisible(true);
 
             searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
-            searchTableScroll.validate();
-            
+
             JPanel bottomPanel = new JPanel(new GridBagLayout());
             bottomPanel.setBackground(Color.white);
             GridBagConstraints bottomConstraints = new GridBagConstraints();
@@ -708,23 +726,22 @@ public class CarFunctions extends JPanel implements ActionListener{
                 bottomPanel.add(customerBookButton, bottomConstraints);
             }
             searchResultsPanel.add(bottomPanel, BorderLayout.SOUTH);
-        }
 
-        searchResultsPanel.setVisible(true);
-        searchResultsPanel.updateUI();
-        searchResultsPanel.validate();
+            searchResultsPanel.setVisible(true);
+            searchResultsPanel.validate();
+        }
     }
 
     public void showCarDetails(){
         int numberValue = (int) numberSpinner.getValue();
-        Car car = FileIO.carList.get(numberValue - 1);
+        Car car = searchedList.get(numberValue - 1);
         GUI.resetFields(components);
         levelEdit.setValue(1);
 
         numberPlateEdit.setText(car.getNumberPlate());
         brandEdit.setText(car.getBrand());
         modelEdit.setText(car.getModel());
-        colorEdit.setText(car.getColor());
+        colorEdit.setSelectedItem(car.getColor());
         levelEdit.setValue(car.getLevel());
         priceEdit.setText(String.valueOf(car.getPrice()));
         if (car.isAvailability()){
@@ -740,7 +757,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         String numberPlateInput = numberPlateEdit.getText();
         String brandInput = brandEdit.getText().toUpperCase();
         String modelInput = modelEdit.getText().toUpperCase();
-        Car.Color colorInput = (Car.Color) color.getSelectedItem();
+        Car.Color colorInput = (Car.Color) colorEdit.getSelectedItem();
         int levelInput = (int) levelEdit.getValue();
         String priceInput = priceEdit.getText();
         boolean availability;
@@ -820,21 +837,27 @@ public class CarFunctions extends JPanel implements ActionListener{
             flag =  true;
         }
         catch (CarNotFoundException carNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car is not available!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidUserException invalidUserException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You had been banned for booking any car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidBookingException invalidBookingException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book Level-1 car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPointException invalidPointException) {
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't book Level-" + toBook.getLevel() + " car!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (ExceedBookingQuantityException exceedBookingQuantityException) {
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can only book one car at one time!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (BookingNotCompletedException bookingNotCompletedException) {
+            GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your previous booking haven't completed!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         return flag;

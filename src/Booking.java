@@ -300,24 +300,31 @@ public class Booking {
             return true;
         }
         catch (EmptyInputException emptyInputException){
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (NumberPlateNotFoundException numberPlateNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (NameNotFoundException nameNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Customer not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPriceException invalidPriceException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Price must not be less than 0!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidStatusException invalidStatusException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Status must not be \"ANY\"!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidPenaltyException invalidPenaltyException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Penalty must not be \"ANY\"!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
 
@@ -350,12 +357,15 @@ public class Booking {
             return true;
         }
         catch (EmptyInputException emptyInputException){
+            GUI.playSound("ElectricVoice.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "All fields require an input!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (NumberPlateNotFoundException numberPlateNotFoundException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car not found!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
 
@@ -371,15 +381,17 @@ public class Booking {
             Status status = Status.BOOKED;
             Booking booking = new Booking(car, customer, status, startDate, endDate);
             FileIO.bookingList.add(booking);
-            CarRentalSystem.loginCustomer.getMyBookings().add(booking);
+            customer.getMyBookings().add(booking);
             car.setAvailability(false);
             flag = true;
         }
         catch (InvalidDateDurationException invalidDateDurationException){
+            GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "End date must be after the start date!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
         catch(Exception exception){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Something wrong!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+            GUI.playSound("NormalVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
         }
         return flag;
     }
@@ -586,6 +598,17 @@ public class Booking {
 
         if (year.equalsIgnoreCase("ANY")){
             isValid = false;
+        }
+
+        switch (month){
+            case FEBRUARY:
+                if (day > 28){
+                    isValid = false;
+                }
+            case APRIL: case JUNE: case SEPTEMBER: case NOVEMBER:
+                if(day > 30){
+                    isValid = false;
+                }
         }
 
         return isValid;

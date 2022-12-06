@@ -1,18 +1,18 @@
 Number Plate: abc 123
 Username: a
-Total Price: 52.5
+Total Price: 50.0
 Outstanding Payment: 0.0
 Status: COMPLETED
-Penalty: LATE
+Penalty: NONE
 Start Date: 10-05-2022
 End Date: 12-05-2022
 
 Number Plate: abc 123
 Username: testing
-Total Price: 110.0
+Total Price: 100.0
 Outstanding Payment: 0.0
 Status: COMPLETED
-Penalty: MINOR_DAMAGE
+Penalty: NONE
 Start Date: 10-05-2022
 End Date: 17-05-2022
 
@@ -25,12 +25,12 @@ Penalty: NONE
 Start Date: 13-05-2022
 End Date: 17-05-2022
 
-Number Plate: www 7549
-Username: testing
-Total Price: 273.44
-Outstanding Payment: 0.0
-Status: COMPLETED
-Penalty: LATE_MAJOR_DAMAGE
-Start Date: 02-11-2022
-End Date: 08-11-2022
+Number Plate: asdas
+Username: a
+Total Price: 3567.0
+Outstanding Payment: 3567.0
+Status: BOOKED
+Penalty: NONE
+Start Date: 01-02-2022
+End Date: 02-03-2022
 
