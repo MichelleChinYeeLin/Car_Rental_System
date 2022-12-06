@@ -613,4 +613,14 @@ public class Booking {
 
         return isValid;
     }
+
+    public static int calcMaxTotalPrice(){
+        double maxTotalPrice = 0.0;
+
+        for (Booking booking : FileIO.getBookingList()) {
+            maxTotalPrice = Math.max(maxTotalPrice, booking.getTotalPrice());
+        }
+
+        return  (int) Math.ceil(maxTotalPrice);
+    }
 }

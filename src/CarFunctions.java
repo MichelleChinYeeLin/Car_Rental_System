@@ -18,7 +18,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JTextField numberPlateSearch, brandSearch, modelSearch;
     private JComboBox<Car.Color> colorSearchBox;
     private JComboBox<String> levelSearchBox, availabilitySearchBox;
-    private JSlider priceSearchSlider;
+    private static JSlider priceSearchSlider;
     private static JPanel searchCarPanel;
     private JPanel searchCarAttributesPanel;
     private ArrayList<Car> searchedList;
@@ -66,13 +66,13 @@ public class CarFunctions extends JPanel implements ActionListener{
         String[] availabilityType = {"Any", "Available", "Unavailable"};
 
         /* Search car */
-        double maxPrice = 0.0;
-        for (Car c : FileIO.carList) {
-            maxPrice = Math.max(maxPrice, c.getPrice());
-        }
-
-        // Create labels
-        int maxPriceInInt = (int) Math.ceil(maxPrice);
+//        double maxPrice = 0.0;
+//        for (Car c : FileIO.carList) {
+//            maxPrice = Math.max(maxPrice, c.getPrice());
+//        }
+//
+//        // Create labels
+//        int maxPriceInInt = (int) Math.ceil(maxPrice);
         numberPlateSearchLabel = new JLabel("No. Plate:");
         brandSearchLabel = new JLabel("Brand:");
         modelSearchLabel = new JLabel("Model:");
@@ -100,12 +100,9 @@ public class CarFunctions extends JPanel implements ActionListener{
         availabilitySearchBox.setFont(GUI.getDefaultFont());
 
         //JSlider
+        int maxPriceInInt = Car.calcMaxPrice();
         priceSearchSlider = new JSlider(JSlider.HORIZONTAL, 10, maxPriceInInt, maxPriceInInt);
-        priceSearchSlider.setMajorTickSpacing(maxPriceInInt/5);
-        priceSearchSlider.setMinorTickSpacing(maxPriceInInt/10);
-        priceSearchSlider.setFont(GUI.getDefaultFont());
-        priceSearchSlider.setPaintTicks(true);
-        priceSearchSlider.setPaintLabels(true);
+        GUI.JSliderSetup(priceSearchSlider, true);
 
         priceSearchIndicator.setText(String.valueOf(maxPriceInInt));
         priceSearchSlider.addChangeListener(changeEvent -> priceSearchIndicator.setText(String.valueOf(priceSearchSlider.getValue())));
@@ -466,6 +463,10 @@ public class CarFunctions extends JPanel implements ActionListener{
 
     }
 
+    public static JSlider getPriceSearchSlider() {
+        return priceSearchSlider;
+    }
+
     public static void showAddCarPanel() {
         showAdminCarPanel(addCarPanel);
     }
@@ -531,6 +532,7 @@ public class CarFunctions extends JPanel implements ActionListener{
 
                     Car.deleteCar(numberValue);
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been deleted!");
+                    searchCar(true);
                 }
                 else {
                     GUI.playSound("ElectricVoice.wav");
@@ -650,7 +652,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         double price = Double.parseDouble(priceSearchIndicator.getText());
         String availability = String.valueOf(availabilitySearchBox.getSelectedItem());
 
-//        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
         searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
 
         if (searchedList.size() == 0){

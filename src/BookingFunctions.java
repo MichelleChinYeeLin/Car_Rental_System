@@ -86,17 +86,9 @@ public class BookingFunctions extends JPanel implements ActionListener {
             customerNameSearch = new JTextField(10);
 
             //JSlider
-            double maxTotalPrice = 0.0;
-            for (Booking booking : FileIO.getBookingList()) {
-                maxTotalPrice = Math.max(maxTotalPrice, booking.getTotalPrice());
-            }
-            int maxTotalPriceInInt = (int) Math.ceil(maxTotalPrice);
+            int maxTotalPriceInInt = Booking.calcMaxTotalPrice();
             totalPriceSlider = new JSlider(JSlider.HORIZONTAL, 10, maxTotalPriceInInt, maxTotalPriceInInt);
-            totalPriceSlider.setMajorTickSpacing(maxTotalPriceInInt/5);
-            totalPriceSlider.setMinorTickSpacing(maxTotalPriceInInt/10);
-            totalPriceSlider.setFont(GUI.getDefaultFont());
-            totalPriceSlider.setPaintTicks(true);
-            totalPriceSlider.setPaintLabels(true);
+            GUI.JSliderSetup(totalPriceSlider, false);
             totalPriceSlider.setPreferredSize(new Dimension(150, 50));
 
             totalPriceIndicator.setText(String.valueOf(maxTotalPriceInInt));

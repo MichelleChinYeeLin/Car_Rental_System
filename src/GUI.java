@@ -79,6 +79,22 @@ public class GUI {
         }
     }
 
+    public static void JSliderSetup(JSlider slider, boolean inCarFunctions){
+        int maxInInt;
+
+        if (inCarFunctions){
+            maxInInt = Car.calcMaxPrice();
+        } else {
+            maxInInt = Booking.calcMaxTotalPrice();
+        }
+
+        slider.setMaximum(maxInInt);
+        slider.setMajorTickSpacing(maxInInt/5);
+        slider.setMinorTickSpacing(maxInInt/10);
+        slider.setFont(GUI.getDefaultFont());
+        slider.setPaintTicks(true);
+    }
+
     public static void disableFields(JComponent[] components){
         for (JComponent i : components) {
             if (i instanceof JTextField){

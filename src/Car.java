@@ -150,6 +150,7 @@ public class Car {
             FileIO.carList.add(newCar);
             FileIO.writeCarFile();
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car added Successfully!");
+            GUI.JSliderSetup(CarFunctions.getPriceSearchSlider(), true);
         }
     }
 
@@ -224,11 +225,23 @@ public class Car {
             car.setAvailability(availability);
             FileIO.writeCarFile();
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Car has been edited!");
+            GUI.JSliderSetup(CarFunctions.getPriceSearchSlider(), true);
         }
     }
 
     public static void deleteCar(int numberValue){
         FileIO.carList.remove(numberValue - 1);
         FileIO.writeCarFile();
+        GUI.JSliderSetup(CarFunctions.getPriceSearchSlider(), true);
+    }
+
+    public static int calcMaxPrice(){
+        double maxPrice = 0.0;
+
+        for (Car c : FileIO.carList) {
+            maxPrice = Math.max(maxPrice, c.getPrice());
+        }
+
+        return (int) Math.ceil(maxPrice);
     }
 }
