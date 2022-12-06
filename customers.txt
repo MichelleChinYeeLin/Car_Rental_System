@@ -16,7 +16,7 @@ Gender: Male
 Age: 17
 Email: 123
 Address: 123
-Points: 501
+Points: 452
 
 Username: 1234
 Password: 1234

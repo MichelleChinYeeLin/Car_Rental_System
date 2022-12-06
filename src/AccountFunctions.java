@@ -933,7 +933,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
     public static void customerDeleteAccount(){
         GUI.disableFields(customerComponents);
         int size = CarRentalSystem.loginCustomer.getMyBookings().size();
-        if (Customer.checkIdentity("Verification success!") && CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.COMPLETED){
+        if (Customer.checkIdentity("Verification success!") && size > 0 && CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.COMPLETED){
             String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
             if (input != null && input.equals("DELETE")){
                 GUI.playSound("DontSayFiveDe.wav");

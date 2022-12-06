@@ -12,6 +12,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class BookingFunctions extends JPanel implements ActionListener {
 
@@ -679,6 +681,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Date endDate = Booking.convertToDate(endDateDay, endDateMonth, endDateYear);
 
             Booking.editBookingDetails(booking, carNumberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
+            GUI.JSliderSetup(totalPriceSlider, false);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
             GUI.playSound("ReflectYourself.wav");
@@ -1046,6 +1049,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     public void showPaymentPanel(){
+        customerBookingPaymentPanel.removeAll();
         int numberValue = (int) numberSpinnerEdit.getValue();
         Booking booking = currentBookingList.get(numberValue - 1);
 
@@ -1110,9 +1114,19 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void confirmCustomerPayment(){
 
-        if (cardNumber.equals("") || cvv.equals("")){
+        if (cardNumber.getText().equals("") || cvv.getText().equals("")){
             GUI.playSound("NormalVoice.wav");
             JOptionPane.showMessageDialog(this, "Payment details incomplete!", "Payment Failed", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Pattern pattern = Pattern.compile("^[0-9]*$");
+        Matcher cardMatcher = pattern.matcher(cardNumber.getText());
+        Matcher cvvMatcher = pattern.matcher(cvv.getText());
+
+        if (!cardMatcher.matches() || !cvvMatcher.matches()){
+            JOptionPane.showMessageDialog(this, "Invalid card number or cvv!", "Payment Failed", JOptionPane.WARNING_MESSAGE);
+            GUI.resetFields(new JComponent[]{cardNumber, cvv});
             return;
         }
 

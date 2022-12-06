@@ -34,3 +34,21 @@ Penalty: NONE
 Start Date: 01-02-2022
 End Date: 02-03-2022
 
+Number Plate: 333
+Username: testing
+Total Price: 96.0
+Outstanding Payment: 0.0
+Status: COMPLETED
+Penalty: NONE
+Start Date: 03-07-2023
+End Date: 15-07-2023
+
+Number Plate: 333
+Username: testing
+Total Price: 16.8
+Outstanding Payment: 0.0
+Status: COMPLETED
+Penalty: LATE
+Start Date: 01-02-2022
+End Date: 03-02-2022
+

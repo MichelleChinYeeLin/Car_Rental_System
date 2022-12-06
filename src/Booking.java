@@ -126,6 +126,7 @@ public class Booking {
         this.status = status;
 
         if (status == Status.RETURNED){
+            car.setAvailability(true);
             calcTotalPrice();
         }
     }
@@ -165,6 +166,10 @@ public class Booking {
         double penaltyFee = calcPenaltyFee();
         totalPrice += Double.parseDouble(decimalFormat.format(penaltyFee));
         outstandingPayment = Double.parseDouble(decimalFormat.format(penaltyFee));
+
+        if (outstandingPayment == 0){
+            status = Status.COMPLETED;
+        }
     }
 
     public double calcMemberDiscount(){

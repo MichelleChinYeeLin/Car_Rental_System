@@ -563,7 +563,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             }
             else if (e.getSource() == confirmBooking){
                 int numberValue = (int) numberSpinner.getValue();
-                Car toBook = FileIO.carList.get(numberValue -1);
+                Car toBook = searchedList.get(numberValue -1);
                 int startDay = (int) startDateDay.getValue();
                 Booking.Month startMonth = (Booking.Month) startDateMonth.getSelectedItem();
                 String startYear = (String) startDateYear.getSelectedItem();
@@ -583,6 +583,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                     GUI.playSound("DontSayFiveDe.wav");
                     JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking success!");
                     showCustomerCarPanel(searchCarPanel);
+                    searchCar(false);
                 }
             }
             else if (e.getSource() == customerBackToSearch){
