@@ -325,6 +325,7 @@ public class CustomerMenu implements ActionListener {
 
         Feedback feedback = new Feedback(CarRentalSystem.loginCustomer, rating, comment);
         FileIO.feedbackList.add(feedback);
+        CarRentalSystem.loginCustomer.getMyFeedbacks().add(feedback);
 
         JOptionPane.showMessageDialog(frame, "Feedback submitted successfully!", "Feedback Submitted", JOptionPane.INFORMATION_MESSAGE);
     }

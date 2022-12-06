@@ -21,6 +21,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JSlider priceSearchSlider;
     private static JPanel searchCarPanel;
     private JPanel searchCarAttributesPanel;
+    private ArrayList<Car> searchedList;
 
     // Admin
     private JPanel addCarAttributesPanel, editCarAttributesPanel;
@@ -30,8 +31,8 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JLabel numberPlateEditLabel, brandEditLabel, modelEditLabel, colorEditLabel, levelEditLabel,
             priceEditLabel, availabilityEditLabel;
     private JTextField numberPlate, brand, model, price;
-    private JTextField numberPlateEdit, brandEdit, modelEdit, colorEdit, priceEdit;
-    private JComboBox<Car.Color> color;
+    private JTextField numberPlateEdit, brandEdit, modelEdit, priceEdit;
+    private JComboBox<Car.Color> color, colorEdit;
     private JSpinner level, levelEdit, numberSpinner;
     private JRadioButton available, notAvailable;
     private ButtonGroup availability;
@@ -61,7 +62,6 @@ public class CarFunctions extends JPanel implements ActionListener{
         Booking.Month[] month = Booking.Month.values();
         String[] year = {"ANY", String.valueOf(gregorianCalendar.get(Calendar.YEAR)), String.valueOf(gregorianCalendar.get(Calendar.YEAR) + 1)};
         Car.Color[] colorType = Car.Color.values();
-//        String[] colorType = {"Any", "Black", "White", "Silver", "Red", "Blue", "Yellow"};
         String[] levelType = {"Any", "1", "2", "3"};
         String[] availabilityType = {"Any", "Available", "Unavailable"};
 
@@ -231,7 +231,6 @@ public class CarFunctions extends JPanel implements ActionListener{
             numberPlateEdit = new JTextField(20);
             brandEdit = new JTextField(20);
             modelEdit = new JTextField(20);
-            colorEdit = new JTextField(20);
             priceEdit = new JTextField(20);
 
             //JSpinner
@@ -251,6 +250,8 @@ public class CarFunctions extends JPanel implements ActionListener{
             //JComboBox
             color = new JComboBox<>(colorType);
             color.setFont(GUI.getDefaultFont());
+            colorEdit = new JComboBox<>(colorType);
+            colorEdit.setFont(GUI.getDefaultFont());
 
             //JComponent array
             components = new JComponent[]{numberPlateEdit, brandEdit, modelEdit, colorEdit,
@@ -539,6 +540,7 @@ public class CarFunctions extends JPanel implements ActionListener{
             else if (e.getSource() == adminBackToSearch){
                 GUI.playSound("ji.wav");
                 showAdminCarPanel(searchCarPanel);
+                searchCar(true);
             }
             else if (e.getSource() == customerSearchButton){
                 GUI.playSound("ji.wav");
@@ -551,7 +553,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 }
                 GUI.playSound("ji.wav");
 
-                Car toBook = FileIO.carList.get(numberValue -1);
+                Car toBook = searchedList.get(numberValue -1);
                 if (validateQualification(toBook)){
                     showCustomerCarPanel(createBookingPanel);
                     carDetails.setText(toBook.getNumberPlate() + " | " + toBook.getBrand() + " | " + toBook.getModel());
@@ -638,18 +640,18 @@ public class CarFunctions extends JPanel implements ActionListener{
     }
 
     public void searchCar(boolean isAdmin){
-        if (isAdmin) searchResultsPanel.removeAll();
-        else searchResultsPanel.removeAll();
+        searchResultsPanel.removeAll();
 
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
         String model = modelSearch.getText();
-        String color = String.valueOf(colorSearchBox.getSelectedItem());
+        Car.Color color = (Car.Color) colorSearchBox.getSelectedItem();
         String level = String.valueOf(levelSearchBox.getSelectedItem());
         double price = Double.parseDouble(priceSearchIndicator.getText());
         String availability = String.valueOf(availabilitySearchBox.getSelectedItem());
 
-        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
+//        ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
+        searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
 
         if (searchedList.size() == 0){
             JLabel carNotFoundLabel = new JLabel("No cars found!");
@@ -732,14 +734,14 @@ public class CarFunctions extends JPanel implements ActionListener{
 
     public void showCarDetails(){
         int numberValue = (int) numberSpinner.getValue();
-        Car car = FileIO.carList.get(numberValue - 1);
+        Car car = searchedList.get(numberValue - 1);
         GUI.resetFields(components);
         levelEdit.setValue(1);
 
         numberPlateEdit.setText(car.getNumberPlate());
         brandEdit.setText(car.getBrand());
         modelEdit.setText(car.getModel());
-        colorEdit.setText(car.getColor());
+        colorEdit.setSelectedItem(car.getColor());
         levelEdit.setValue(car.getLevel());
         priceEdit.setText(String.valueOf(car.getPrice()));
         if (car.isAvailability()){
@@ -755,7 +757,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         String numberPlateInput = numberPlateEdit.getText();
         String brandInput = brandEdit.getText().toUpperCase();
         String modelInput = modelEdit.getText().toUpperCase();
-        Car.Color colorInput = (Car.Color) color.getSelectedItem();
+        Car.Color colorInput = (Car.Color) colorEdit.getSelectedItem();
         int levelInput = (int) levelEdit.getValue();
         String priceInput = priceEdit.getText();
         boolean availability;

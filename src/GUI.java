@@ -52,6 +52,7 @@ public class GUI {
         frame.setIconImage(logo.getImage());
         frame.getContentPane().setBackground(getFrameBackgroundColor());
         frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     public static void JLabelSetup(JLabel[] labels){
@@ -115,6 +116,9 @@ public class GUI {
             }
             if (i instanceof JLabel){
                 ((JLabel) i).setText("");
+            }
+            if (i instanceof JComboBox<?>){
+                ((JComboBox<?>) i).setSelectedIndex(0);
             }
         }
     }

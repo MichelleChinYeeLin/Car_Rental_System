@@ -4,7 +4,6 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -13,9 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
-
-import static java.lang.Math.max;
-import static java.lang.Math.ceil;
 
 public class BookingFunctions extends JPanel implements ActionListener {
 
@@ -44,7 +40,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private static JTable ongoingBookingTable, completedBookingTable, customerAllBookingTable;
     private JTextField cardNumber, cvv;
     private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton, payButton, confirmPaymentButton, cancelPaymentButton;
-//    private ArrayList<Booking> customerBookingList = new ArrayList<>();
     public BookingFunctions(boolean isAdmin){
 
         this.isAdmin = isAdmin;
@@ -91,9 +86,9 @@ public class BookingFunctions extends JPanel implements ActionListener {
             //JSlider
             double maxTotalPrice = 0.0;
             for (Booking booking : FileIO.getBookingList()) {
-                maxTotalPrice = max(maxTotalPrice, booking.getTotalPrice());
+                maxTotalPrice = Math.max(maxTotalPrice, booking.getTotalPrice());
             }
-            int maxTotalPriceInInt = (int) ceil(maxTotalPrice);
+            int maxTotalPriceInInt = (int) Math.ceil(maxTotalPrice);
             totalPriceSlider = new JSlider(JSlider.HORIZONTAL, 10, maxTotalPriceInInt, maxTotalPriceInInt);
             totalPriceSlider.setMajorTickSpacing(maxTotalPriceInInt/5);
             totalPriceSlider.setMinorTickSpacing(maxTotalPriceInInt/10);
@@ -476,6 +471,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editBookingDetailsAdmin();
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been edited!");
                     showBookingPanel(searchBookingPanel);
                     searchBooking();
                 }

@@ -172,17 +172,38 @@ public class Admin extends User{
     }
 
     public static boolean deleteAccount(int numberValue, String userType){
-        if (userType.equals("Admin")) {
-            if (FileIO.adminList.size() == 1){
-                return false;
+        boolean flag = false;
+        try {
+            if (userType.equals("Admin")) {
+                if (FileIO.adminList.size() == 1){
+                    throw new LastAdminException();
+                }
+
+                FileIO.adminList.remove(numberValue - 1);
+                FileIO.writeAdminFile();
             }
-            FileIO.adminList.remove(numberValue - 1);
-            FileIO.writeAdminFile();
+            else if (userType.equals("Customer")){
+                Customer customer = FileIO.customerList.get(numberValue - 1);
+
+                if (customer.getMyBookings().size() > 0){
+                    throw new InvalidUserException();
+                }
+
+                FileIO.customerList.remove(numberValue - 1);
+                FileIO.feedbackList.removeAll(customer.getMyFeedbacks());
+                FileIO.writeCustomerFile();
+                FileIO.writeFeedbackFile();
+            }
+
+            flag = true;
+
+        } catch (LastAdminException lastAdminException) {
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (InvalidUserException invalidUserException) {
+            GUI.playSound("ReflectYourself.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete customer that have bookings!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         }
-        else if (userType.equals("Customer")){
-            FileIO.customerList.remove(numberValue - 1);
-            FileIO.writeCustomerFile();
-        }
-        return true;
+        return flag;
     }
 }

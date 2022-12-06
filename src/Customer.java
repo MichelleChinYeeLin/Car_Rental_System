@@ -18,6 +18,7 @@ public class Customer extends User {
     public static final String phonePattern = "\\d{10,11}"; // 10 - 11 numbers
     public static final String emailPattern = "\\w{6,30}@gmail.com";  // at least 6 words and only one "@gmail.com"
     private ArrayList<Booking> myBookings = new ArrayList<>();
+    private ArrayList<Feedback> myFeedbacks = new ArrayList<>();
 
     public Customer() {
         super("", "");
@@ -127,6 +128,14 @@ public class Customer extends User {
 
     public void setMyBookings(ArrayList<Booking> myBookings) {
         this.myBookings = myBookings;
+    }
+
+    public ArrayList<Feedback> getMyFeedbacks() {
+        return myFeedbacks;
+    }
+
+    public void setMyFeedbacks(ArrayList<Feedback> myFeedbacks) {
+        this.myFeedbacks = myFeedbacks;
     }
 
     public int getMemberLevel() {

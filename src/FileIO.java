@@ -612,6 +612,7 @@ public class FileIO {
 
                     Feedback feedback = new Feedback(thisCustomer, rating, comment);
                     feedbackList.add(feedback);
+                    thisCustomer.getMyFeedbacks().add(feedback);
                     line = br.readLine();
                     line = br.readLine();
                 }
