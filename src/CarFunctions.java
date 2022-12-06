@@ -51,7 +51,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private JSpinner startDateDay, endDateDay;
     private JButton[] customerCarButtons;
     private static JPanel[] customerPanels;
-
+    private static ArrayList<Car> currentCarList;
 
     public CarFunctions(boolean isAdmin){
 
@@ -541,7 +541,7 @@ public class CarFunctions extends JPanel implements ActionListener{
                 if(numberValue == 0){
                     throw new CarNotFoundException();
                 }
-                Car toBook = FileIO.carList.get(numberValue -1);
+                Car toBook = currentCarList.get(numberValue -1);
                 if (validateQualification(toBook)){
                     showCustomerCarPanel(createBookingPanel);
                     carDetails.setText(toBook.getNumberPlate() + " | " + toBook.getBrand() + " | " + toBook.getModel());
@@ -626,9 +626,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     }
 
     public void searchCar(boolean isAdmin){
-        if (isAdmin) searchResultsPanel.removeAll();
-        else searchResultsPanel.removeAll();
-
+        currentCarList = new ArrayList<>();
         String numberPlate = numberPlateSearch.getText();
         String brand = brandSearch.getText();
         String model = modelSearch.getText();
@@ -638,16 +636,13 @@ public class CarFunctions extends JPanel implements ActionListener{
         String availability = String.valueOf(availabilitySearchBox.getSelectedItem());
 
         ArrayList<Car> searchedList = Car.searchCar(numberPlate, brand, model, color, level, price, availability);
+        currentCarList = searchedList;
 
         if (searchedList.size() == 0){
             JLabel carNotFoundLabel = new JLabel("No cars found!");
             carNotFoundLabel.setFont(GUI.getDefaultFont());
             carNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
-            if (isAdmin) {
-                searchResultsPanel.add(carNotFoundLabel);
-            } else {
-                searchResultsPanel.add(carNotFoundLabel);
-            }
+            searchResultsPanel.add(carNotFoundLabel);
             carNotFoundLabel.setVisible(true);
 
             if (searchTableScroll != null){
@@ -670,7 +665,8 @@ public class CarFunctions extends JPanel implements ActionListener{
             searchTableScroll.setVisible(true);
 
             searchResultsPanel.add(searchTableScroll, BorderLayout.CENTER);
-
+            searchTableScroll.validate();
+            
             JPanel bottomPanel = new JPanel(new GridBagLayout());
             bottomPanel.setBackground(Color.white);
             GridBagConstraints bottomConstraints = new GridBagConstraints();
@@ -712,10 +708,11 @@ public class CarFunctions extends JPanel implements ActionListener{
                 bottomPanel.add(customerBookButton, bottomConstraints);
             }
             searchResultsPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-            searchResultsPanel.setVisible(true);
-            searchResultsPanel.validate();
         }
+
+        searchResultsPanel.setVisible(true);
+        searchResultsPanel.updateUI();
+        searchResultsPanel.validate();
     }
 
     public void showCarDetails(){

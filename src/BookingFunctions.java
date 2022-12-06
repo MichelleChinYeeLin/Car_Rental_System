@@ -43,6 +43,8 @@ public class BookingFunctions extends JPanel implements ActionListener {
     private static JTable ongoingBookingTable, completedBookingTable, customerAllBookingTable;
     private JTextField cardNumber, cvv;
     private JButton editCustomerButton, deleteCustomerButton, OKCustomerButton, backCustomerButton, receiptCustomerButton, printButton, payButton, confirmPaymentButton, cancelPaymentButton;
+
+    private ArrayList<Booking> currentBookingList;
     public BookingFunctions(boolean isAdmin){
 
         this.isAdmin = isAdmin;
@@ -488,24 +490,33 @@ public class BookingFunctions extends JPanel implements ActionListener {
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
-                showBookingPanel(customerEditBookingPanel);
-                showBookingDetailsCustomer();
+
+                if (currentBookingList.get((int)numberSpinnerEdit.getValue() - 1).getStatus() != Booking.Status.BOOKED){
+                    JOptionPane.showMessageDialog(this, "You cannot edit this booking anymore!", "Edit Failed", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    showBookingPanel(customerEditBookingPanel);
+                    showBookingDetailsCustomer();
+                }
             }
             else if (e.getSource() == deleteCustomerButton){
                 if ((int) numberSpinnerEdit.getValue() == 0) {
                     throw new BookingNotFoundException();
                 }
 
-                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
-                if (input != null && input.equals("DELETE")) {
-                    int numberValue = (int) numberSpinnerEdit.getValue();
-
-//                    Booking.deleteBooking(customerBookingList.get(numberValue - 1));
-                    Booking.deleteBooking(CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1));
-                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been deleted!");
-                    searchBooking();
-                } else {
-                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
+                if (currentBookingList.get((int)numberSpinnerEdit.getValue() - 1).getStatus() != Booking.Status.BOOKED){
+                    JOptionPane.showMessageDialog(this, "You cannot delete this booking anymore!", "Delete Failed", JOptionPane.WARNING_MESSAGE);
+                }
+                else {
+                    String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                    if (input != null && input.equals("DELETE")) {
+                        int numberValue = (int) numberSpinnerEdit.getValue();
+                        Booking.deleteBooking(currentBookingList.get(numberValue - 1));
+                        JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been deleted!");
+                        searchBooking();
+                    } else {
+                        JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
+                    }
                 }
             }
             else if (e.getSource() == OKCustomerButton){
@@ -525,7 +536,6 @@ public class BookingFunctions extends JPanel implements ActionListener {
             }
             else if (e.getSource() == receiptCustomerButton){
                 int numberValue = (int) numberSpinnerReceipt.getValue();
-//                Booking booking = customerBookingList.get(numberValue - 1);
                 Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
                 generateReceipt(booking);
             }
@@ -585,7 +595,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void showBookingDetailsAdmin(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = FileIO.bookingList.get(numberValue - 1);
+        Booking booking = currentBookingList.get(numberValue - 1);
 
         carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
         customerNameEdit.setText(booking.getCustomer().getUsername());
@@ -613,7 +623,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void showBookingDetailsCustomer(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = FileIO.bookingList.get(numberValue - 1);
+        Booking booking = currentBookingList.get(numberValue - 1);
 
         carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
 
@@ -636,6 +646,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void editBookingDetailsAdmin(){
         int numberValue = (int) numberSpinnerEdit.getValue();
+        Booking booking = currentBookingList.get(numberValue - 1);
         String carNumberPlate = carNumberPlateEdit.getText();
         String customerName = customerNameEdit.getText();
         double outstandingPayment = Double.parseDouble(outstandingPaymentEdit.getText());
@@ -658,7 +669,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Date startDate = Booking.convertToDate(startDateDay, startDateMonth, startDateYear);
             Date endDate = Booking.convertToDate(endDateDay, endDateMonth, endDateYear);
 
-            Booking.editBookingDetails(numberValue, carNumberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
+            Booking.editBookingDetails(booking, carNumberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
         }
         catch (InvalidDateDurationException invalidDateDurationException){
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Invalid date! Please try again.", "Invalid Date Input", JOptionPane.WARNING_MESSAGE);
@@ -666,6 +677,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     private void searchBooking(){
+        currentBookingList = new ArrayList<>();
         searchBookingResultsPanel.removeAll();
 
         String numberPlate = carNumberPlateSearch.getText();
@@ -699,6 +711,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             Object[][] tempTable = new Object[searchedList.size()][tableColumn.length];
             int i = 0;
             for (Booking booking : searchedList){
+                currentBookingList.add(booking);
                 i = insertBookingTableAdmin(tempTable, i, booking);
             }
 
@@ -836,7 +849,8 @@ public class BookingFunctions extends JPanel implements ActionListener {
     }
 
     public void viewOngoingBookingCustomer(){
-//        customerBookingList = new ArrayList<>();
+        currentBookingList = new ArrayList<>();
+
         ongoingBookingPanel.removeAll();
         int row = 0;
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
@@ -846,22 +860,14 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
 
         String[] tableColumn = {"No.", "Car No. Plate", "Total Price", "Outstanding Payment", "Status", "Penalty Type", "Start Date", "End Date"};
-//        Object[][] tempTable = new Object[FileIO.bookingList.size()][tableColumn.length];
         Object[][] tempTable = new Object[row][tableColumn.length];
         int i = 0;
         boolean bookingFound = false;
-//        for (Booking booking: FileIO.bookingList){
-//            if (booking.getCustomer().getUsername().equals(CarRentalSystem.loginCustomer.getUsername()) &&
-//                booking.getStatus() != Booking.Status.COMPLETED){
-//                i = insertBookingTableCustomer(tempTable, i, booking);
-//                customerBookingList.add(booking);
-//                bookingFound = true;
-//            }
-//        }
+
         for (Booking booking: CarRentalSystem.loginCustomer.getMyBookings()){
             if (booking.getStatus() != Booking.Status.COMPLETED){
                 i = insertBookingTableCustomer(tempTable, i, booking);
-//                customerBookingList.add(booking);
+                currentBookingList.add(booking);
                 bookingFound = true;
             }
         }
@@ -1013,8 +1019,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     private void editBookingDetailsCustomer(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-//        Booking booking = customerBookingList.get(numberValue - 1);
-        Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
+        Booking booking = currentBookingList.get(numberValue - 1);
         String carNumberPlate = carNumberPlateEdit.getText();
 
         try{
@@ -1042,7 +1047,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
     public void showPaymentPanel(){
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
+        Booking booking = currentBookingList.get(numberValue - 1);
 
         if (booking.getOutstandingPayment() == 0){
             JOptionPane.showMessageDialog(this, "No outstanding payment for this booking!", "No Outstanding Payment", JOptionPane.WARNING_MESSAGE);
@@ -1111,7 +1116,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         }
 
         int numberValue = (int) numberSpinnerEdit.getValue();
-        Booking booking = CarRentalSystem.loginCustomer.getMyBookings().get(numberValue - 1);
+        Booking booking = currentBookingList.get(numberValue - 1);
 
         Booking.makePayment(booking);
         JOptionPane.showMessageDialog(this, "Payment successful!", "Payment Succeeded", JOptionPane.WARNING_MESSAGE);

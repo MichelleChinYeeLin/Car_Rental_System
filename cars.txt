@@ -14,3 +14,11 @@ Level: 3
 Price: 33.0
 Available: true
 
+Number Plate: www 7549
+Brand: PERODUA
+Model: MYVI
+Color: SILVER
+Level: 1
+Price: 35.0
+Available: true
+

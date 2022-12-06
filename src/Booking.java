@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class Booking {
         LATE_MAJOR_DAMAGE;
     }
 
-    //private String bookingID;
+    public static final DecimalFormat decimalFormat = new DecimalFormat("0.00");
     private Car car;
     private Customer customer;
     private double totalPrice;
@@ -106,7 +107,7 @@ public class Booking {
     }
 
     public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
+        this.totalPrice = Double.parseDouble(decimalFormat.format(totalPrice));
     }
 
     public double getOutstandingPayment() {
@@ -135,10 +136,6 @@ public class Booking {
 
     public void setPenalty(PenaltyType penalty) {
         this.penalty = penalty;
-
-        if (penalty != PenaltyType.NONE){
-            calcTotalPrice();
-        }
     }
 
     public Date getStartDate() {
@@ -165,21 +162,50 @@ public class Booking {
     }
 
     public void calcTotalPrice(){
-        totalPrice += calcPenaltyFee();
+        double penaltyFee = calcPenaltyFee();
+        totalPrice += Double.parseDouble(decimalFormat.format(penaltyFee));
+        outstandingPayment = Double.parseDouble(decimalFormat.format(penaltyFee));
     }
 
     public double calcMemberDiscount(){
         if (customer.getPoints() > 500){
-            return totalPrice * 0.2;
+            return Double.parseDouble(decimalFormat.format(totalPrice * 0.2));
         }
         else if (customer.getPoints() > 200){
-            return totalPrice * 0.1;
+            return Double.parseDouble(decimalFormat.format(totalPrice * 0.1));
         }
         else if (customer.getPoints() < 0) {
-            return -totalPrice * 0.1;
+            return Double.parseDouble(decimalFormat.format(-totalPrice * 0.1));
         }
 
         return 0;
+    }
+    public int calcCustomerPoints(){
+        double penaltyFee = calcPenaltyFee();
+        int customerPoints = customer.getPoints();
+        customerPoints += (int)((totalPrice - penaltyFee) * 0.1);
+
+        if (penalty == PenaltyType.LATE){
+            customerPoints -= 50;
+        }
+
+        else if (penalty == PenaltyType.MINOR_DAMAGE){
+            customerPoints -= 100;
+        }
+
+        else if (penalty == PenaltyType.LATE_MINOR_DAMAGE){
+            customerPoints -= 150;
+        }
+
+        else if (penalty == PenaltyType.MAJOR_DAMAGE){
+            customerPoints -= 300;
+        }
+
+        else if (penalty == PenaltyType.LATE_MAJOR_DAMAGE){
+            customerPoints -= 350;
+        }
+
+        return customerPoints;
     }
 
     public double calcPenaltyFee(){
@@ -219,6 +245,7 @@ public class Booking {
                 }
                 else if (booking.getStatus() == Status.RETURNED){
                     booking.setStatus(Status.COMPLETED);
+                    booking.getCustomer().setPoints(booking.calcCustomerPoints());
                 }
 
                 break;
@@ -344,6 +371,8 @@ public class Booking {
             Status status = Status.BOOKED;
             Booking booking = new Booking(car, customer, status, startDate, endDate);
             FileIO.bookingList.add(booking);
+            CarRentalSystem.loginCustomer.getMyBookings().add(booking);
+            car.setAvailability(false);
             flag = true;
         }
         catch (InvalidDateDurationException invalidDateDurationException){
@@ -355,30 +384,33 @@ public class Booking {
         return flag;
     }
 
-    public static void editBookingDetails(int numberValue, String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
-        Booking booking = FileIO.bookingList.get(numberValue - 1);
+    public static void editBookingDetails(Booking customerBooking, String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
         boolean isValid = validateCarDetails(numberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
 
-        if (isValid){
-            for (Car car : FileIO.carList){
-                if (car.getNumberPlate().equalsIgnoreCase(numberPlate)){
-                    booking.setCar(car);
-                    break;
+        if (isValid) {
+            for (Booking booking : FileIO.bookingList) {
+                if (booking == customerBooking){
+                    for (Car car : FileIO.carList) {
+                        if (car.getNumberPlate().equalsIgnoreCase(numberPlate)) {
+                            booking.setCar(car);
+                            break;
+                        }
+                    }
+
+                    for (Customer customer : FileIO.customerList) {
+                        if (customer.getUsername().equalsIgnoreCase(customerName)) {
+                            booking.setCustomer(customer);
+                            break;
+                        }
+                    }
+
+                    booking.setOutstandingPayment(outstandingPayment);
+                    booking.setPenalty(penalty);
+                    booking.setStatus(status);
+                    booking.setStartDate(startDate);
+                    booking.setEndDate(endDate);
                 }
             }
-
-            for (Customer customer : FileIO.customerList){
-                if (customer.getUsername().equalsIgnoreCase(customerName)){
-                    booking.setCustomer(customer);
-                    break;
-                }
-            }
-
-            booking.setOutstandingPayment(outstandingPayment);
-            booking.setPenalty(penalty);
-            booking.setStatus(status);
-            booking.setStartDate(startDate);
-            booking.setEndDate(endDate);
         }
     }
 
@@ -398,7 +430,6 @@ public class Booking {
                     booking.setStartDate(startDate);
                     booking.setEndDate(endDate);
                 }
-                break;
             }
         }
     }
@@ -559,6 +590,4 @@ public class Booking {
 
         return isValid;
     }
-
-
 }
