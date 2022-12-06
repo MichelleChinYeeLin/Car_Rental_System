@@ -142,7 +142,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
 
             //JComboBox
             String[] userTypes = {"Admin", "Customer"};
-            String[] genderTypes = {"male", "female"};
+            String[] genderTypes = {"Male", "Female"};
             adminUserType = new JComboBox<>(userTypes);
             adminUserType.setFont(new Font(Font.SERIF, Font.PLAIN, 16));
             adminUserType.setPreferredSize(new Dimension(100,40));
@@ -171,9 +171,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminPointEdit.setPreferredSize(new Dimension(100,25));
 
             //JRadioButtons
-            adminMale = new JRadioButton("male");
+            adminMale = new JRadioButton("Male");
             adminMale.setFocusable(false);
-            adminFemale = new JRadioButton("female");
+            adminFemale = new JRadioButton("Female");
             adminFemale.setFocusable(false);
             adminGenderGroup = new ButtonGroup();
             adminGenderGroup.add(adminMale);
@@ -502,7 +502,6 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 String passwordCheckInput = String.valueOf(adminPassword2.getPassword());
 
                 Admin.changePassword(passwordInput, passwordCheckInput);
-                GUI.playSound("DontSayFiveDe.wav");
             }
             else if (e.getSource() == adminCancelEdit){
                 GUI.playSound("ji.wav");
@@ -550,6 +549,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 }
             }
             else if (e.getSource() == adminOKButton){
+                if (Objects.equals(adminUserType.getSelectedItem(), "Admin")) {
+                    throw new InvalidUserException();
+                }
                 String input = JOptionPane.showInputDialog("Type \"CONFIRM\" to proceed!");
                 if (input != null && input.equals("CONFIRM")){
                     editAccountDetails();
@@ -575,6 +577,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
                     if (Admin.deleteAccount(numberValue, accountType)){
                         GUI.playSound("DontSayFiveDe.wav");
                         JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "User account has been deleted!");
+                        adminSearchResultPanel.removeAll();
+                        searchAccount();
                     }
                     else {
                         throw new LastAdminException();
@@ -615,6 +619,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
         } catch (UserNotFoundException userNotFoundException){
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Please select a row number to edit!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
+        } catch (InvalidUserException invalidUserException) {
+            GUI.playSound("ElectricVoice.wav");
+            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
         } catch (LastAdminException lastAdminException){
             GUI.playSound("ReflectYourself.wav");
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete the last admin account!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
@@ -789,7 +796,7 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminPhoneEdit.setText(customerAccount.getPhone());
             adminEmailEdit.setText(customerAccount.getEmail());
             adminAddressEdit.setText(customerAccount.getAddress());
-            if (customerAccount.getGender().equals("male")) {
+            if (customerAccount.getGender().equals("Male")) {
                 adminMale.setSelected(true);
             }
             else {
@@ -803,34 +810,22 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private void editAccountDetails(){
         int numberValue = (int) numberSpinner.getValue();
 
-        try {
-            if (adminUserType.getSelectedItem().equals("Admin")) {
-                throw new InvalidUserException();
+        if (adminUserType.getSelectedItem().equals("Customer")){
+            String nameInput = adminNameEdit.getText();
+            String phoneInput = adminPhoneEdit.getText();
+            String emailInput = adminEmailEdit.getText();
+            String addressInput = adminAddressEdit.getText();
+            String genderInput;
+            if (adminMale.isSelected()){
+                genderInput = "Male";
             }
-            else if (adminUserType.getSelectedItem().equals("Customer")){
-                GUI.playSound("ji.wav");
-
-                String nameInput = adminNameEdit.getText();
-                String phoneInput = adminPhoneEdit.getText();
-                String emailInput = adminEmailEdit.getText();
-                String addressInput = adminAddressEdit.getText();
-                String genderInput;
-                if (adminMale.isSelected()){
-                    genderInput = "male";
-                }
-                else {
-                    genderInput = "female";
-                }
-                int ageValue = (int) adminAgeEdit.getValue();
-                int pointValue = (int) adminPointEdit.getValue();
-
-                Admin.editAccountDetails(numberValue, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue, pointValue);
+            else {
+                genderInput = "Female";
             }
-        } catch (InvalidUserException invalidUserException) {
-            GUI.playSound("ElectricVoice.wav");
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Admin details are not available to modify!", "Invalid input!", JOptionPane.WARNING_MESSAGE);
-        } catch (Exception exception){
-            JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Unexpected error occurred! Please try again later.", "Registration Approval Failed", JOptionPane.WARNING_MESSAGE);
+            int ageValue = (int) adminAgeEdit.getValue();
+            int pointValue = (int) adminPointEdit.getValue();
+
+            Admin.editAccountDetails(numberValue, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue, pointValue);
         }
     }
 

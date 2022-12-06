@@ -41,6 +41,7 @@ public class Admin extends User{
             if (password.equals("") || passwordCheck.equals("")) throw new EmptyInputException();
             if (!password.equals(passwordCheck)) throw new MismatchPasswordException();
 
+            GUI.playSound("ji.wav");
             CarRentalSystem.loginAdmin.setPassword(password);
             FileIO.writeAdminFile();
             JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Your password has been successfully changed!");
@@ -143,6 +144,7 @@ public class Admin extends User{
 
         Customer customer = FileIO.customerList.get(numberValue - 1);
         if (Customer.validateCustomerDetails(true, customer.getUsername(), name, age, customer.getPassword(), customer.getPassword(), phone, email)){
+            GUI.playSound("ji.wav");
             customer.setName(name);
             customer.setPhone(phone);
             customer.setGender(gender);
@@ -166,6 +168,7 @@ public class Admin extends User{
             customer.setPassword(customer.getUsername());
             FileIO.writeCustomerFile();
         }
+        JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Account password successfully reset!");
     }
 
     public static boolean deleteAccount(int numberValue, String userType){

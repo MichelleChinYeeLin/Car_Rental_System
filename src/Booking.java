@@ -354,6 +354,7 @@ public class Booking {
             Status status = Status.BOOKED;
             Booking booking = new Booking(car, customer, status, startDate, endDate);
             FileIO.bookingList.add(booking);
+            customer.getMyBookings().add(booking);
             flag = true;
         }
         catch (InvalidDateDurationException invalidDateDurationException){
