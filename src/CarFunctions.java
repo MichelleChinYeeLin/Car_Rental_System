@@ -66,13 +66,7 @@ public class CarFunctions extends JPanel implements ActionListener{
         String[] availabilityType = {"Any", "Available", "Unavailable"};
 
         /* Search car */
-//        double maxPrice = 0.0;
-//        for (Car c : FileIO.carList) {
-//            maxPrice = Math.max(maxPrice, c.getPrice());
-//        }
-//
-//        // Create labels
-//        int maxPriceInInt = (int) Math.ceil(maxPrice);
+        // Create labels
         numberPlateSearchLabel = new JLabel("No. Plate:");
         brandSearchLabel = new JLabel("Brand:");
         modelSearchLabel = new JLabel("Model:");

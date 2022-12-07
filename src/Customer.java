@@ -1,9 +1,9 @@
 import javax.swing.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Date;
 
 public class Customer extends User {
 

@@ -24,7 +24,7 @@ public class Booking {
         DECEMBER(12);
 
         private final int value;
-        private Month(int value){
+        Month(int value){
             this.value = value;
         }
 

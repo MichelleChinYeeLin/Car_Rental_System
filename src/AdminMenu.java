@@ -27,7 +27,6 @@ public class AdminMenu implements MainPage {
     /* ACCOUNT */
     private JPanel accountFunctionsPanel;
     private JButton editPassword, addAdmin, searchAccount, allAccount;
-    // search -> edit/delete
 
     /* BOOKING */
     private BookingFunctions bookingFunctionsPanel;
@@ -42,7 +41,6 @@ public class AdminMenu implements MainPage {
 
     public AdminMenu(){
         frame = new JFrame("Admin Menu");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GUI.JFrameSetup(frame);
         frame.setLayout(new GridBagLayout());
 

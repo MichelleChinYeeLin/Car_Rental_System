@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class CarRentalSystem {
 
@@ -18,8 +17,6 @@ public class CarRentalSystem {
         homePage = new HomePage();
         loginPage = new LoginPage();
         signUpPage = new SignUpPage();
-        //customerMenu = new CustomerMenu();
-        //adminMenu = new AdminMenu();
 
         currentFrame = homePage.getFrame();
     }

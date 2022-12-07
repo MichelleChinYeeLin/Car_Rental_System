@@ -4,8 +4,6 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.net.URL;
-import java.io.File;
 
 public class GUI {
 
