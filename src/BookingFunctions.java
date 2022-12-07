@@ -511,7 +511,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
                         Booking.deleteBooking(currentBookingList.get(numberValue - 1));
                         JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Booking has been deleted!");
                         GUI.playSound("DontSayFiveDe.wav");
-                        searchBooking();
+                        viewOngoingBookingCustomer();
                     } else {
                         GUI.playSound("ElectricVoice.wav");
                         JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
@@ -632,6 +632,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         Booking booking = currentBookingList.get(numberValue - 1);
 
         carNumberPlateEdit.setText(booking.getCar().getNumberPlate());
+        carNumberPlateEdit.setEnabled(false);
 
         Date startDate = booking.getStartDate();
         Date endDate = booking.getEndDate();
@@ -940,6 +941,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
             ongoingBookingPanel.add(bookingNotFoundLabel);
         }
 
+        ongoingBookingPanel.updateUI();
         ongoingBookingPanel.validate();
     }
 

@@ -63,6 +63,16 @@ public class Booking {
     private Date startDate;
     private Date endDate;
 
+    public Booking (){
+        this.car = null;
+        this.customer = null;
+        this.totalPrice = 0.0;
+        this.outstandingPayment = 0.0;
+        this.status = null;
+        this.penalty = null;
+        this.startDate = null;
+        this.endDate = null;
+    }
     public Booking (Car car, Customer customer, double totalPrice, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate) {
         this.car = car;
         this.customer = customer;
@@ -129,6 +139,11 @@ public class Booking {
             car.setAvailability(true);
             calcTotalPrice();
         }
+
+        else if (status == Status.COMPLETED){
+            car.setAvailability(true);
+            calcCustomerPoints();
+        }
     }
 
     public PenaltyType getPenalty() {
@@ -157,7 +172,7 @@ public class Booking {
 
     public double calcTotalPrice(Car car, Date startDate, Date endDate){
         long milliSecDiff = Math.abs(endDate.getTime() - startDate.getTime());
-        long duration = TimeUnit.DAYS.convert(milliSecDiff, TimeUnit.MILLISECONDS);
+        long duration = TimeUnit.DAYS.convert(milliSecDiff, TimeUnit.MILLISECONDS) + 1;
 
         return car.getPrice() * duration;
     }
@@ -262,7 +277,7 @@ public class Booking {
         }
     }
 
-    private static boolean validateCarDetails(String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
+    private static boolean validateBookingDetails(String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
         try{
             boolean numberPlateFound = false;
             boolean customerNameFound = false;
@@ -340,7 +355,7 @@ public class Booking {
         return false;
     }
 
-    private static boolean validateCarDetails(String numberPlate, Date startDate, Date endDate){
+    private static boolean validateBookingDetails(String numberPlate, Date startDate, Date endDate){
 
         try{
             boolean numberPlateFound = false;
@@ -352,6 +367,7 @@ public class Booking {
             for (Car car : FileIO.carList){
                 if (car.getNumberPlate().equalsIgnoreCase(numberPlate)){
                     numberPlateFound = true;
+                    break;
                 }
             }
 
@@ -406,7 +422,7 @@ public class Booking {
     }
 
     public static void editBookingDetails(Booking customerBooking, String numberPlate, String customerName, double outstandingPayment, Status status, PenaltyType penalty, Date startDate, Date endDate){
-        boolean isValid = validateCarDetails(numberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
+        boolean isValid = validateBookingDetails(numberPlate, customerName, outstandingPayment, status, penalty, startDate, endDate);
 
         if (isValid) {
             for (Booking booking : FileIO.bookingList) {
@@ -436,30 +452,53 @@ public class Booking {
     }
 
     public static void editBookingDetails(Booking customerBooking, String numberPlate, Date startDate, Date endDate){
-        boolean isValid = validateCarDetails(numberPlate, startDate, endDate);
+        boolean isValid = validateBookingDetails(numberPlate, startDate, endDate);
 
         if (isValid){
+            Booking newBooking = new Booking();
             for(Booking booking : FileIO.bookingList){
                 if (booking == customerBooking){
                     for (Car car : FileIO.carList){
                         if (car.getNumberPlate().equalsIgnoreCase(numberPlate)){
                             booking.setCar(car);
+                            booking.setStartDate(startDate);
+                            booking.setEndDate(endDate);
+
+                            double totalPrice = booking.calcTotalPrice(car, startDate, endDate);
+                            totalPrice -= booking.calcMemberDiscount();
+                            booking.setTotalPrice(totalPrice);
+                            booking.setOutstandingPayment(totalPrice);
                             break;
                         }
                     }
-
-                    booking.setStartDate(startDate);
-                    booking.setEndDate(endDate);
                 }
             }
         }
     }
 
     public static void deleteBooking(int numberValue){
+
+        Booking booking = FileIO.bookingList.get(numberValue - 1);
+
+        for (Car car : FileIO.carList){
+            if (booking.getCar() == car){
+                car.setAvailability(true);
+            }
+        }
+
+        booking.getCustomer().getMyBookings().remove(booking);
         FileIO.bookingList.remove(numberValue - 1);
     }
 
     public static void deleteBooking(Booking booking){
+
+        for (Car car : FileIO.carList){
+            if (booking.getCar() == car){
+                car.setAvailability(true);
+            }
+        }
+
+        booking.getCustomer().getMyBookings().remove(booking);
         FileIO.bookingList.remove(booking);
     }
 

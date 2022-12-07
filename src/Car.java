@@ -209,7 +209,7 @@ public class Car {
     public static void editCarDetails(int numberValue, String numberPlate, String brand, String model, Color color, int level, String price, boolean availability){
 
         boolean sameNumberPlate = true;
-        Car car = FileIO.carList.get(numberValue - 1);
+        Car car = CarFunctions.getSearchedList().get(numberValue - 1);
         if (!car.numberPlate.equals(numberPlate)){
             sameNumberPlate = false;
         }
@@ -230,7 +230,8 @@ public class Car {
     }
 
     public static void deleteCar(int numberValue){
-        FileIO.carList.remove(numberValue - 1);
+        Car car = CarFunctions.getSearchedList().get(numberValue - 1);
+        FileIO.carList.remove(car);
         FileIO.writeCarFile();
         GUI.JSliderSetup(CarFunctions.getPriceSearchSlider(), true);
     }

@@ -21,7 +21,7 @@ public class CarFunctions extends JPanel implements ActionListener{
     private static JSlider priceSearchSlider;
     private static JPanel searchCarPanel;
     private JPanel searchCarAttributesPanel;
-    private ArrayList<Car> searchedList;
+    private static ArrayList<Car> searchedList;
 
     // Admin
     private JPanel addCarAttributesPanel, editCarAttributesPanel;
@@ -461,6 +461,10 @@ public class CarFunctions extends JPanel implements ActionListener{
 
         setPreferredSize(new Dimension(600,500));
 
+    }
+
+    public static ArrayList<Car> getSearchedList(){
+        return searchedList;
     }
 
     public static JSlider getPriceSearchSlider() {
