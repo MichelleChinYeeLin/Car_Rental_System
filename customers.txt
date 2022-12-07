@@ -1,40 +1,120 @@
 Username: a
 Password: a
-Name: hy
+Name: He Yuan
 Phone Number: 0123456789
-Gender: Female
-Age: 17
-Email: heyuandeemail@gmail.com
-Address: 111
-Points: 0
-
-Username: testing
-Password: 1234
-Name: test
-Phone Number: 123
 Gender: Male
 Age: 17
-Email: 123
-Address: 123
-Points: 452
-
-Username: 1234
-Password: 1234
-Name: Two
-Phone Number: 1231
-Gender: Female
-Age: 17
-Email: 123
-Address: 123
+Email: heyuandashuaige@gmail.com
+Address: City A
 Points: 0
 
-Username: 456
-Password: 456
-Name: Three
-Phone Number: 123
+Username: mmm
+Password: 1234
+Name: Michelle
+Phone Number: 0192837465
+Gender: Female
+Age: 30
+Email: michelle@gmail.com
+Address: City B
+Points: 0
+
+Username: emberf
+Password: hmm
+Name: Joe Lau
+Phone Number: 0182768431
 Gender: Female
 Age: 17
-Email: 123
-Address: 123
+Email: joejoe@gmail.com
+Address: City C
+Points: 0
+
+Username: wyatt
+Password: hallo
+Name: Wai Hoe
+Phone Number: 02938471654
+Gender: Male
+Age: 17
+Email: wyattttt@gmail.com
+Address: City D
+Points: 0
+
+Username: cmcmcm
+Password: dashuaige
+Name: Cheok Mun
+Phone Number: 0192836123
+Gender: Male
+Age: 50
+Email: cmcmcm@gmail.com
+Address: City E
+Points: 0
+
+Username: ytytyt
+Password: yeppy
+Name: Ying Tong
+Phone Number: 02931231654
+Gender: Female
+Age: 20
+Email: yepppppp@gmail.com
+Address: City F
+Points: 0
+
+Username: shinzu
+Password: dashen
+Name: Shin Zu
+Phone Number: 02541261654
+Gender: Female
+Age: 34
+Email: szzzzz@gmail.com
+Address: City G
+Points: 0
+
+Username: sabri
+Password: iliketogotravel
+Name: Sabri Hi
+Phone Number: 1230984572
+Gender: Female
+Age: 25
+Email: sbsbsbsb@gmail.com
+Address: City H
+Points: 0
+
+Username: azlina
+Password: iliketowastetime
+Name: Azlina Sister
+Phone Number: 7384927561
+Gender: Male
+Age: 17
+Email: azlinaverygood@gmail.com
+Address: City i
+Points: 0
+
+Username: moneymega
+Password: idontknowhowtoteach
+Name: Moneymegacome
+Phone Number: 1230984572
+Gender: Female
+Age: 40
+Email: mwmwmwm@gmail.com
+Address: City J
+Points: 0
+
+Username: minnu
+Password: ilikeyou
+Name: Minnu John
+Phone Number: 8574629183
+Gender: Female
+Age: 20
+Email: minnnnnnu@gmail.com
+Address: City S
+Points: 0
+
+Username: munirah
+Password: ilikeyoualso
+Name: Munirah Greet
+Phone Number: 1029312033
+Gender: Female
+Age: 39
+Email: mmmmmuuuuu@gmail.com
+Address: City Z
 Points: 0
 

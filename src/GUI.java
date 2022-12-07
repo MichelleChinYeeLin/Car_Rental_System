@@ -114,7 +114,7 @@ public class GUI {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile( ));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            //clip.start();
+            clip.start();
         } catch(Exception exception) {
             System.out.println("Error with playing sound.");
             exception.printStackTrace();

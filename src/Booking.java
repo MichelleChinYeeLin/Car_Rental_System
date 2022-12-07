@@ -210,6 +210,10 @@ public class Booking {
             customerPoints -= 350;
         }
 
+        if (customerPoints > 1000){
+            customerPoints = 1000;
+        }
+
         return customerPoints;
     }
 
@@ -624,6 +628,10 @@ public class Booking {
 
         for (Booking booking : FileIO.getBookingList()) {
             maxTotalPrice = Math.max(maxTotalPrice, booking.getTotalPrice());
+        }
+
+        if (maxTotalPrice == 0.0){
+            maxTotalPrice = 10;
         }
 
         return  (int) Math.ceil(maxTotalPrice);

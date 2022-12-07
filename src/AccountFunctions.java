@@ -161,11 +161,11 @@ public class AccountFunctions extends JPanel implements ActionListener {
             //JSpinner
             adminFromAge = new JSpinner(new SpinnerNumberModel(17,1,122,1));
             adminFromAge.setPreferredSize(new Dimension(100,25));
-            adminToAge = new JSpinner(new SpinnerNumberModel(17,1,122,1));
+            adminToAge = new JSpinner(new SpinnerNumberModel(122,1,122,1));
             adminToAge.setPreferredSize(new Dimension(100,25));
             adminFromPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
             adminFromPoint.setPreferredSize(new Dimension(100,25));
-            adminToPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+            adminToPoint = new JSpinner(new SpinnerNumberModel(1000,0,1000,1));
             adminToPoint.setPreferredSize(new Dimension(100,25));
             adminAgeEdit = new JSpinner(new SpinnerNumberModel(17,17,122,1));
             adminAgeEdit.setPreferredSize(new Dimension(100,25));

@@ -1,12 +1,24 @@
-Username: testing
+Username: mmm
 Rating: 10
-Comment: testing testing 1234
+Comment: very good
 
-Username: testing
+Username: mmm
 Rating: 10
-Comment: new comment here!
+Comment: especially got lengzai
 
-Username: testing
+Username: a
 Rating: 4
-Comment: test rating system
+Comment: no no no
+
+Username: cmcmcm
+Rating: 8
+Comment: nice
+
+Username: ytytyt
+Rating: 6
+Comment: average
+
+Username: emberf
+Rating: 10
+Comment: why can't give 100 marks!
 

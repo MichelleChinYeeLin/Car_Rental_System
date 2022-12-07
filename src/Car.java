@@ -242,6 +242,10 @@ public class Car {
             maxPrice = Math.max(maxPrice, c.getPrice());
         }
 
+        if (maxPrice == 0.0){
+            maxPrice = 10;
+        }
+
         return (int) Math.ceil(maxPrice);
     }
 }

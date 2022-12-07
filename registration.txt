@@ -1,0 +1,18 @@
+Username: vazeeee
+Password: aaa
+Name: Vaze
+Phone Number: 9283741029
+Gender: Male
+Age: 30
+Email: xxxxxx@gmail.com
+Address: i have no address
+
+Username: randompeople
+Password: rubrub
+Name: Rubbish
+Phone Number: 1111111111
+Gender: Female
+Age: 17
+Email: 29292929@gmail.com
+Address: 123321123321
+

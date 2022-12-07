@@ -1,48 +1,120 @@
-Number Plate: xyz 333
-Brand: LAMBORGHINI
-Model: URUS
-Color: YELLOW
+Number Plate: abc 333
+Brand: PERODUA
+Model: MYVI
+Color: BLUE
 Level: 1
-Price: 25.0
-Available: false
-
-Number Plate: abc 123
-Brand: PROTON
-Model: SSS
-Color: RED
-Level: 3
-Price: 33.0
+Price: 136.0
 Available: true
 
-Number Plate: asdas
-Brand: ASD
-Model: ASD
-Color: BLACK
-Level: 1
-Price: 123.0
-Available: true
-
-Number Plate: 123
-Brand: A
-Model: A
-Color: BLACK
-Level: 2
-Price: 123.0
-Available: true
-
-Number Plate: xxx 333
-Brand: LAMBORGHINI
-Model: URUS
+Number Plate: xyz 321
+Brand: PERODUA
+Model: BEZZA
 Color: WHITE
 Level: 1
-Price: 9.0
+Price: 158.0
 Available: true
 
-Number Plate: 333
-Brand: SS
-Model: SS
+Number Plate: YYY 408
+Brand: PERODUA
+Model: AXIA
+Color: WHITE
+Level: 1
+Price: 168.0
+Available: true
+
+Number Plate: aaa 111
+Brand: PROTON
+Model: SAGA
 Color: SILVER
 Level: 1
-Price: 10.0
+Price: 189.0
+Available: true
+
+Number Plate: eee 304
+Brand: PROTON
+Model: SAGA
+Color: YELLOW
+Level: 1
+Price: 201.0
+Available: true
+
+Number Plate: ZZZ 123
+Brand: PERODUA
+Model: ALZA
+Color: BLACK
+Level: 2
+Price: 193.0
+Available: true
+
+Number Plate: xxx 456
+Brand: TOYOTA
+Model: YARIS VIOS
+Color: WHITE
+Level: 2
+Price: 238.0
+Available: true
+
+Number Plate: Acb 666
+Brand: HONDA
+Model: FIT
+Color: BLACK
+Level: 2
+Price: 255.0
+Available: true
+
+Number Plate: OMG 788
+Brand: HONDA
+Model: CIVIC
+Color: RED
+Level: 2
+Price: 394.0
+Available: true
+
+Number Plate: cb 666
+Brand: HONDA
+Model: CR-V
+Color: WHITE
+Level: 2
+Price: 496.0
+Available: true
+
+Number Plate: bb 612
+Brand: NISSAN
+Model: X-TRAIL
+Color: RED
+Level: 2
+Price: 539.0
+Available: true
+
+Number Plate: abz 55
+Brand: TOYOTA
+Model: ALPHARD
+Color: BLACK
+Level: 3
+Price: 840.0
+Available: true
+
+Number Plate: A 666
+Brand: LAMBORGHINI
+Model: AVENTADOR
+Color: SILVER
+Level: 3
+Price: 4000.0
+Available: true
+
+Number Plate: A 1
+Brand: KOENIGSEGG
+Model: REGERA
+Color: WHITE
+Level: 3
+Price: 8888.0
+Available: true
+
+Number Plate: Z 111
+Brand: FERRARI
+Model: PUROSANGUE
+Color: RED
+Level: 3
+Price: 7777.0
 Available: true
 

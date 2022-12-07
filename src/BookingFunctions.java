@@ -95,12 +95,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
 
             totalPriceIndicator.setText(String.valueOf(maxTotalPriceInInt));
 
-            totalPriceSlider.addChangeListener(new ChangeListener() {
-                @Override
-                public void stateChanged(ChangeEvent changeEvent) {
-                    totalPriceIndicator.setText(String.valueOf(totalPriceSlider.getValue()));
-                }
-            });
+            totalPriceSlider.addChangeListener(changeEvent -> totalPriceIndicator.setText(String.valueOf(totalPriceSlider.getValue())));
 
             totalPricePanel.add(totalPriceSlider);
             totalPricePanel.add(totalPriceIndicator);
@@ -712,6 +707,7 @@ public class BookingFunctions extends JPanel implements ActionListener {
         if (searchedList.size() == 0){
             JLabel bookingNotFoundLabel = new JLabel("Booking not found!");
             bookingNotFoundLabel.setHorizontalAlignment(JLabel.CENTER);
+            bookingNotFoundLabel.setFont(GUI.getDefaultFont());
             searchBookingResultsPanel.add(bookingNotFoundLabel);
             bookingNotFoundLabel.setVisible(true);
 

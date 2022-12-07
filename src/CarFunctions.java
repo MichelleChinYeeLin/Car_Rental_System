@@ -828,12 +828,14 @@ public class CarFunctions extends JPanel implements ActionListener{
                 throw new InvalidPointException();
             }
 
-            if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.BOOKED){
-                throw new ExceedBookingQuantityException();
-            }
+            if (size != 0){
+                if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.BOOKED){
+                    throw new ExceedBookingQuantityException();
+                }
 
-            if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() != Booking.Status.COMPLETED){
-                throw new BookingNotCompletedException();
+                if (CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() != Booking.Status.COMPLETED){
+                    throw new BookingNotCompletedException();
+                }
             }
 
             flag =  true;
