@@ -732,10 +732,10 @@ public class CarFunctions extends JPanel implements ActionListener{
                 bottomPanel.add(customerBookButton, bottomConstraints);
             }
             searchResultsPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-            searchResultsPanel.setVisible(true);
-            searchResultsPanel.validate();
         }
+
+        searchResultsPanel.setVisible(true);
+        searchResultsPanel.validate();
     }
 
     public void showCarDetails(){

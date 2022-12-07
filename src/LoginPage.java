@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginPage implements ActionListener {
+public class LoginPage implements Page {
 
     private JFrame frame;
     private JButton login, cancel;
