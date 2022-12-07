@@ -4,7 +4,7 @@ Model: MYVI
 Color: BLUE
 Level: 1
 Price: 136.0
-Available: true
+Available: false
 
 Number Plate: xyz 321
 Brand: PERODUA
@@ -12,7 +12,7 @@ Model: BEZZA
 Color: WHITE
 Level: 1
 Price: 158.0
-Available: true
+Available: false
 
 Number Plate: YYY 408
 Brand: PERODUA
@@ -20,7 +20,7 @@ Model: AXIA
 Color: WHITE
 Level: 1
 Price: 168.0
-Available: true
+Available: false
 
 Number Plate: aaa 111
 Brand: PROTON
@@ -36,7 +36,7 @@ Model: SAGA
 Color: YELLOW
 Level: 1
 Price: 201.0
-Available: true
+Available: false
 
 Number Plate: ZZZ 123
 Brand: PERODUA
@@ -100,7 +100,7 @@ Model: AVENTADOR
 Color: SILVER
 Level: 3
 Price: 4000.0
-Available: true
+Available: false
 
 Number Plate: A 1
 Brand: KOENIGSEGG

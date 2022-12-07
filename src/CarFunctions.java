@@ -817,15 +817,15 @@ public class CarFunctions extends JPanel implements ActionListener{
                 throw new InvalidUserException();
             }
 
-            // BLACK-LISTED Customer
             if (memberLevel == -1){
                 if (!(toBook.getLevel() == 1)){
                     throw new InvalidBookingException();
                 }
             }
-
-            if (memberLevel < toBook.getLevel()){
-                throw new InvalidPointException();
+            else {
+                if (memberLevel < toBook.getLevel()){
+                    throw new InvalidPointException();
+                }
             }
 
             if (size != 0){

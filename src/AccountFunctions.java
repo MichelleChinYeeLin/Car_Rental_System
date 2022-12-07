@@ -14,8 +14,8 @@ public class AccountFunctions extends JPanel implements ActionListener {
     private JLabel usernameEditLabel, passwordEditLabel, nameEditLabel, phoneEditLabel, genderEditLabel, ageEditLabel,
             emailEditLabel, addressEditLabel, pointEditLabel;
     private JLabel[] editLabels;
-    private ArrayList<Admin> searchedAdminList;
-    private ArrayList<Customer> searchedCustomerList;
+    private static ArrayList<Admin> searchedAdminList;
+    private static ArrayList<Customer> searchedCustomerList;
 
     // Admin
     private static JPanel adminEditPasswordPanel, addAdminPanel, adminSearchAccountPanel, adminViewAccountPanel, adminEditAccountPanel;
@@ -163,13 +163,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
             adminFromAge.setPreferredSize(new Dimension(100,25));
             adminToAge = new JSpinner(new SpinnerNumberModel(122,1,122,1));
             adminToAge.setPreferredSize(new Dimension(100,25));
-            adminFromPoint = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+            adminFromPoint = new JSpinner(new SpinnerNumberModel(0,-1000,1000,1));
             adminFromPoint.setPreferredSize(new Dimension(100,25));
-            adminToPoint = new JSpinner(new SpinnerNumberModel(1000,0,1000,1));
+            adminToPoint = new JSpinner(new SpinnerNumberModel(1000,-1000,1000,1));
             adminToPoint.setPreferredSize(new Dimension(100,25));
             adminAgeEdit = new JSpinner(new SpinnerNumberModel(17,17,122,1));
             adminAgeEdit.setPreferredSize(new Dimension(100,25));
-            adminPointEdit = new JSpinner(new SpinnerNumberModel(0,0,1000,1));
+            adminPointEdit = new JSpinner(new SpinnerNumberModel(0,-1000,1000,1));
             adminPointEdit.setPreferredSize(new Dimension(100,25));
 
             //JRadioButtons
@@ -671,6 +671,13 @@ public class AccountFunctions extends JPanel implements ActionListener {
         return adminUsername2;
     }
 
+    public static ArrayList<Admin> getSearchedAdminList() {
+        return searchedAdminList;
+    }
+
+    public static ArrayList<Customer> getSearchedCustomerList() {
+        return searchedCustomerList;
+    }
 
     private void searchAccount(){
         searchedAdminList = new ArrayList<>();
@@ -824,7 +831,9 @@ public class AccountFunctions extends JPanel implements ActionListener {
                 genderInput = "Female";
             }
             int ageValue = (int) adminAgeEdit.getValue();
+            if (ageValue > 122) ageValue = 122;
             int pointValue = (int) adminPointEdit.getValue();
+            if (pointValue > 1000) pointValue = 1000;
 
             Admin.editAccountDetails(numberValue, nameInput, phoneInput, emailInput, addressInput, genderInput, ageValue, pointValue);
         }

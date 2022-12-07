@@ -142,7 +142,7 @@ public class Admin extends User{
 
     public static void editAccountDetails(int numberValue, String name, String phone, String email, String address, String gender, int age, int point){
 
-        Customer customer = FileIO.customerList.get(numberValue - 1);
+        Customer customer = AccountFunctions.getSearchedCustomerList().get(numberValue - 1);
         if (Customer.validateCustomerDetails(true, customer.getUsername(), name, age, customer.getPassword(), customer.getPassword(), phone, email)){
             GUI.playSound("ji.wav");
             customer.setName(name);
@@ -159,12 +159,12 @@ public class Admin extends User{
 
     public static void resetPassword(int numberValue, String userType){
         if (userType.equals("Admin")) {
-            Admin admin = FileIO.adminList.get(numberValue - 1);
+            Admin admin = AccountFunctions.getSearchedAdminList().get(numberValue - 1);
             admin.setPassword(admin.getUsername());
             FileIO.writeAdminFile();
         }
         else if (userType.equals("Customer")){
-            Customer customer = FileIO.customerList.get(numberValue - 1);
+            Customer customer = AccountFunctions.getSearchedCustomerList().get(numberValue - 1);
             customer.setPassword(customer.getUsername());
             FileIO.writeCustomerFile();
         }
@@ -179,17 +179,18 @@ public class Admin extends User{
                     throw new LastAdminException();
                 }
 
-                FileIO.adminList.remove(numberValue - 1);
+                Admin admin = AccountFunctions.getSearchedAdminList().get(numberValue - 1);
+                FileIO.adminList.remove(admin);
                 FileIO.writeAdminFile();
             }
             else if (userType.equals("Customer")){
-                Customer customer = FileIO.customerList.get(numberValue - 1);
+                Customer customer = AccountFunctions.getSearchedCustomerList().get(numberValue - 1);
 
                 if (customer.getMyBookings().size() > 0){
                     throw new InvalidUserException();
                 }
 
-                FileIO.customerList.remove(numberValue - 1);
+                FileIO.customerList.remove(customer);
                 FileIO.feedbackList.removeAll(customer.getMyFeedbacks());
                 FileIO.writeCustomerFile();
                 FileIO.writeFeedbackFile();
