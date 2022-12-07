@@ -35,7 +35,7 @@ public class AdminMenu implements MainPage {
 
     /* REPORT */
     private JPanel reportFunctionsPanel;
-    private JButton userReport, carReport, paymentReport, feedbackReport;
+    private JButton customerReport, carReport, paymentReport, feedbackReport;
 
     /* RECORD */
     private JPanel recordFunctionsPanel;
@@ -181,12 +181,12 @@ public class AdminMenu implements MainPage {
 
         /* REPORT */
         //Create buttons
-        userReport = new JButton("User");
+        customerReport = new JButton("Customer");
         carReport = new JButton("Car");
         paymentReport = new JButton("Payment");
         feedbackReport = new JButton("Feedback");
-        reportButtons = new JButton[]{userReport, carReport, paymentReport, feedbackReport};
-        userReport.addActionListener(this);
+        reportButtons = new JButton[]{customerReport, carReport, paymentReport, feedbackReport};
+        customerReport.addActionListener(this);
         carReport.addActionListener(this);
         paymentReport.addActionListener(this);
         feedbackReport.addActionListener(this);
@@ -199,7 +199,7 @@ public class AdminMenu implements MainPage {
 
         //Report button panel
         JPanel reportButtonPanel = new JPanel(new GridBagLayout());
-        reportButtonPanel.add(userReport);
+        reportButtonPanel.add(customerReport);
         reportButtonPanel.add(carReport);
         reportButtonPanel.add(paymentReport);
         reportButtonPanel.add(feedbackReport);
@@ -335,7 +335,7 @@ public class AdminMenu implements MainPage {
                 showRecordsPanel();
                 showPanel(recordsPanel, recordFunctionsPanel);
             }
-            else if (e.getSource() == userReport){
+            else if (e.getSource() == customerReport){
                 GUI.playSound("ji.wav");
                 ReportFunctions.showUserPanel();
             }

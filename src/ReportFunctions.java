@@ -11,13 +11,13 @@ import java.util.Date;
 
 public class ReportFunctions extends JPanel implements ActionListener {
 
-    private static JPanel userPanel, carPanel, paymentPanel, feedbackPanel;
+    private static JPanel customerPanel, carPanel, paymentPanel, feedbackPanel;
     private static JButton printUserButton, printCarButton, printPaymentButton, printFeedbackButton;
     private static JPanel[] panels;
-    private static String userPrintText, carPrintText, paymentPrintText, feedbackPrintText;
+    private static String customerPrintText, carPrintText, paymentPrintText, feedbackPrintText;
 
     public ReportFunctions(){
-        userPanel = new JPanel(new GridBagLayout());
+        customerPanel = new JPanel(new GridBagLayout());
         carPanel = new JPanel(new GridBagLayout());
         paymentPanel = new JPanel(new GridBagLayout());
         feedbackPanel = new JPanel(new GridBagLayout());
@@ -32,10 +32,10 @@ public class ReportFunctions extends JPanel implements ActionListener {
         printFeedbackButton.addActionListener(this);
         GUI.JButtonSetup(new JButton[]{printUserButton, printCarButton, printPaymentButton, printFeedbackButton});
 
-        panels = new JPanel[]{userPanel, carPanel, paymentPanel, feedbackPanel};
+        panels = new JPanel[]{customerPanel, carPanel, paymentPanel, feedbackPanel};
         GUI.JPanelSetup(panels);
         setPreferredSize(new Dimension(600,500));
-        add(userPanel);
+        add(customerPanel);
         add(carPanel);
         add(paymentPanel);
         add(feedbackPanel);
@@ -45,7 +45,7 @@ public class ReportFunctions extends JPanel implements ActionListener {
         try {
             if (e.getSource() == printUserButton){
                 GUI.playSound("ji.wav");
-                generateReport("user_report", userPrintText);
+                generateReport("user_report", customerPrintText);
             }
             else if (e.getSource() == printCarButton){
                 GUI.playSound("ji.wav");
@@ -68,7 +68,7 @@ public class ReportFunctions extends JPanel implements ActionListener {
 
     public static void showUserPanel(){
         generateUserPanel();
-        showReportPanel(userPanel);
+        showReportPanel(customerPanel);
     }
 
     public static void showCarPanel(){
@@ -94,7 +94,7 @@ public class ReportFunctions extends JPanel implements ActionListener {
     }
 
     private static void generateUserPanel(){
-        userPanel.removeAll();
+        customerPanel.removeAll();
 
         int maleNum = 0, femaleNum = 0, totalUserNum = 0;
         int less20 = 0, less30 = 0, less40 = 0, less50 = 0, less122 = 0;
@@ -140,8 +140,8 @@ public class ReportFunctions extends JPanel implements ActionListener {
         GUI.JLabelTitleSetup(genderTitle);
         GUI.JLabelSetup(new JLabel[]{genderLabel, genderAnalysis});
 
-        double malePercentage = (Double.valueOf(maleNum) / maleNum + femaleNum) * 100;
-        double femalePercentage = (Double.valueOf(femaleNum) / maleNum + femaleNum) * 100;
+        double malePercentage = (Double.valueOf(maleNum) / totalUserNum) * 100;
+        double femalePercentage = (Double.valueOf(femaleNum) / totalUserNum) * 100;
 
         String labelText = "<html><body><p>Male Number<br/>Male Percent<br/>Female Number<br/>Female Percent</p></body></html>";
         genderLabel.setText(labelText);
@@ -151,15 +151,15 @@ public class ReportFunctions extends JPanel implements ActionListener {
         genderAnalysis.setText(analysisText);
 
         //HTML
-        userPrintText = "<html><body><div style=\"max-width:300px\"><p>Total Number Of Customers: " + totalUserNum + "</p>";
-        userPrintText += "<h1 style=\"text-align:center\">Gender Analysis</h1>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Male Number: </span>\n" +
+        customerPrintText = "<html><body><div style=\"max-width:300px\"><p>Total Number Of Customers: " + totalUserNum + "</p>";
+        customerPrintText += "<h1 style=\"text-align:center\">Gender Analysis</h1>";
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Male Number: </span>\n" +
                 maleNum + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Male Percentage: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Male Percentage: </span>\n" +
                 String.format("%.2f", malePercentage) + "%</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Female Number: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Female Number: </span>\n" +
                 femaleNum + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Female Percentage: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">Female Percentage: </span>\n" +
                 String.format("%.2f", femalePercentage) + "%</div></div>";
 
         //Age Panel
@@ -178,16 +178,16 @@ public class ReportFunctions extends JPanel implements ActionListener {
         analysisText = "<html><body><p style=\"text-align:right\">" + less20 + "<br/>" + less30 + "<br/>" + less40 + "<br/>" + less50 + "<br/>" + less122;
         ageAnalysis.setText(analysisText);
 
-        userPrintText += "<div style=\"max-width:300px\"><h1 style=\"text-align:center\">Age Analysis</h1>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">17 - 20: </span>\n" +
+        customerPrintText += "<div style=\"max-width:300px\"><h1 style=\"text-align:center\">Age Analysis</h1>";
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">17 - 20: </span>\n" +
                 less20 + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">21 - 30: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">21 - 30: </span>\n" +
                 less30 + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">31 - 40: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">31 - 40: </span>\n" +
                 less40 + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">41 - 50: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">41 - 50: </span>\n" +
                 less50 + "</div>";
-        userPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">> 50: </span>\n" +
+        customerPrintText += "<div style=\"text-align:right;width:100%\"><span style=\"float:left\">> 50: </span>\n" +
                 less122 + "</div></div></body></html>";
 
         GridBagConstraints panelConstraints = new GridBagConstraints();
@@ -236,16 +236,16 @@ public class ReportFunctions extends JPanel implements ActionListener {
         mainConstraints.gridx = 0;
         mainConstraints.gridy = 0;
         mainConstraints.anchor = GridBagConstraints.WEST;
-        userPanel.add(totalUserNumLabel, mainConstraints);
+        customerPanel.add(totalUserNumLabel, mainConstraints);
 
         mainConstraints.gridy = 1;
         mainConstraints.anchor = GridBagConstraints.CENTER;
-        userPanel.add(mainPanel, mainConstraints);
+        customerPanel.add(mainPanel, mainConstraints);
 
         genderPanel.validate();
         agePanel.validate();
         mainPanel.validate();
-        userPanel.validate();
+        customerPanel.validate();
     }
 
     private static void generateCarPanel(){
@@ -465,13 +465,13 @@ public class ReportFunctions extends JPanel implements ActionListener {
 
         for (int i = 0; i < carNum.size(); i++){
 
-            if (carNum.get(i) == highestNum){
+            if (carNum.get(i) == highestNum && highestText.equals("")){
                 highestText = car.get(i).getNumberPlate();
             }
-            else if (carNum.get(i) == highest2Num){
+            else if (carNum.get(i) == highest2Num && highest2Text.equals("")){
                 highest2Text = car.get(i).getNumberPlate();
             }
-            else if (carNum.get(i) == highest3Num){
+            else if (carNum.get(i) == highest3Num && highest3Text.equals("")){
                 highest3Text = car.get(i).getNumberPlate();
             }
         }
