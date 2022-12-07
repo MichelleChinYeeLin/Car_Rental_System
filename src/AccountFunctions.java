@@ -942,19 +942,25 @@ public class AccountFunctions extends JPanel implements ActionListener {
     public static void customerDeleteAccount(){
         GUI.disableFields(customerComponents);
         int size = CarRentalSystem.loginCustomer.getMyBookings().size();
-        if (Customer.checkIdentity("Verification success!") && size > 0 && CarRentalSystem.loginCustomer.getMyBookings().get(size - 1).getStatus() == Booking.Status.COMPLETED){
-            String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
-            if (input != null && input.equals("DELETE")){
-                GUI.playSound("DontSayFiveDe.wav");
-                Customer.deleteAccount();
-                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
-                CarRentalSystem.loginCustomer = null;
-                CarRentalSystem.currentFrame.setVisible(false);
-                CarRentalSystem.homePage.getFrame().setVisible(true);
+        if (Customer.checkIdentity("Verification success!")){
+            if (size == 0){
+                String input = JOptionPane.showInputDialog("Type \"DELETE\" to confirm the deletion!");
+                if (input != null && input.equals("DELETE")){
+                    GUI.playSound("DontSayFiveDe.wav");
+                    Customer.deleteAccount();
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Goodbye Honey~", "Account Deleted", JOptionPane.INFORMATION_MESSAGE);
+                    CarRentalSystem.loginCustomer = null;
+                    CarRentalSystem.currentFrame.setVisible(false);
+                    CarRentalSystem.homePage.getFrame().setVisible(true);
+                }
+                else {
+                    GUI.playSound("ElectricVoice.wav");
+                    JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
+                }
             }
             else {
-                GUI.playSound("ElectricVoice.wav");
-                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "Deletion canceled!");
+                GUI.playSound("DontSayFiveDe.wav");
+                JOptionPane.showMessageDialog(CarRentalSystem.currentFrame, "You can't delete your account because you had done at least one booking with us!");
             }
         }
     }

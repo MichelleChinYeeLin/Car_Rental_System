@@ -382,6 +382,7 @@ public class Customer extends User {
 
     public static void deleteAccount() {
         FileIO.customerList.remove(CarRentalSystem.loginCustomer);
+        FileIO.feedbackList.removeAll(CarRentalSystem.loginCustomer.getMyFeedbacks());
         FileIO.writeCustomerFile();
     }
 
